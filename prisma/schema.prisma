@@ -1,0 +1,189 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+}
+
+model User {
+  id                     String                   @id @default(cuid())
+  naam                   String
+  voornaam               String
+  email                  String                   @unique
+  telefoon               String
+  image                  String?
+  accounts               Account[]
+  sessions               Session[]
+  paswoord               String
+  createdAt              DateTime                 @default(now())
+  updatedAt              DateTime                 @updatedAt
+  UserRoles              UserRoles[]
+  MissieUser             MissieUser[]
+  MissieEtappeBestand    MissieEtappeBestand[]
+  EtappeOnderdeelBestand EtappeOnderdeelBestand[]
+  KostenVerdeling        KostenVerdeling[]
+  FinTransactie          FinTransactie[]
+  SpaarTransactie        SpaarTransactie[]
+}
+
+model Account {
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([provider, providerAccountId])
+}
+
+model Session {
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@id([identifier, token])
+}
+
+model UserRoles {
+  id     Int  @id @default(autoincrement())
+  user   User @relation(fields: [userId], references: [id])
+  userId String
+  rol    Role @relation(fields: [rolId], references: [id])
+  rolId  Int
+}
+
+model Role {
+  id        Int         @id @default(autoincrement())
+  rolnaam   String      @db.VarChar(100)
+  UserRoles UserRoles[]
+}
+
+model Missie {
+  id               Int             @id @default(autoincrement())
+  titel            String          @db.VarChar(100)
+  omschrijving     String?         @db.VarChar(1000)
+  locatie          String?         @db.VarChar(100)
+  startDatum       DateTime
+  eindDatum        DateTime
+  publiekZichtbaar Boolean         @default(false)
+  afgsloten        Boolean         @default(false)
+  MissieUser       MissieUser[]
+  FinTransactie    FinTransactie[]
+  MissieEtappe     MissieEtappe[]
+}
+
+model MissieUser {
+  id            Int     @id @default(autoincrement())
+  user          User    @relation(fields: [userId], references: [id])
+  userId        String
+  missie        Missie  @relation(fields: [missieId], references: [id])
+  missieId      Int
+  isOrganisator Boolean @default(false)
+}
+
+model MissieEtappe {
+  id                  Int                   @id @default(autoincrement())
+  missie              Missie                @relation(fields: [missieId], references: [id])
+  missieId            Int
+  titel               String                @db.VarChar(100)
+  omschrijving        String?               @db.VarChar(1000)
+  locatie             String?               @db.VarChar(100)
+  datumTijd           DateTime              @default(now())
+  EtappeOnderdeel     EtappeOnderdeel[]
+  MissieEtappeBestand MissieEtappeBestand[]
+}
+
+model MissieEtappeBestand {
+  id             Int          @id @default(autoincrement())
+  missieEtappe   MissieEtappe @relation(fields: [missieEtappeId], references: [id])
+  missieEtappeId Int
+  bestandsNaam   String       @db.VarChar(500)
+  mime           String       @db.VarChar(500)
+  url            String       @db.VarChar(500)
+  width          Int
+  height         Int
+  size           BigInt
+  fileId         String       @db.VarChar(100)
+  uploadDatum    DateTime     @default(now())
+  user           User         @relation(fields: [userId], references: [id])
+  userId         String
+}
+
+model EtappeOnderdeel {
+  id                     Int                      @id @default(autoincrement())
+  etappe                 MissieEtappe             @relation(fields: [etappeId], references: [id])
+  etappeId               Int
+  kost                   Decimal
+  betaaldDoor            String
+  KostenVerdeling        KostenVerdeling[]
+  EtappeOnderdeelBestand EtappeOnderdeelBestand[]
+}
+
+model EtappeOnderdeelBestand {
+  id                Int             @id @default(autoincrement())
+  etappeOnderdeel   EtappeOnderdeel @relation(fields: [etappeOnderdeelId], references: [id])
+  etappeOnderdeelId Int
+  bestandsNaam      String          @db.VarChar(500)
+  mime              String          @db.VarChar(500)
+  url               String          @db.VarChar(500)
+  width             Int
+  height            Int
+  size              BigInt
+  fileId            String          @db.VarChar(100)
+  uploadDatum       DateTime        @default(now())
+  user              User            @relation(fields: [userId], references: [id])
+  userId            String
+}
+
+model KostenVerdeling {
+  id                Int             @id @default(autoincrement())
+  etappeOnderdeel   EtappeOnderdeel @relation(fields: [etappeOnderdeelId], references: [id])
+  etappeOnderdeelId Int
+  user              User            @relation(fields: [userId], references: [id])
+  userId            String
+  bedrag            Decimal
+}
+
+model FinTransactie {
+  id         Int      @id @default(autoincrement())
+  user       User     @relation(fields: [userId], references: [id])
+  userId     String
+  missie     Missie   @relation(fields: [missieId], references: [id])
+  missieId   Int
+  datum      DateTime
+  bedrag     Decimal  @default(0)
+  mededeling String?
+}
+
+model SpaarTransactie {
+  id         Int      @id @default(autoincrement())
+  datum      DateTime
+  bedrag     Decimal  @default(0)
+  mededeling String?
+  user       User     @relation(fields: [userId], references: [id])
+  userId     String
+}
