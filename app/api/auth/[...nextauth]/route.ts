@@ -4,13 +4,10 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import * as bcrypt from "bcrypt";
 import NextAuth from "next-auth/next";
 
-import { use } from "react";
-import { User } from "@prisma/client";
-
 export const authOptions: AuthOptions = {
-  pages: {
-    signIn: "/auth/signin",
-  },
+pages:{
+  signIn: "/identity/login",
+},
   session: {
     strategy: "jwt",
   },
@@ -53,7 +50,9 @@ export const authOptions: AuthOptions = {
         let arr: string[] = [];
         user.UserRoles.map((rol) => {
           arr.push(rol.rol.rolnaam);
+          
         });
+
         const u = {
             id: user.id,
             email: user.email,
@@ -61,6 +60,7 @@ export const authOptions: AuthOptions = {
             naam: user.naam,
             rollen:arr
         }
+        console.log(u)
         return u;
       },
     }),
@@ -68,12 +68,15 @@ export const authOptions: AuthOptions = {
 
   callbacks: {
     async jwt({ token, user }) {
-      if (user) token.rollen = user.rollen;
+      console.log(`Logging van callback: ${user}`)
+      if(user) token.user=user
+
+      //if (user) token.rollen = user.rollen;
       return token;
     },
 
     async session({ token, session }) {
-        if (session?.user) session.user.rollen = token.rollen
+        if (session?.user) session.user = token.user 
         return session
     },
   },
