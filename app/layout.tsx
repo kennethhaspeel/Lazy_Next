@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   title: "Lazy Company",
   description: "Lazy Company Virtual HQ",
   icons:{
-    icon:"/Afbeeldingen/Algemeen/favicon-32x32.png"
+    icon:"/Afbeeldingen/Algemeen/favicon.ico"
   }
 };
 
