@@ -62,6 +62,7 @@ const RegistreerForm = () => {
     try {
         const result = await RegistreerGebruiker(data)
         toast.success(<RegistratieGelukt/>)
+        reset()
     } catch(error) {
        
         if(error instanceof Error){

@@ -41,6 +41,7 @@ export const authOptions: AuthOptions = {
               });
     
             if (!user) throw new Error("Email of paswoord zijn niet correct");
+            if (!user.emailBevestigd) throw new Error("U moet eerst uw email adres bevestigen");
     
             if (!credentials?.paswoord) throw new Error("Gelieve een paswoord in te geven");
             const isPassowrdCorrect = await bcrypt.compare(credentials.paswoord, user.paswoord);

@@ -1,6 +1,7 @@
 import Handlebars from "handlebars";
 import nodemailer from "nodemailer";
 import {BevestigRegistratieTemplate} from '../EmailTemplates/BevestigRegistratie'
+import { PaswoordResetTemplate } from "../EmailTemplates/PaswoordReset";
 
 export async function ZendMail({to,subject,body}:{to:string,subject:string,body:string}){
 
@@ -40,4 +41,10 @@ export function compileerActivatieMail(name:string,url:string){
     const template = Handlebars.compile(BevestigRegistratieTemplate)
     const htmlBody = template({name,url})
     return htmlBody
+}
+
+export function compileerPaswoordResetMail(name:string,url:string){
+  const template = Handlebars.compile(PaswoordResetTemplate)
+  const htmlBody = template({name,url})
+  return htmlBody
 }

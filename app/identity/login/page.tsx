@@ -12,6 +12,7 @@ const SigninPage = ({searchParams}:Props) => {
     <main >
       <div className="flex items-center justify-center flex-col">
         <LoginForm callbackUrl={searchParams.callbackUrl}/>
+        <Link href={"/identity/PaswoordVergeten"}>Paswoord vergeten?</Link>
       </div>
     </main>
   );

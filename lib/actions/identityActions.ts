@@ -3,15 +3,9 @@
 import { User } from "@prisma/client";
 import { prisma } from "../prisma";
 import * as bcrypt from "bcrypt";
-import { compileerActivatieMail } from "./ZendMail";
-import { verifyJwt } from "../jwt";
+import { ZendMail, compileerActivatieMail, compileerPaswoordResetMail } from "./ZendMail";
+import { signJwt, verifyJwt } from "../jwt";
 
-// export async function RegistreerGebruiker(user: Omit<User,"id"|"image"|"createdAt"|"updatedAt">){
-//     console.log(user)
-//     // const result = await prisma.user.create({
-
-//     // })
-// }
 
 export async function RegistreerGebruiker(user: registratieModel) {
   console.log(user);
@@ -27,7 +21,13 @@ export async function RegistreerGebruiker(user: registratieModel) {
       paswoord: await bcrypt.hash(user.paswoord, 10),
     },
   });
-  const body = compileerActivatieMail(user.voornaam, "");
+
+  const jwtUserId = signJwt({
+    id: result.id,
+  });
+  const activationUrl = `${process.env.NEXTAUTH_URL}/identity/BevestigRegistratie/${jwtUserId}`;
+  const body = compileerActivatieMail(user.voornaam, activationUrl);
+  await ZendMail({ to: user.email, subject: "Activate Your Account", body });
   return result;
 }
 
@@ -55,3 +55,26 @@ export const activateUser: ActivateUserFunc = async (jwtUserID) => {
   });
   return "success";
 };
+
+export async function VergetenPaswoord(email: string) {
+  const user = await prisma.user.findUnique({
+    where: {
+      email: email,
+    },
+  });
+
+  if (!user) throw new Error("The User Does Not Exist!");
+
+  //  Send Email with Password Reset Link
+  const jwtUserId = signJwt({
+    id: user.id,
+  });
+  const resetPassUrl = `${process.env.NEXTAUTH_URL}/auth/resetPass/${jwtUserId}`;
+  const body = compileerPaswoordResetMail(user.voornaam, resetPassUrl);
+  const sendResult = await ZendMail({
+    to: user.email,
+    subject: "Reset Paswoord",
+    body: body,
+  });
+  return sendResult;
+}
