@@ -69,7 +69,7 @@ export async function VergetenPaswoord(email: string) {
   const jwtUserId = signJwt({
     id: user.id,
   });
-  const resetPassUrl = `${process.env.NEXTAUTH_URL}/auth/resetPass/${jwtUserId}`;
+  const resetPassUrl = `${process.env.NEXTAUTH_URL}/identity/PaswoordReset/${jwtUserId}`;
   const body = compileerPaswoordResetMail(user.voornaam, resetPassUrl);
   const sendResult = await ZendMail({
     to: user.email,
@@ -78,3 +78,31 @@ export async function VergetenPaswoord(email: string) {
   });
   return sendResult;
 }
+
+type ResetPaswoordFucn = (
+  jwtUserId: string,
+  password: string
+) => Promise<"userNotExist" | "success">;
+
+export const PaswoordInstellen: ResetPaswoordFucn = async (jwtUserId, paswoord) => {
+  const payload = verifyJwt(jwtUserId);
+  if (!payload) return "userNotExist";
+  const userId = payload.id;
+  const user = await prisma.user.findUnique({
+    where: {
+      id: userId,
+    },
+  });
+  if (!user) return "userNotExist";
+
+  const result = await prisma.user.update({
+    where: {
+      id: userId,
+    },
+    data: {
+      paswoord: await bcrypt.hash(paswoord, 10),
+    },
+  });
+  if (result) return "success";
+  else throw new Error("Something went wrong!");
+};

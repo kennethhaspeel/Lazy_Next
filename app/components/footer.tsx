@@ -1,4 +1,5 @@
 "use client"
+import Link from "next/link";
 import { useSession } from "next-auth/react";
 
 const Footer = () => {
@@ -13,7 +14,7 @@ const Footer = () => {
         {session && session.user ? (
         <>
           <p>
-           Ingelogd als {session.user.voornaam} {session.user.naam}
+           Ingelogd als <Link className="hover:cursor-pointer underline" href="/identity/Profiel">{session.user.voornaam} {session.user.naam}</Link> 
           </p>
 
         </>

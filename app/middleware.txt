@@ -1,0 +1,31 @@
+import { withAuth, NextRequestWithAuth } from "next-auth/middleware";
+import { NextResponse } from "next/server";
+
+export default withAuth(
+  // `withAuth` augments your `Request` with the user's token.
+  function middleware(request: NextRequestWithAuth) {
+    const rollen = request.nextauth.token?.user.rollen ?? [];
+
+    console.log(request.nextUrl.pathname);
+    console.log(request.nextauth.token);
+    console.log(
+      `Rollen van gebruiker ${request.nextauth.token?.user.naam} ${request.nextauth.token?.user.voornaam} : ${rollen}`
+    );
+    if (
+      request.nextUrl.pathname.startsWith("/missies") &&
+      rollen.indexOf("test") < 0
+    ) {
+      return NextResponse.rewrite(
+        new URL("/algemeen/geentoegang", request.url)
+      );
+    }
+  },
+  {
+    callbacks: {
+      authorized: ({ token }) => !!token,
+    },
+  }
+);
+export const config = {
+  matcher: ["/missies"],
+};
