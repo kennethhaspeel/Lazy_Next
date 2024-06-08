@@ -9,10 +9,11 @@ import React from "react";
 import LoginButton from "./LoginButton";
 import Link from "next/link";
 import { Image } from "@nextui-org/react";
+import ThemeSwitch from "./ThemeSwitcher";
 
 const Header = () => {
   return (
-    <Navbar isBordered>
+    <Navbar isBordered className=" dark:bg-slate-800">
       <NavbarBrand>
         <Link href="/">
           <Image
@@ -37,6 +38,9 @@ const Header = () => {
       <NavbarContent justify="end">
         <NavbarItem>
           <LoginButton />
+        </NavbarItem>
+        <NavbarItem>
+          <ThemeSwitch/>
         </NavbarItem>
       </NavbarContent>
     </Navbar>

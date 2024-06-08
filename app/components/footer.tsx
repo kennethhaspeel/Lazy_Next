@@ -1,11 +1,12 @@
 "use client"
 import Link from "next/link";
 import { useSession } from "next-auth/react";
+import ThemeSwitch from "./ThemeSwitcher";
 
 const Footer = () => {
     const { data: session } = useSession();
   return (
-    <footer className="fixed bottom-0 left-0 z-20 w-full bg-white border-t border-gray-200 shadow md:flex md:items-center md:justify-between md:p-6 dark:bg-gray-800 dark:border-gray-600">
+    <footer className="fixed bottom-0 left-0 z-20 w-full bg-white border-t border-gray-200 shadow md:flex md:items-center md:justify-between md:p-6 dark:bg-slate-800">
       <div className="w-full mx-auto  max-w-5xl md:flex md:items-center md:justify-between">
         <span className="text-sm text-gray-500 sm:text-center dark:text-gray-400">
           © 2023{" "} Kenneth Haspeel
