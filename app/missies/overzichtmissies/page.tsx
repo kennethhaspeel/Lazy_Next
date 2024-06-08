@@ -2,7 +2,7 @@
 import { useSession } from 'next-auth/react'
 import { redirect } from 'next/navigation'
 
-const overzichtmissies = () => {
+const OverzichtMissies = () => {
 
   const { data: session } = useSession({
     required: true,
@@ -30,4 +30,4 @@ const overzichtmissies = () => {
   
 }
 
-export default overzichtmissies
+export default OverzichtMissies
