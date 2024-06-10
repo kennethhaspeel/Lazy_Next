@@ -22,7 +22,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="nl-be" suppressHydrationWarning>
-      <body className="dark:bg-slate-800">
+      <body className="dark:bg-slate-800 min-h-screen bg-slate-50">
         <Providers>
           <Header/>
           <div className=" flex flex-auto h-screen max-w-7xl mx-auto">

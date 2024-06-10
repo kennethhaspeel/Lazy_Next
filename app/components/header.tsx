@@ -1,49 +1,145 @@
+"use client";
 import {
-  Button,
   Navbar,
   NavbarBrand,
   NavbarContent,
   NavbarItem,
+  NavbarMenuToggle,
+  NavbarMenu,
+  NavbarMenuItem,
+  Button,
 } from "@nextui-org/react";
-import React from "react";
+import { useState } from "react";
 import LoginButton from "./LoginButton";
 import Link from "next/link";
 import { Image } from "@nextui-org/react";
 import ThemeSwitch from "./ThemeSwitcher";
+import { useSession, signIn } from "next-auth/react";
 
 const Header = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { data: session } = useSession();
   return (
-    <Navbar isBordered className=" dark:bg-slate-800">
-      <NavbarBrand>
-        <Link href="/">
+    <Navbar isBordered>
+      {/* KLEIN SCHERM */}
+      <NavbarContent className="flex md:hidden">
+        <NavbarBrand>
+          <Link href="/">
+            <Image
+              width={48}
+              alt="Logo"
+              src="/Afbeeldingen/pwa/android-chrome-192x192-trans.png"
+            />
+          </Link>
+          <p>
+            <Link href="/">Lazy Company</Link>
+          </p>
+        </NavbarBrand>
+      </NavbarContent>
+
+      <NavbarContent as="div" justify="end" className="flex md:hidden">
+        <NavbarMenuToggle
+          aria-label={isMenuOpen ? "Sluit menu" : "Open menu"}
+        />
+      </NavbarContent>
+      <NavbarMenu>
+        <NavbarMenuItem key={0}>
+          <Link href="/" className="w-full">
+            Home
+          </Link>
+        </NavbarMenuItem>
+        <NavbarMenuItem key={1}>
+          <Link href="/missies/overzichtmissies" className="w-full">
+            Missies
+          </Link>
+        </NavbarMenuItem>
+        <NavbarMenuItem key={1}>
+          <Link href="/spaarboek/overzicht" className="w-full">
+            Spaarboekje
+          </Link>
+        </NavbarMenuItem>
+        <NavbarItem>
+          <hr />
+        </NavbarItem>
+        <NavbarItem>
+          <div className="flex flex-row">
+            <div className="w-full p-4">
+              <Button onClick={() => signIn()} className="w-full">
+                Log in{" "}
+              </Button>
+            </div>
+            <div className="w-full p-4">
+              <Button as={Link} href="/identity/registreer"  className="w-full">
+                Registreer
+              </Button>
+            </div>
+          </div>
+
+        </NavbarItem>
+      </NavbarMenu>
+
+      {/* GROOT SCHERM */}
+      <NavbarContent
+        as="div"
+        justify="start"
+        className="hidden md:flex max-w-10"
+      >
+        <NavbarBrand>
           <Image
             width={48}
             alt="Logo"
             src="/Afbeeldingen/pwa/android-chrome-192x192-trans.png"
           />
-        </Link>
-      </NavbarBrand>
+        </NavbarBrand>
+      </NavbarContent>
 
-      <NavbarContent className="hidden sm:flex gap-4">
+      <NavbarContent justify="start" className="hidden md:flex">
         <NavbarItem>
-          <Link
-            color="foreground"
-            className="hover:text-sky-500 transition-colors"
-            href="/"
-          >
-            Home
-          </Link>
+          <Link href="/">Home</Link>
+        </NavbarItem>
+        <NavbarItem>
+          <Link href="/missies/overzichtmissies">Missies</Link>
+        </NavbarItem>
+        <NavbarItem>
+          <Link href="/spaarboek/overzicht">Spaarboekje</Link>
         </NavbarItem>
       </NavbarContent>
-      <NavbarContent justify="end">
-        <NavbarItem>
-          <LoginButton />
-        </NavbarItem>
-        <NavbarItem>
-          <ThemeSwitch/>
-        </NavbarItem>
+      <NavbarContent justify="end" className="hidden md:flex">
+        <LoginButton />
+        <ThemeSwitch />
       </NavbarContent>
     </Navbar>
+    //     <Navbar isBordered className=" dark:bg-slate-800">
+    //       <NavbarBrand>
+    //         <Link href="/">
+    //           <Image
+    //             width={48}
+    //             alt="Logo"
+    //             src="/Afbeeldingen/pwa/android-chrome-192x192-trans.png"
+    //           />
+    //         </Link>
+    //       </NavbarBrand>
+
+    //       <NavbarContent className="hidden sm:flex gap-4">
+    //         <NavbarItem>
+    //           <Link
+    //             color="foreground"
+    //             className="hover:text-sky-500 transition-colors"
+    //             href="/"
+    //           >
+    //             Home
+    //           </Link>
+    //         </NavbarItem>
+    //       </NavbarContent>
+    //       <NavbarContent justify="end">
+    //         <NavbarItem>
+    //           <LoginButton />
+    //         </NavbarItem>
+    //         <NavbarItem>
+    //           <ThemeSwitch/>
+    //         </NavbarItem>
+    //       </NavbarContent>
+    //     </Navbar>
   );
 };
 

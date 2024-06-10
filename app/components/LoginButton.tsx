@@ -12,7 +12,7 @@ const LoginButton = () => {
         <>
           <Button
             as={Link}
-            className="text-white hover:text-sky-800 transition-colors"
+            className="dark:hover:bg-slate-500 dark:hover:text-white p-2 rounded-lg transition-colors"
             href={"/api/auth/signout"}
           >
             Log uit
