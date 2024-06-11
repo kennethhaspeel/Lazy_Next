@@ -9,30 +9,38 @@ import {
   NavbarMenuItem,
   Button,
 } from "@nextui-org/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import LoginButton from "./LoginButton";
 import Link from "next/link";
 import { Image } from "@nextui-org/react";
 import ThemeSwitch from "./ThemeSwitcher";
-import { useSession, signIn } from "next-auth/react";
+import { useSession, signIn, signOut } from "next-auth/react";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+const toggleMenu = ()=>{
+  setIsMenuOpen(!isMenuOpen)
+  
+}
+useEffect(()=>{
+  console.log(isMenuOpen)
+},[isMenuOpen])
   const { data: session } = useSession();
   return (
-    <Navbar isBordered>
+    <Navbar isBordered isMenuOpen={isMenuOpen}> 
       {/* KLEIN SCHERM */}
       <NavbarContent className="flex md:hidden">
         <NavbarBrand>
-          <Link href="/">
+          <Link href="/" onClick={()=>setIsMenuOpen(false)}>
             <Image
               width={48}
               alt="Logo"
               src="/Afbeeldingen/pwa/android-chrome-192x192-trans.png"
             />
+            
           </Link>
           <p>
-            <Link href="/">Lazy Company</Link>
+            <Link href="/" onClick={()=>toggleMenu}>Lazy Company</Link>
           </p>
         </NavbarBrand>
       </NavbarContent>
@@ -40,41 +48,67 @@ const Header = () => {
       <NavbarContent as="div" justify="end" className="flex md:hidden">
         <NavbarMenuToggle
           aria-label={isMenuOpen ? "Sluit menu" : "Open menu"}
+          onChange={()=>{toggleMenu()}}
         />
       </NavbarContent>
       <NavbarMenu>
         <NavbarMenuItem key={0}>
-          <Link href="/" className="w-full">
+          <Link href="/" className="w-full"  onClick={()=>toggleMenu()}>
             Home
           </Link>
         </NavbarMenuItem>
         <NavbarMenuItem key={1}>
-          <Link href="/missies/overzichtmissies" className="w-full">
+          <Link href="/missies/OverzichtMissies" className="w-full"  onClick={()=>toggleMenu()}>
             Missies
           </Link>
         </NavbarMenuItem>
         <NavbarMenuItem key={2}>
-          <Link href="/spaarboek/overzicht" className="w-full">
+          <Link href="/spaarboek/overzicht" className="w-full" onClick={()=>toggleMenu()}>
             Spaarboekje
           </Link>
         </NavbarMenuItem>
         <NavbarItem>
           <hr />
         </NavbarItem>
-        <NavbarItem>
-          <div className="flex flex-row">
-            <div className="w-full p-4">
-              <Button onClick={() => signIn()} className="w-full">
-                Log in{" "}
-              </Button>
-            </div>
-            <div className="w-full p-4">
-              <Button as={Link} href="/identity/registreer"  className="w-full">
-                Registreer
-              </Button>
-            </div>
-          </div>
+        <NavbarItem className="sm:hidden">
+          {session && session.user ? (
+            <p>
+              ingelogd als{" "}
+              <span className="font-bold">
+                {session.user.voornaam} {session.user.naam}
+              </span>
+            </p>
+          ) : (
+            <p>Niet ingelogd</p>
+          )}
+        </NavbarItem>
 
+        <NavbarItem>
+          {session && session.user ?
+            (
+            <div className="w-full p-4">
+              <Button onClick={() => { toggleMenu();signOut()}} className="w-full">
+                Log Uit{" "}
+              </Button>
+            </div>
+          ): (
+            <div className="flex flex-row">
+              <div className="w-full p-4">
+                <Button onClick={() => { toggleMenu();signIn()}} className="w-full">
+                  Log in{" "}
+                </Button>
+              </div>
+              <div className="w-full p-4">
+                <Button
+                  as={Link}
+                  href="/identity/registreer"
+                  className="w-full"
+                >
+                  Registreer
+                </Button>
+              </div>
+            </div>
+          )}
         </NavbarItem>
       </NavbarMenu>
 
@@ -98,7 +132,7 @@ const Header = () => {
           <Link href="/">Home</Link>
         </NavbarItem>
         <NavbarItem>
-          <Link href="/missies/overzichtmissies">Missies</Link>
+          <Link href="/missies/OverzichtMissies">Missies</Link>
         </NavbarItem>
         <NavbarItem>
           <Link href="/spaarboek/overzicht">Spaarboekje</Link>

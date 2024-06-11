@@ -7,6 +7,7 @@ import { gebruiker } from "@/next-auth";
 export const authOptions: AuthOptions = {
   pages: {
     signIn: "/identity/login",
+    signOut:"/identity/LogUit"
   },
   session: {
     strategy: "jwt",

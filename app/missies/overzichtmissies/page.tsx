@@ -1,33 +1,36 @@
-"use client"
-import { useSession } from 'next-auth/react'
-import { redirect } from 'next/navigation'
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
+import { GetAllMissions } from "@/lib/queries/missieQuery";
+import { authOptions } from "@/app/api/auth/[...nextauth]/AuthOptions";
+import { Suspense } from "react";
 
-const OverzichtMissies = () => {
+const OverzichtMissies = async () => {
+  const session = await getServerSession(authOptions);
+  if (session?.user.rollen.indexOf("admin") === -1) {
+    return <h1 className="text-5xl">Geen Toegang</h1>;
+  }
+  const missies = await GetAllMissions();
+  console.log(missies);
 
-  const { data: session } = useSession({
-    required: true,
-    onUnauthenticated() {
-        redirect('/identity/login?callbackUrl=/missies/overzichtmissies')
-    },
-    
-})
-    if (session?.user.rollen.indexOf("admin") === -1) {
-        return <h1 className="text-5xl">Access Denied</h1>
+
+
+  return (
+
+    <Suspense fallback={<Loading/>}>
+    {
+      missies?.map(missie=>{
+        return (
+          <p key={missie.id}>{missie.omschrijving} - {missie.locatie}</p>
+        )
+      })
     }
+    </Suspense>
 
+  )
+};
 
-      return (
-        <>
-        {
-         session? (
-          <div>overzicht</div>
-         ) :(
-          'Loading'
-         )
-        }
-          </>
-      )
-  
+export default OverzichtMissies;
+
+function Loading() {
+  return <h2>🌀 Loading...</h2>;
 }
-
-export default OverzichtMissies
