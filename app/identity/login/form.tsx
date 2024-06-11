@@ -53,51 +53,69 @@ const LoginForm = (props: Props) => {
   };
   return (
     <>
-      <form className="flex flex-col gap-2 p-2 border rounded-md shadow max-w-3xl mx-auto justify-between" onSubmit={handleSubmit(onSubmit)}>
-        <Input
-          errorMessage={errors.email?.message}
-          isInvalid={!!errors.email}
-          {...register("email")}
-          label="Email"
-          className="col-span-2"
-          startContent={<EnvelopeIcon className="w-4" />}
-        />
-        <Input
-          errorMessage={errors.paswoord?.message}
-          isInvalid={!!errors.paswoord}
-          {...register("paswoord")}
-          label="Paswoord"
-          className="col-span-2"
-          type={isZichtbaar ? "text" : "password"}
-          startContent={<KeyIcon className="w-4" />}
-          endContent={
-            isZichtbaar ? (
-              <EyeSlashIcon
-                className="w-4 cursor-pointer"
-                onClick={toggleIsZichtbaar}
-              />
-            ) : (
-              <EyeIcon
-                className="w-4 cursor-pointer"
-                onClick={toggleIsZichtbaar}
-              />
-            )
-          }
-        />
-        <div className="flex items-center justify-center gap-2">
-          <Button
-            color="primary"
-            type="submit"
-            disabled={isSubmitting}
-            isLoading={isSubmitting}
-          >
-            {isSubmitting ? "U wordt ingelogd" : "Log in"}
-          </Button>
-          <Button as={Link} href="/auth/registreer">
-            Registreer
-          </Button>
-        </div>
-      </form>
+      <div>
+        <form className="w-full p-5 border" onSubmit={handleSubmit(onSubmit)}>
+          <div className="mb-5 align-middle">
+            <Input
+              errorMessage={errors.email?.message}
+              isInvalid={!!errors.email}
+              {...register("email")}
+              label="Email"
+              className="col-span-2"
+              startContent={<EnvelopeIcon className="w-4" />}
+            />
+          </div>
+          <div className="mb-5">
+            <Input
+              errorMessage={errors.paswoord?.message}
+              isInvalid={!!errors.paswoord}
+              {...register("paswoord")}
+              label="Paswoord"
+              className="col-span-2"
+              type={isZichtbaar ? "text" : "password"}
+              startContent={<KeyIcon className="w-4" />}
+              endContent={
+                isZichtbaar ? (
+                  <EyeSlashIcon
+                    className="w-4 cursor-pointer"
+                    onClick={toggleIsZichtbaar}
+                  />
+                ) : (
+                  <EyeIcon
+                    className="w-4 cursor-pointer"
+                    onClick={toggleIsZichtbaar}
+                  />
+                )
+              }
+            />
+          </div>
+          <div className="mb-5 w-full">
+            <Button
+              color="primary"
+              type="submit"
+              disabled={isSubmitting}
+              isLoading={isSubmitting}
+              className="w-full"
+            >
+              {isSubmitting ? "U wordt ingelogd" : "Log in"}
+            </Button>
+          </div>
+          <hr />
+          <p className="mt-5">Paswoord vergeten?</p>
+          <div className="mb-5 mt-5 w-full">
+            <Button as={Link} href="/identity/PaswoordVergeten" className="w-full">
+              Paswoord Instellen
+            </Button>
+          </div>
+          <hr />
+          <p className="mt-5">Nog niet geregistreerd?</p>
+          <div className="mb-5 mt-5 w-full">
+            <Button as={Link} href="/identity/registreer" className="w-full">
+              Registreer
+            </Button>
+          </div>
+        </form>
+      </div>
     </>
   );
 };

@@ -1,18 +1,26 @@
 import PaswoordVergetenForm from "./form";
-
+import Afbeelding from "../../afbeeldingen/paswoordvergeten.jpg";
+import Image from "next/image";
 const PaswoordVergetenPage = () => {
   return (
-    <section className="mt-6 mx-auto max-w-5xl">
-      <div className="grid grid-cols-1 place-items-center items-center">
-        <div className="py-2">
-          <h2>Paswoord vergeten</h2>
-        </div>
-
-        <div className="flex items-center justify-center flex-col">
+    <main className="pt-5 flex">
+      <div className="flex-1 p-4 flex flex-col  items-center">
+        <div className="text-xl font-bold mb-4">Paswoord Vergeten</div>
+        <div className="w-full">
           <PaswoordVergetenForm />
+          </div>
+        
         </div>
-      </div>
-    </section>
+        <div className="hidden md:flex md:flex-1 md:max-w-full">
+          <Image
+            src={Afbeelding}
+            alt="loginafbeelding"
+            className="h-auto max-w-full"
+            placeholder="blur"
+            fill={false}
+          />
+        </div>
+      </main>
   );
 };
 

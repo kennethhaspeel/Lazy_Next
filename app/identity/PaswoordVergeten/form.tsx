@@ -39,22 +39,24 @@ const FormSchema = z.object({
         }
       };
       return (
-        <div className="grid grid-cols-1 md:grid-cols-3 items-center">
+        <div>
           <form
-            className="grid grid-cols-2 gap-3 p-2 place-self-stretch shadow border rounded-md"
+            className="w-full p-5"
             onSubmit={handleSubmit(submitRequest)}
           >
-            <div className="text-center p-2">Uw emailadres</div>
-            <Input
-              label="Email"
+            <div className="mb-5 align-middle">
+             <Input
+              label="Uw Email"
               {...register("email")}
               startContent={<EnvelopeIcon className="w-4" />}
               errorMessage={errors.email?.message}
               className="col-span-2"
-            />
-            <div className="flex col-span-2 justify-center">
+            />             
+            </div>
+
+            <div className="mb-5 mt-5 w-full">
             <Button
-            className="w-48"
+            className="w-full"
               isLoading={isSubmitting}
               type="submit"
               disabled={isSubmitting}
@@ -66,14 +68,6 @@ const FormSchema = z.object({
 
 
           </form>
-          
-          <Image
-            src={"/Afbeeldingen/identity/paswoordvergeten2.jpg"}
-            alt="paswoord vergeten"
-            width={300}
-            height={300}
-            className="col-span-2 place-self-center"
-          />
         </div>
       );
 }

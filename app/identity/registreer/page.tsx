@@ -1,20 +1,23 @@
-import { Link, Image } from "@nextui-org/react";
 import RegistreerForm from "./form";
+import Link from "next/link";
+import Afbeelding from "../../afbeeldingen/registreerafbeelding.jpg";
+import Image from "next/image";
 
 const Registreer = () => {
   return (
-    <section className="mt-6 mx-auto max-w-5xl">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 place-items-center items-center">
-        <div className="md:col-span-2 flex justify-center items-center">
-          <p className="text-center p-2">Al geregistreerd?</p>
-          <Link href={"/identity/login"}>Log In</Link>
+    <section className="pt-5 flex">
+      <div className="flex-1 p-4 flex flex-col  items-center">
+        <div className="text-xl font-bold mb-4">Registreer</div>
+        <div className="w-full">
+          <RegistreerForm />
         </div>
-        <RegistreerForm />
+      </div>
+      <div className="hidden md:flex md:flex-1 md:max-w-full">
         <Image
-          src="/Afbeeldingen/identity/iwantyou.jpg"
-          alt="loginform"
-          width={300}
-          height={400}
+          src={Afbeelding}
+          alt="loginafbeelding"
+          className="h-auto max-w-full"
+          placeholder="blur"
         />
       </div>
     </section>

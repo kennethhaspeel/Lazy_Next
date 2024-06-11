@@ -53,7 +53,7 @@ const Header = () => {
             Missies
           </Link>
         </NavbarMenuItem>
-        <NavbarMenuItem key={1}>
+        <NavbarMenuItem key={2}>
           <Link href="/spaarboek/overzicht" className="w-full">
             Spaarboekje
           </Link>

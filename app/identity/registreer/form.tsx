@@ -51,7 +51,7 @@ const RegistreerForm = () => {
     handleSubmit,
     reset,
     control,
-    formState: { errors },
+    formState: { errors, isSubmitting  },
   } = useForm<InputType>({
     resolver: zodResolver(formSchema),
   });
@@ -76,8 +76,9 @@ const RegistreerForm = () => {
     <>
       <form
         onSubmit={handleSubmit(bewaarGebruiker)}
-        className="grid grid-cols-2 gap-3 p-2 place-self-stretch shadow border rounded-md"
+        className="w-full p-5 border"
       >
+        <div className="mb-1 sm:mb-5 align-middle">
         <Input
           {...register("geheimeVraag")}
           errorMessage={errors.geheimeVraag?.message}
@@ -86,6 +87,8 @@ const RegistreerForm = () => {
           className="col-span-2"
           startContent={<UserIcon className="w-4" />}
         />
+        </div>
+        <div className="mb-1 sm:mb-5 align-middle">
         <Input
           errorMessage={errors.voornaam?.message}
           isInvalid={!!errors.voornaam}
@@ -93,6 +96,8 @@ const RegistreerForm = () => {
           label="Voornaam"
           startContent={<UserIcon className="w-4" />}
         />
+        </div>
+        <div className="mb-1 sm:mb-5  align-middle">
         <Input
           errorMessage={errors.naam?.message}
           isInvalid={!!errors.naam}
@@ -100,7 +105,8 @@ const RegistreerForm = () => {
           label="Naam"
           startContent={<UserIcon className="w-4" />}
         />
-
+        </div>
+<div className="mb-1 sm:mb-5  align-middle">
         <Input
           errorMessage={errors.email?.message}
           isInvalid={!!errors.email}
@@ -109,6 +115,8 @@ const RegistreerForm = () => {
           className="col-span-2"
           startContent={<EnvelopeIcon className="w-4" />}
         />
+        </div>
+        <div className="mb-1 sm:mb-5 align-middle">
         <Input
           errorMessage={errors.telefoon?.message}
           isInvalid={!!errors.telefoon}
@@ -117,6 +125,8 @@ const RegistreerForm = () => {
           className="col-span-2"
           startContent={<PhoneIcon className="w-4" />}
         />
+        </div>
+        <div className="mb-1 sm:mb-5 align-middle">
         <Input
           errorMessage={errors.paswoord?.message}
           isInvalid={!!errors.paswoord}
@@ -139,6 +149,8 @@ const RegistreerForm = () => {
             )
           }
         />
+        </div>
+        <div className="mb-5 align-middle">
         <Input
           errorMessage={errors.bevestigPaswoord?.message}
           isInvalid={!!errors.bevestigPaswoord}
@@ -148,9 +160,11 @@ const RegistreerForm = () => {
           type={isZichtbaar ? "text" : "password"}
           startContent={<KeyIcon className="w-4" />}
         />
-        <div className="flex justify-center col-span-2">
-          <Button className="w-48" color="primary" type="submit">
-            Registreer
+        </div>
+        <div className="mb-5 mt-5 w-full">
+          <Button className="w-full" color="primary" type="submit"               disabled={isSubmitting}
+              isLoading={isSubmitting}>
+            {isSubmitting ? "Registratie wordt verwerkt" : "Registreer"}
           </Button>
         </div>
       </form>

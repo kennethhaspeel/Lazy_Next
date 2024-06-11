@@ -1,13 +1,19 @@
-import { ZendMail } from "@/lib/actions/ZendMail";
 import Image from "next/image";
+import banner from "./afbeeldingen/banner.png";
 
 export default async function Home() {
-
   return (
-    <main className="px-6 mx-auto">
-      <p className="mt-12 mb-12 text-3xl text-center dark:text-white">
-        Welkom bij Lazy Company
-      </p>
+    <main className="p-2 mx-auto">
+      <div className="flex flex-col sm:flex-col-reverse">
+        <div>
+          <Image src={banner} alt="banner" placeholder="blur" />
+        </div>
+        <div>
+          <p className="mt-6 mb-6 text-3xl text-center dark:text-white">
+            Welkom bij Lazy Company
+          </p>
+        </div>
+      </div>
     </main>
   );
 }
