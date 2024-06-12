@@ -88,6 +88,8 @@ model Missie {
   titel            String          @db.VarChar(100)
   omschrijving     String?         @db.VarChar(1000)
   locatie          String?         @db.VarChar(100)
+  afbeelding       String?         @db.VarChar(500)
+  geom             String?         @db.VarChar(2500)
   startDatum       DateTime
   eindDatum        DateTime
   publiekZichtbaar Boolean         @default(false)
@@ -113,6 +115,7 @@ model MissieEtappe {
   titel               String                @db.VarChar(100)
   omschrijving        String?               @db.VarChar(1000)
   locatie             String?               @db.VarChar(100)
+  geom                String?               @db.VarChar(2500)
   datumTijd           DateTime              @default(now())
   EtappeOnderdeel     EtappeOnderdeel[]
   MissieEtappeBestand MissieEtappeBestand[]
