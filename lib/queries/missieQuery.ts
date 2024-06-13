@@ -46,3 +46,46 @@ export async function GetAllMissions() {
   });
   return MissieLijst;
 }
+
+export async function GetMission(id: number) {
+  const result = await prisma.missie.findUnique({
+    where: {
+      id: id,
+    },
+    include: {
+      MissieUser: {
+        include: {
+          user: {
+            select: {
+              naam: true,
+              voornaam: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  let MissieDeelnemers: MissieDeelnemerModel[] = [];
+  result!.MissieUser.map((deelnemer) => {
+    MissieDeelnemers.push({
+      id: deelnemer.userId,
+      naam: `${deelnemer.user.voornaam} ${deelnemer.user.naam}`,
+      isOrganisator: deelnemer.isOrganisator,
+    });
+  });
+
+  const Missie: MissieModel = {
+    id: result!.id,
+    titel: result!.titel,
+    omschrijving: result?.omschrijving ? result.omschrijving : "",
+    locatie: result!.locatie ? result!.locatie : "",
+    afbeelding: result!.afbeelding,
+    startDatum: result!.startDatum,
+    eindDatum: result!.eindDatum,
+    publiekZichtbaar: result!.publiekZichtbaar,
+    afgesloten: result!.afgsloten,
+    deelnemers:MissieDeelnemers
+  }
+  return Missie
+}
