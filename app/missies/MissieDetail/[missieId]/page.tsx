@@ -1,7 +1,7 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/AuthOptions";
-import { GetMission } from "@/lib/queries/missieQuery";
-import { GetAllUsers } from "@/lib/queries/userQuery";
+import { GetMission } from "@/lib/actions/MissieActions";
+import { GetAllUsers } from "@/lib/actions/UserActions";
 import { User } from "@prisma/client";
 import { Button, Input } from "@nextui-org/react";
 import { DateToDDMMYYYY } from "@/app/components/DatumHelper";
@@ -52,12 +52,18 @@ const DetailPagina = async ({ params }: Props) => {
               <div className="ps-2 font-extrabold">Afbeelding</div>
               <div className="sm:col-span-5">
                 {deelnemer.isOrganisator ? (
-<div>
-  {missie.afbeelding ? ('afbeelding'):('geen afbeelding')}
-</div>
-
-                ) : <p>test</p>}
-
+                  <div>
+                    {missie.afbeelding ? "afbeelding" : "geen afbeelding"}
+                  </div>
+                ) : (
+                  <div>
+                    {missie.afbeelding ? (
+                      <p>Bekijk afbeelding</p>
+                    ) : (
+                      "Nog geen afbeelding"
+                    )}
+                  </div>
+                )}
               </div>
             </div>
             <div className="mt-3 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
@@ -77,7 +83,7 @@ const DetailPagina = async ({ params }: Props) => {
                 <div className="ps-2">
                   <Button
                     as={Link}
-                    href="/identity/registreer"
+                    href={`/missies/MissieDetailBewerken/${params.missieId}`}
                     className="w-full"
                     color="primary"
                   >

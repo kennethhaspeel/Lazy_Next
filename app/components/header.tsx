@@ -9,7 +9,7 @@ import {
   NavbarMenuItem,
   Button,
 } from "@nextui-org/react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import LoginButton from "./LoginButton";
 import Link from "next/link";
 import { Image } from "@nextui-org/react";
@@ -22,9 +22,7 @@ const toggleMenu = ()=>{
   setIsMenuOpen(!isMenuOpen)
   
 }
-useEffect(()=>{
-  console.log(isMenuOpen)
-},[isMenuOpen])
+
   const { data: session } = useSession();
   return (
     <Navbar isBordered isMenuOpen={isMenuOpen}> 

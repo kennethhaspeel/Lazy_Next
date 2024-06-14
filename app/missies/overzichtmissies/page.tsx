@@ -1,7 +1,7 @@
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
-import { GetAllMissions } from "@/lib/queries/missieQuery";
-import { GetAllUsers } from "@/lib/queries/userQuery";
+import { GetAllMissions } from "@/lib/actions/MissieActions";
+import { GetAllUsers } from "@/lib/actions/UserActions";
 import { authOptions } from "@/app/api/auth/[...nextauth]/AuthOptions";
 import { Suspense } from "react";
 import MissieBlok from "./MissieBlok";
@@ -19,9 +19,10 @@ const OverzichtMissies = async () => {
 
   return (
     <Suspense fallback={<Loading />}>
-      <div className=" pt-2 grid grid-col-2 sm:grid-col-2 md:grid-col-3">
+      <div className=" pt-2 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3">
       {missies?.map((missie) => {
         return (
+          <div className="pt-4" key={missie.id}>
           <MissieBlok
             missie={missie}
             naam={session?.user.naam ? session?.user.naam : ""}
@@ -30,6 +31,7 @@ const OverzichtMissies = async () => {
             key={missie.id}
             
           />
+          </div>
         );
       })}
       </div>

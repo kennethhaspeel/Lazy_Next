@@ -1,5 +1,7 @@
+"use server";
 import { Missie, MissieEtappe, MissieUser, User } from "@prisma/client";
 import { prisma } from "../prisma";
+import { GetDatumAlgemeen } from "@/app/components/DatumHelper";
 
 export async function GetAllMissions() {
   const result = await prisma.missie.findMany({
@@ -85,7 +87,52 @@ export async function GetMission(id: number) {
     eindDatum: result!.eindDatum,
     publiekZichtbaar: result!.publiekZichtbaar,
     afgesloten: result!.afgsloten,
-    deelnemers:MissieDeelnemers
-  }
-  return Missie
+    deelnemers: MissieDeelnemers,
+  };
+  return Missie;
+}
+
+export async function PostMissieNieuw(data: PostMissieNieuwModel) {
+  const missie = await prisma.missie.create({
+    data: {
+      titel: data.titel,
+      omschrijving: data.omschrijving,
+      locatie: data.locatie,
+      startDatum: data.startDatum,
+      eindDatum: data.eindDatum,
+      publiekZichtbaar: false,
+    },
+  });
+
+  const user = await prisma.missieUser.create({
+    data: {
+      missieId: missie.id,
+      userId: data.deelnemer!.id,
+      isOrganisator: true,
+    },
+  });
+  const etappe = await prisma.missieEtappe.create({
+    data: {
+      titel: "Algemeen",
+      datumTijd: GetDatumAlgemeen(data.startDatum),
+      missieId: missie.id,
+    },
+  });
+
+  return missie.id;
+}
+export async function UpdateMissie(model: PostMissieNieuwModel) {
+  const update = await prisma.missie.update({
+    where: {
+      id: model.id,
+    },
+    data: {
+      titel: model.titel,
+      omschrijving: model.omschrijving,
+      locatie: model.locatie,
+      startDatum: model.startDatum,
+      eindDatum: model.eindDatum,
+      publiekZichtbaar: model.publiekZichtbaar,
+    },
+  });
 }
