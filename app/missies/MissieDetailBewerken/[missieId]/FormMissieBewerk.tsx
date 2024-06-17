@@ -10,6 +10,7 @@ import {
   ButtonGroup,
   cn,
   Checkbox,
+  Switch,
 } from "@nextui-org/react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -17,6 +18,7 @@ import { toast } from "react-toastify";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   DateToYYYYMMDDstring,
+  GMTtoDate,
   YYYYMMDDtoDate,
 } from "@/app/components/DatumHelper";
 import {
@@ -40,10 +42,9 @@ import { useState } from "react";
 const formSchema = z.object({
   titel: z.string().min(1, "Geef de missie een titel"),
   omschrijving: z.string().min(1, "Geef een korte omschrijving van de missie"),
-   locatie: z.string().min(1,"Geef een korte omschrijving van de missie"),
-  startDatum: z.date({required_error:"Gelieve een startdatum in te geven"}),
-  eindDatum: z.date({required_error:"Gelieve een einddatum in te geven"}),
- 
+  locatie: z.string().min(1, "Geef een korte omschrijving van de missie"),
+  startDatum: z.date({ required_error: "Gelieve een startdatum in te geven" }),
+  eindDatum: z.date({ required_error: "Gelieve een einddatum in te geven" }),
 });
 
 type InputType = z.infer<typeof formSchema>;
@@ -52,24 +53,26 @@ interface Props {
 }
 
 const FormMissieBewerk = ({ missieData }: Props) => {
+  let formatter = useDateFormatter({ dateStyle: "full" });
   const [zichtbaar, setZichtbaar] = useState(missieData.publiekZichtbaar);
-
+  const [start, setStart] = useState(missieData.startDatum);
+  const [einde, setEinde] = useState(missieData.eindDatum);
   const router = useRouter();
-
+  //console.log(missieData)
   const bewaarMissie: SubmitHandler<InputType> = async (data) => {
     console.log(data);
     try {
       const model: PostMissieNieuwModel = {
+        id: missieData.id,
         titel: data.titel,
         omschrijving: data.omschrijving,
-        startDatum: YYYYMMDDtoDate(data.startDatum),
-        eindDatum: YYYYMMDDtoDate(data.eindDatum),
+        startDatum: data.startDatum,
+        eindDatum: data.eindDatum,
         locatie: data.locatie,
         publiekZichtbaar: zichtbaar,
       };
-      console.log(model);
-      //   const result = await UpdateMissie(model);
-      //   router.push(`/missies/MissieDetail/${missieData.id}`);
+      const result = await UpdateMissie(model);
+      router.push(`/missies/MissieDetail/${missieData.id}`);
     } catch (error) {
       if (error instanceof Error) {
         toast.error(`${error.message}`);
@@ -88,10 +91,11 @@ const FormMissieBewerk = ({ missieData }: Props) => {
       titel: missieData.titel,
       omschrijving: missieData.omschrijving ? missieData.omschrijving : "",
       locatie: missieData.locatie ? missieData.locatie : "",
-      startDatum:missieData.startDatum,
-      eindDatum: missieData.eindDatum,
+      startDatum: start,
+      eindDatum: einde,
     },
   });
+
   return (
     <form onSubmit={handleSubmit(bewaarMissie)} className="w-full p-5 border">
       <div className="mb-1 sm:mb-5 align-middle">
@@ -123,43 +127,44 @@ const FormMissieBewerk = ({ missieData }: Props) => {
       </div>
       <div className="mb-1 sm:mb-5 align-middle">
         <Input
-          {...register("startDatum")}
-          errorMessage={errors.startDatum?.message}
-          isInvalid={!!errors.startDatum}
+          {...register("locatie")}
+          errorMessage={errors.locatie?.message}
+          isInvalid={!!errors.locatie}
           label="Algemene locatie"
           className="col-span-2"
         />
       </div>
-      {/* <div className="mb-1 sm:mb-5 align-middle">
+      <div className="mb-1 sm:mb-5 align-middle">
         <I18nProvider locale="nl-BE">
           <DateRangePicker
             label="Start- en einddatum"
             onChange={(e) => {
-              setValue(
-                "startDatum",
-                e.start.toDate(getLocalTimeZone())
-              );
-              setValue(
-                "eindDatum",
-                e.end.toDate(getLocalTimeZone())
-              );
+              console.log(e.start.toDate(getLocalTimeZone()));
+              setStart(e.start.toDate(getLocalTimeZone()));
+              setEinde(e.end.toDate(getLocalTimeZone()));
             }}
             value={{
-              start: parseDate(DateToYYYYMMDDstring({...register("startDatum")})),
-              end: parseDate(DateToYYYYMMDDstring({...register("eindDatum")})),
+              start: parseDate(GMTtoDate(start)),
+              end: parseDate(GMTtoDate(einde)),
             }}
           />
         </I18nProvider>
-      </div> */}
+      </div>
       <div className="mb-1 sm:mb-5 align-middle">
-        <Checkbox
+        <Switch isSelected={zichtbaar} onValueChange={setZichtbaar}>
+          Publiek Zichtbaar?
+        </Switch>
+        {/* <Checkbox
           size="lg"
           color="primary"
           isSelected={zichtbaar}
           onValueChange={setZichtbaar}
+          classNames={{
+            base:cn("data-[selected=false]:border-success")
+          }}
         >
           Publiek Zichtbaar
-        </Checkbox>
+        </Checkbox> */}
       </div>
       <div className="mb-5 mt-5 w-full">
         <Button

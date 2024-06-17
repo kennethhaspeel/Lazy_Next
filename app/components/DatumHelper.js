@@ -6,9 +6,9 @@ Date.prototype.addDay = function (days) {
   return date;
 };
 
-export const GetDatumAlgemeen = (datum, dagenverschil = -1)=>{
-  return datum.addDay(dagenverschil)
-}
+export const GetDatumAlgemeen = (datum, dagenverschil = -1) => {
+  return datum.addDay(dagenverschil);
+};
 
 export const GetMissieDagen = (startDatum, eindDatum) => {
   let dagen = new Array();
@@ -55,9 +55,18 @@ export const DateToDDMMYYYY = (datum) => {
 
 export const DateToYYYYMMDDstring = (datum) => {
   console.log(datum)
-  return (format(datum, "yyyy-MM-dd")).toString()
+  return format(datum, "yyyy-MM-dd").toString();
+};
+
+export const GMTtoDate=(datum)=>{
+  let jaar = datum.getFullYear()
+  let maand = datum.getMonth() +1
+  let dag = datum.getDate()
+  let dat = `${jaar}-${String(maand).padStart(2,'0')}-${String(dag).padStart(2,'0')}`
+  return dat
+
 }
 
-export const YYYYMMDDtoDate = (datumstring)=>{
-  return parse(datumstring,"yyyy-MM-dd",new Date())
-}
+export const YYYYMMDDtoDate = (datumstring) => {
+  return parse(datumstring, "yyyy-MM-dd", new Date());
+};
