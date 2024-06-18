@@ -62,7 +62,7 @@ const Header = () => {
           <>
             <NavbarMenuItem key={1}>
               <Link
-                href="/Missies/OverzichtMissies"
+                href="/Missie/OverzichtMissies"
                 className="w-full"
                 onClick={() => toggleMenu()}
               >
@@ -161,7 +161,7 @@ const Header = () => {
         {session && session.user ? (
           <>
         <NavbarItem>
-          <Link href="/Missies/OverzichtMissies">Missies</Link>
+          <Link href="/Missie/OverzichtMissies">Missies</Link>
         </NavbarItem>
         <NavbarItem>
           <Link href="/Spaarboek/Overzicht">Spaarboekje</Link>

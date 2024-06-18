@@ -83,7 +83,7 @@ const DetailPagina = async ({ params }: Props) => {
                 <div className="ps-2">
                   <Button
                     as={Link}
-                    href={`/missies/MissieDetailBewerken/${params.missieId}`}
+                    href={`/Missie/MissieDetailBewerken/${params.missieId}`}
                     className="w-full"
                     color="primary"
                   >
