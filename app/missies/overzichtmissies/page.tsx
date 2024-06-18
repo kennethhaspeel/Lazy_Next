@@ -1,5 +1,4 @@
 import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
 import { GetAllMissions } from "@/lib/actions/MissieActions";
 import { GetAllUsers } from "@/lib/actions/UserActions";
 import { authOptions } from "@/app/api/auth/[...nextauth]/AuthOptions";
@@ -18,6 +17,8 @@ const OverzichtMissies = async () => {
   const [missies,users]= await Promise.all([missieData,allUsers])
 
   return (
+    <>
+    <div className="text-4xl font-extrabold">Overzicht missies</div>
     <Suspense fallback={<Loading />}>
       <div className=" pt-2 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3">
       {missies?.map((missie) => {
@@ -36,6 +37,7 @@ const OverzichtMissies = async () => {
       })}
       </div>
     </Suspense>
+    </>
   );
 };
 
