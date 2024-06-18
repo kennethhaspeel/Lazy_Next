@@ -22,7 +22,7 @@ const MissieBlok = async ({ missie, naam, voornaam, allUsers }: Props) => {
   const deelnemer = missie.deelnemers.filter((el) => {
     return `${el.naam}` === `${voornaam} ${naam}`;
   })[0];
-  const detailurl = `/missies/MissieDetail/${missie.id}`;
+  const detailurl = `/Missies/MissieDetail/${missie.id}`;
 
   const CheckDeelname = () => {
     const deelnemers = missie.deelnemers;
