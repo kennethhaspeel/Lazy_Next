@@ -1,8 +1,8 @@
 "use server"
-import { prisma } from "../prisma";
+import db from "../prisma"
 
 export async function GetAllUsers(){
-    const result = await prisma.user.findMany({
+    const result = await db.user.findMany({
         where: {
             emailBevestigd : true
         },

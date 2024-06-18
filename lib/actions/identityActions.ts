@@ -1,7 +1,6 @@
 "use server";
 
-import { User } from "@prisma/client";
-import { prisma } from "../prisma";
+import db from "../prisma";
 import * as bcrypt from "bcrypt";
 import { ZendMail, compileerActivatieMail, compileerPaswoordResetMail } from "./ZendMail";
 import { signJwt, verifyJwt } from "../jwt";
@@ -12,7 +11,7 @@ export async function RegistreerGebruiker(user: registratieModel) {
   if (user.geheimeVraag.toUpperCase() !== "MISSIE") {
     throw new Error("Antwoord op de geheime vraag is verkeerd");
   }
-  const result = await prisma.user.create({
+  const result = await db.user.create({
     data: {
       naam: user.naam,
       voornaam: user.voornaam,
@@ -38,14 +37,14 @@ type ActivateUserFunc = (
 export const activateUser: ActivateUserFunc = async (jwtUserID) => {
   const payload = verifyJwt(jwtUserID);
   const userId = payload?.id;
-  const user = await prisma.user.findUnique({
+  const user = await db.user.findUnique({
     where: {
       id: userId,
     },
   });
   if (!user) return "userNotExist";
   if (user.emailBevestigd) return "alreadyActivated";
-  const result = await prisma.user.update({
+  const result = await db.user.update({
     where: {
       id: userId,
     },
@@ -57,7 +56,7 @@ export const activateUser: ActivateUserFunc = async (jwtUserID) => {
 };
 
 export async function VergetenPaswoord(email: string) {
-  const user = await prisma.user.findUnique({
+  const user = await db.user.findUnique({
     where: {
       email: email,
     },
@@ -88,14 +87,14 @@ export const PaswoordInstellen: ResetPaswoordFucn = async (jwtUserId, paswoord) 
   const payload = verifyJwt(jwtUserId);
   if (!payload) return "userNotExist";
   const userId = payload.id;
-  const user = await prisma.user.findUnique({
+  const user = await db.user.findUnique({
     where: {
       id: userId,
     },
   });
   if (!user) return "userNotExist";
 
-  const result = await prisma.user.update({
+  const result = await db.user.update({
     where: {
       id: userId,
     },

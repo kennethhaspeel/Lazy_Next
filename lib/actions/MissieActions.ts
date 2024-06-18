@@ -1,10 +1,10 @@
 "use server";
-import { Missie, MissieEtappe, MissieUser, User } from "@prisma/client";
-import { prisma } from "../prisma";
+
+import db from "../prisma";
 import { GetDatumAlgemeen } from "@/app/components/DatumHelper";
 
 export async function GetAllMissions() {
-  const result = await prisma.missie.findMany({
+  const result = await db.missie.findMany({
     orderBy: [
       {
         startDatum: "desc",
@@ -50,7 +50,7 @@ export async function GetAllMissions() {
 }
 
 export async function GetMission(id: number) {
-  const result = await prisma.missie.findUnique({
+  const result = await db.missie.findUnique({
     where: {
       id: id,
     },
@@ -93,7 +93,7 @@ export async function GetMission(id: number) {
 }
 
 export async function PostMissieNieuw(data: PostMissieNieuwModel) {
-  const missie = await prisma.missie.create({
+  const missie = await db.missie.create({
     data: {
       titel: data.titel,
       omschrijving: data.omschrijving,
@@ -104,14 +104,14 @@ export async function PostMissieNieuw(data: PostMissieNieuwModel) {
     },
   });
 
-  const user = await prisma.missieUser.create({
+  const user = await db.missieUser.create({
     data: {
       missieId: missie.id,
       userId: data.deelnemer!.id,
       isOrganisator: true,
     },
   });
-  const etappe = await prisma.missieEtappe.create({
+  const etappe = await db.missieEtappe.create({
     data: {
       titel: "Algemeen",
       datumTijd: GetDatumAlgemeen(data.startDatum),
@@ -122,7 +122,7 @@ export async function PostMissieNieuw(data: PostMissieNieuwModel) {
   return missie.id;
 }
 export async function UpdateMissie(model: PostMissieNieuwModel) {
-  const update = await prisma.missie.update({
+  const update = await db.missie.update({
     where: {
       id: model.id,
     },

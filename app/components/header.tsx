@@ -71,7 +71,7 @@ const Header = () => {
             </NavbarMenuItem>
             <NavbarMenuItem key={2}>
               <Link
-                href="/spaarboek/overzicht"
+                href="/Spaarboek/Overzicht"
                 className="w-full"
                 onClick={() => toggleMenu()}
               >
@@ -164,7 +164,7 @@ const Header = () => {
           <Link href="/missies/OverzichtMissies">Missies</Link>
         </NavbarItem>
         <NavbarItem>
-          <Link href="/spaarboek/overzicht">Spaarboekje</Link>
+          <Link href="/Spaarboek/Overzicht">Spaarboekje</Link>
         </NavbarItem>
       
       </>
