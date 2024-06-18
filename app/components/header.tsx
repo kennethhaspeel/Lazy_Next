@@ -62,7 +62,7 @@ const Header = () => {
           <>
             <NavbarMenuItem key={1}>
               <Link
-                href="/missies/OverzichtMissies"
+                href="/Missies/OverzichtMissies"
                 className="w-full"
                 onClick={() => toggleMenu()}
               >
@@ -161,7 +161,7 @@ const Header = () => {
         {session && session.user ? (
           <>
         <NavbarItem>
-          <Link href="/missies/OverzichtMissies">Missies</Link>
+          <Link href="/Missies/OverzichtMissies">Missies</Link>
         </NavbarItem>
         <NavbarItem>
           <Link href="/Spaarboek/Overzicht">Spaarboekje</Link>
@@ -175,37 +175,6 @@ const Header = () => {
         <ThemeSwitch />
       </NavbarContent>
     </Navbar>
-    //     <Navbar isBordered className=" dark:bg-slate-800">
-    //       <NavbarBrand>
-    //         <Link href="/">
-    //           <Image
-    //             width={48}
-    //             alt="Logo"
-    //             src="/Afbeeldingen/pwa/android-chrome-192x192-trans.png"
-    //           />
-    //         </Link>
-    //       </NavbarBrand>
-
-    //       <NavbarContent className="hidden sm:flex gap-4">
-    //         <NavbarItem>
-    //           <Link
-    //             color="foreground"
-    //             className="hover:text-sky-500 transition-colors"
-    //             href="/"
-    //           >
-    //             Home
-    //           </Link>
-    //         </NavbarItem>
-    //       </NavbarContent>
-    //       <NavbarContent justify="end">
-    //         <NavbarItem>
-    //           <LoginButton />
-    //         </NavbarItem>
-    //         <NavbarItem>
-    //           <ThemeSwitch/>
-    //         </NavbarItem>
-    //       </NavbarContent>
-    //     </Navbar>
   );
 };
 

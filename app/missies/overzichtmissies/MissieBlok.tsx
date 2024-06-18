@@ -31,7 +31,7 @@ const MissieBlok = async ({ missie, naam, voornaam, allUsers }: Props) => {
     });
     return ind > -1;
   };
- 
+
   return (
     <>
       <Card className="py-4 px-2 border w-[280px] items-center" key={missie.id}>
@@ -45,10 +45,10 @@ const MissieBlok = async ({ missie, naam, voornaam, allUsers }: Props) => {
         </CardHeader>
         <CardBody className="w-[250px] h-[250px] rounded-2xl overflow-hidden p-2">
           {missie.afbeelding ? (
-            <MissieBlokRemoteAfbeelding imageUrl={missie.afbeelding}/>
+            <MissieBlokRemoteAfbeelding imageUrl={missie.afbeelding} />
           ) : (
             <div className="pt-2 mt-2">
-            <MissieBlokNoImage/>
+              <MissieBlokNoImage />
             </div>
           )}
         </CardBody>
@@ -65,7 +65,7 @@ const MissieBlok = async ({ missie, naam, voornaam, allUsers }: Props) => {
               </div>
             </div>
             <hr />
-            {missie.publiekZichtbaar || deelnemer?.isOrganisator? (
+            {missie.publiekZichtbaar || deelnemer?.isOrganisator ? (
               <div className="columns-1">
                 <Button as={Link} href={detailurl} className="w-full">
                   Details
