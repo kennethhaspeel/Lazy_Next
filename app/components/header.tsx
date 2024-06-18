@@ -23,7 +23,7 @@ const Header = () => {
   };
 
   const { data: session } = useSession();
-  console.log(session?.user.naam);
+  //console.log(session?.user.naam);
   return (
     <Navbar isBordered isMenuOpen={isMenuOpen}>
       {/* KLEIN SCHERM */}

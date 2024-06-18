@@ -5,37 +5,16 @@ import {
   DateRangePicker,
   Input,
   Textarea,
-  Radio,
-  RadioGroup,
-  ButtonGroup,
-  cn,
-  Checkbox,
   Switch,
 } from "@nextui-org/react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { toast } from "react-toastify";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  DateToYYYYMMDDstring,
-  GMTtoDate,
-  YYYYMMDDtoDate,
-} from "@/app/components/DatumHelper";
-import {
-  today,
-  startOfWeek,
-  startOfMonth,
-  endOfWeek,
-  endOfMonth,
-  getLocalTimeZone,
-  parseDate,
-} from "@internationalized/date";
+import { GMTtoDate } from "@/app/components/DatumHelper";
+import { getLocalTimeZone, parseDate } from "@internationalized/date";
 import { I18nProvider, useDateFormatter } from "@react-aria/i18n";
-import {
-  GetMission,
-  PostMissieNieuw,
-  UpdateMissie,
-} from "@/lib/actions/MissieActions";
+import { UpdateMissie } from "@/lib/actions/MissieActions";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -58,9 +37,7 @@ const FormMissieBewerk = ({ missieData }: Props) => {
   const [start, setStart] = useState(missieData.startDatum);
   const [einde, setEinde] = useState(missieData.eindDatum);
   const router = useRouter();
-  //console.log(missieData)
   const bewaarMissie: SubmitHandler<InputType> = async (data) => {
-    console.log(data);
     try {
       const model: PostMissieNieuwModel = {
         id: missieData.id,
@@ -72,7 +49,7 @@ const FormMissieBewerk = ({ missieData }: Props) => {
         publiekZichtbaar: zichtbaar,
       };
       const result = await UpdateMissie(model);
-      router.push(`/missies/MissieDetail/${missieData.id}`);
+      router.push(`/Missie/MissieDetail/${missieData.id}`);
     } catch (error) {
       if (error instanceof Error) {
         toast.error(`${error.message}`);
@@ -154,17 +131,6 @@ const FormMissieBewerk = ({ missieData }: Props) => {
         <Switch isSelected={zichtbaar} onValueChange={setZichtbaar}>
           Publiek Zichtbaar?
         </Switch>
-        {/* <Checkbox
-          size="lg"
-          color="primary"
-          isSelected={zichtbaar}
-          onValueChange={setZichtbaar}
-          classNames={{
-            base:cn("data-[selected=false]:border-success")
-          }}
-        >
-          Publiek Zichtbaar
-        </Checkbox> */}
       </div>
       <div className="mb-5 mt-5 w-full">
         <Button

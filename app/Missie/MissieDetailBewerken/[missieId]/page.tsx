@@ -15,10 +15,9 @@ interface Props {
 
 const MissieDetailBewerken = async ({ params }: Props) => {
   const session = await getServerSession(authOptions);
-  if (session?.user.rollen.indexOf("deelnemer") === -1) {
+  if (!session) {
     return <h1 className="text-5xl">Geen Toegang</h1>;
   }
-  //let missieData = await GetMission(Number(params.missieId));
   return (
     <Suspense fallback={<Loading />}>
       <section className="pt-5 flex">

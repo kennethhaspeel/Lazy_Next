@@ -15,7 +15,8 @@ interface Props {
 
 const DetailPagina = async ({ params }: Props) => {
   const session = await getServerSession(authOptions);
-  if (session?.user.rollen.indexOf("deelnemer") === -1) {
+  console.log(session)
+  if (!session?.user) {
     return <h1 className="text-5xl">Geen Toegang</h1>;
   }
   const missieData: Promise<MissieModel> = GetMission(Number(params.missieId));

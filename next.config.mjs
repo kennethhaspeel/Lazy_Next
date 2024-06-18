@@ -8,8 +8,13 @@ const nextConfig = {
         pathname: "**",
       },
     ],
-    // domains: ["ik.imagekit.io","placehold.co"],
   },
+  experimental:{
+    staleTimes:{
+      dynamic:0,
+      static:180
+    }
+  }
 };
 
 export default nextConfig;
