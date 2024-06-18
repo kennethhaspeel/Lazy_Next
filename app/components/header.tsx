@@ -18,27 +18,28 @@ import { useSession, signIn, signOut } from "next-auth/react";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-const toggleMenu = ()=>{
-  setIsMenuOpen(!isMenuOpen)
-  
-}
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
 
   const { data: session } = useSession();
+  console.log(session?.user.naam);
   return (
-    <Navbar isBordered isMenuOpen={isMenuOpen}> 
+    <Navbar isBordered isMenuOpen={isMenuOpen}>
       {/* KLEIN SCHERM */}
       <NavbarContent className="flex md:hidden">
         <NavbarBrand>
-          <Link href="/" onClick={()=>setIsMenuOpen(false)}>
+          <Link href="/" onClick={() => setIsMenuOpen(false)}>
             <Image
               width={48}
               alt="Logo"
               src="/Afbeeldingen/pwa/android-chrome-192x192-trans.png"
             />
-            
           </Link>
           <p>
-            <Link href="/" onClick={()=>toggleMenu}>Lazy Company</Link>
+            <Link href="/" onClick={() => toggleMenu}>
+              Lazy Company
+            </Link>
           </p>
         </NavbarBrand>
       </NavbarContent>
@@ -46,25 +47,42 @@ const toggleMenu = ()=>{
       <NavbarContent as="div" justify="end" className="flex md:hidden">
         <NavbarMenuToggle
           aria-label={isMenuOpen ? "Sluit menu" : "Open menu"}
-          onChange={()=>{toggleMenu()}}
+          onChange={() => {
+            toggleMenu();
+          }}
         />
       </NavbarContent>
       <NavbarMenu>
         <NavbarMenuItem key={0}>
-          <Link href="/" className="w-full"  onClick={()=>toggleMenu()}>
+          <Link href="/" className="w-full" onClick={() => toggleMenu()}>
             Home
           </Link>
         </NavbarMenuItem>
-        <NavbarMenuItem key={1}>
-          <Link href="/missies/OverzichtMissies" className="w-full"  onClick={()=>toggleMenu()}>
-            Missies
-          </Link>
-        </NavbarMenuItem>
-        <NavbarMenuItem key={2}>
-          <Link href="/spaarboek/overzicht" className="w-full" onClick={()=>toggleMenu()}>
-            Spaarboekje
-          </Link>
-        </NavbarMenuItem>
+        {session && session.user ? (
+          <>
+            <NavbarMenuItem key={1}>
+              <Link
+                href="/missies/OverzichtMissies"
+                className="w-full"
+                onClick={() => toggleMenu()}
+              >
+                Missies
+              </Link>
+            </NavbarMenuItem>
+            <NavbarMenuItem key={2}>
+              <Link
+                href="/spaarboek/overzicht"
+                className="w-full"
+                onClick={() => toggleMenu()}
+              >
+                Spaarboekje
+              </Link>
+            </NavbarMenuItem>
+          </>
+        ) : (
+          ""
+        )}
+
         <NavbarItem>
           <hr />
         </NavbarItem>
@@ -82,17 +100,28 @@ const toggleMenu = ()=>{
         </NavbarItem>
 
         <NavbarItem>
-          {session && session.user ?
-            (
+          {session && session.user ? (
             <div className="w-full p-4">
-              <Button onClick={() => { toggleMenu();signOut()}} className="w-full">
+              <Button
+                onClick={() => {
+                  toggleMenu();
+                  signOut();
+                }}
+                className="w-full"
+              >
                 Log Uit{" "}
               </Button>
             </div>
-          ): (
+          ) : (
             <div className="flex flex-row">
               <div className="w-full p-4">
-                <Button onClick={() => { toggleMenu();signIn()}} className="w-full">
+                <Button
+                  onClick={() => {
+                    toggleMenu();
+                    signIn();
+                  }}
+                  className="w-full"
+                >
                   Log in{" "}
                 </Button>
               </div>
@@ -129,13 +158,18 @@ const toggleMenu = ()=>{
         <NavbarItem>
           <Link href="/">Home</Link>
         </NavbarItem>
+        {session && session.user ? (
+          <>
         <NavbarItem>
           <Link href="/missies/OverzichtMissies">Missies</Link>
         </NavbarItem>
         <NavbarItem>
           <Link href="/spaarboek/overzicht">Spaarboekje</Link>
         </NavbarItem>
-      </NavbarContent>
+      
+      </>
+    ) : ('')}
+    </NavbarContent>
       <NavbarContent justify="end" className="hidden md:flex">
         <LoginButton />
         <ThemeSwitch />
