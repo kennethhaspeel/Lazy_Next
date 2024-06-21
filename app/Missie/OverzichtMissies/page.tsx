@@ -20,10 +20,10 @@ const OverzichtMissies = async () => {
     <>
     <div className="text-4xl font-extrabold">Overzicht missies</div>
     <Suspense fallback={<Loading />}>
-      <div className=" pt-2 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3">
+      <div className=" pt-2 grid grid-cols-1  sm:grid-cols-2 md:grid-cols-3">
       {missies?.map((missie) => {
         return (
-          <div className="pt-4" key={missie.id}>
+          <div className="pt-4 mx-auto" key={missie.id}>
           <MissieBlok
             missie={missie}
             naam={session?.user.naam ? session?.user.naam : ""}

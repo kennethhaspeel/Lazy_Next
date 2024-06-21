@@ -8,45 +8,39 @@ import { DateToDDMMYYYY } from "@/app/components/DatumHelper";
 import Link from "next/link";
 
 interface Props {
-  params: {
-    missieId: string;
-  };
+  missieData: MissieModel;
 }
 
-const DetailPagina = async ({ params }: Props) => {
+const ToonGegevens = async ({ missieData }: Props) => {
   const session = await getServerSession(authOptions);
-  console.log(session)
+
   if (!session?.user) {
     return <h1 className="text-5xl">Geen Toegang</h1>;
   }
-  const missieData: Promise<MissieModel> = GetMission(Number(params.missieId));
-  const allUsers: Promise<User[]> = GetAllUsers();
-
-  const [missie, users] = await Promise.all([missieData, allUsers]);
-  const deelnemer = missie.deelnemers.filter((el) => {
+  const deelnemer = missieData.deelnemers.filter((el) => {
     return `${el.naam}` === `${session?.user.voornaam} ${session?.user.naam}`;
   })[0];
-  console.log(missie);
+
   return (
     <div className="pt-4 h-screen max-w-7xl mx-auto">
-      <div className="text-3xl">{missie.titel}</div>
+      <div className="text-3xl">Missie '{missieData.titel}'</div>
       <form className="hidden sm:grid">
         <div className="space-y-12">
           <div className="border">
             <div className="mt-3 mb-3 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
               <div className="ps-2 font-extrabold">Titel</div>
-              <div className="sm:col-span-5">{missie.titel}</div>
+              <div className="sm:col-span-5">{missieData.titel}</div>
             </div>
             <div className="mt-3 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
               <div className="ps-2 font-extrabold">Omschrijving</div>
               <div className="sm:col-span-5">
-                <p>{missie.omschrijving}</p>
+                <p>{missieData.omschrijving}</p>
               </div>
             </div>
             <div className="mt-3 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
               <div className="ps-2 font-extrabold">Locatie</div>
               <div className="sm:col-span-5">
-                <p>{missie.locatie}</p>
+                <p>{missieData.locatie}</p>
               </div>
             </div>
             <div className="mt-3 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
@@ -54,11 +48,11 @@ const DetailPagina = async ({ params }: Props) => {
               <div className="sm:col-span-5">
                 {deelnemer.isOrganisator ? (
                   <div>
-                    {missie.afbeelding ? "afbeelding" : "geen afbeelding"}
+                    {missieData.afbeelding ? "afbeelding" : "geen afbeelding"}
                   </div>
                 ) : (
                   <div>
-                    {missie.afbeelding ? (
+                    {missieData.afbeelding ? (
                       <p>Bekijk afbeelding</p>
                     ) : (
                       "Nog geen afbeelding"
@@ -70,21 +64,21 @@ const DetailPagina = async ({ params }: Props) => {
             <div className="mt-3 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
               <div className="ps-2 font-extrabold">Startdatum</div>
               <div className="sm:col-span-5">
-                <p>{DateToDDMMYYYY(missie.startDatum)}</p>
+                <p>{DateToDDMMYYYY(missieData.startDatum)}</p>
               </div>
             </div>
             <div className="mt-3 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
               <div className="ps-2 font-extrabold">Einddatum</div>
               <div className="sm:col-span-5">
-                <p>{DateToDDMMYYYY(missie.eindDatum)}</p>
+                <p>{DateToDDMMYYYY(missieData.eindDatum)}</p>
               </div>
             </div>
             {!!deelnemer.isOrganisator ? (
               <div className="mt-3 mb-3 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                 <div className="ps-2">
-                  <Button
+                <Button
                     as={Link}
-                    href={`/Missie/MissieDetailBewerken/${params.missieId}`}
+                    href={`/Missie/GegevensBewerken/${missieData.id}`}
                     className="w-full"
                     color="primary"
                   >
@@ -103,4 +97,4 @@ const DetailPagina = async ({ params }: Props) => {
   );
 };
 
-export default DetailPagina;
+export default ToonGegevens;
