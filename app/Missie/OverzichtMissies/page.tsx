@@ -5,6 +5,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/AuthOptions";
 import { Suspense } from "react";
 import MissieBlok from "./MissieBlok";
 import { User } from "@prisma/client";
+import LoadingSpinner from "@/app/components/LoadingSpinner";
 
 const OverzichtMissies = async () => {
   const session = await getServerSession(authOptions);
@@ -19,7 +20,7 @@ const OverzichtMissies = async () => {
   return (
     <>
     <div className="text-4xl font-extrabold">Overzicht missies</div>
-    <Suspense fallback={<Loading />}>
+    <Suspense fallback={<LoadingSpinner/>}>
       <div className=" pt-2 grid grid-cols-1  sm:grid-cols-2 md:grid-cols-3">
       {missies?.map((missie) => {
         return (

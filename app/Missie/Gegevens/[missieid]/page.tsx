@@ -5,6 +5,7 @@ import { User } from "@prisma/client";
 import ToonGegevens from "./ToonGegevens";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/AuthOptions";
+import ToonDeelnemers from "./ToonDeelnemers";
 
 interface Props {
   params: {
@@ -22,10 +23,18 @@ const page = async ({ params: { missieid } }: Props) => {
   const allUsers: Promise<User[]> = GetAllUsers();
 
   const [missie, users] = await Promise.all([missieData, allUsers]);
+  const currentUser = missie.deelnemers.filter((el) => {
+    return `${el.naam}` === `${session?.user.voornaam} ${session?.user.naam}`;
+  })[0];
   return (
     <>
-      <ToonGegevens missieData={missie} />
+      <ToonGegevens missieData={missie} currentUser={currentUser} />
       <hr />
+      <ToonDeelnemers
+        deelnemers={missie?.deelnemers}
+        currentUser={currentUser}
+        missieId={missieid}
+      />
     </>
   );
 };
