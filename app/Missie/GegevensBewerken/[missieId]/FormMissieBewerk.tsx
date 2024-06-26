@@ -49,7 +49,7 @@ const FormMissieBewerk = ({ missieData }: Props) => {
         publiekZichtbaar: zichtbaar,
       };
       const result = await UpdateMissie(model);
-      router.push(`/Missie/MissieDetail/${missieData.id}`);
+      router.push(`/Missie/Gegevens/${missieData.id}`);
     } catch (error) {
       if (error instanceof Error) {
         toast.error(`${error.message}`);

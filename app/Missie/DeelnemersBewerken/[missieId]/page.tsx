@@ -24,7 +24,6 @@ const DeelnemersBewerken = async ({ params: {missieId} }: Props) => {
   }
   const missieData: Promise<MissieModel> = GetMission(Number(missieId));
   const allUsers: Promise<User[]> = GetAllUsers();
-
   const [missie, users] = await Promise.all([missieData, allUsers]);
   return (
     <>
@@ -34,16 +33,17 @@ const DeelnemersBewerken = async ({ params: {missieId} }: Props) => {
             <DeelnemersBewerkenForm
               missieData={missie}
               allUsers={users}
+              currentUser={session?.user.id}
             />
           </div>
 
           <div className="hidden md:flex md:flex-1 md:max-w-full">
-            <Image
+            {/* <Image
               src={AfbeeldingBewerk}
               alt="editformafbeelding"
               className="h-auto max-w-full"
               placeholder="blur"
-            />
+            /> */}
           </div>
         </section>
       </Suspense>

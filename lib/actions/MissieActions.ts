@@ -1,5 +1,6 @@
 "use server";
 
+import { MissieUser } from "@prisma/client";
 import db from "../prisma";
 import { GetDatumAlgemeen } from "@/app/components/DatumHelper";
 
@@ -135,4 +136,27 @@ export async function UpdateMissie(model: PostMissieNieuwModel) {
       publiekZichtbaar: model.publiekZichtbaar,
     },
   });
+}
+
+export async function UpdateMissieDeelnemers(
+  model: UpdateMissieDeelnemerModel
+) {
+  const deleteMissieDeelnemers = await db.missieUser.deleteMany({
+    where: {
+      missieId: model.missieid,
+    },
+  });
+
+  const m = model.deelnemers
+    .filter((x) => x.deelnemer)
+    .map((deel) => ({
+      missieId: model.missieid,
+      userId: deel.id,
+      isOrganisator: deel.organisator,
+    }));
+
+  const updateDeelnemers = await db.missieUser.createMany({
+    data: m,
+  });
+  return model;
 }

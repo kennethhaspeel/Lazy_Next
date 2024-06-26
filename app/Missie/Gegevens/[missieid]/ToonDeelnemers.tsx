@@ -22,7 +22,7 @@ const ToonDeelnemers = ({
         </div>
         <div className="pt-2 ps-2">
           <div className="font-bold  underline text-xl">Organisator(en)</div>
-          <div className="p-2">
+          <div className="p-2  flex gap-4">
             {deelnemers
               .filter((u) => u.isOrganisator)
               .map((u) => {
@@ -36,15 +36,17 @@ const ToonDeelnemers = ({
         </div>
         <div className="pt-2 ps-2">
           <div className="font-bold  underline text-xl">Deelnemer(s)</div>
-          <div className="p-2">
+          <div className="p-2 flex gap-4">
             {deelnemers.filter((u) => !u.isOrganisator).length ? (
               deelnemers
                 .filter((u) => !u.isOrganisator)
                 .map((u) => {
                   return (
+
                     <Chip key={u.id} color="success" variant="shadow" size="lg">
                       {u.naam}
                     </Chip>
+
                   );
                 })
             ) : (

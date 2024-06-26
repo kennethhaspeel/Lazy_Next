@@ -1,7 +1,8 @@
 import React from 'react'
 
-export const MissieAfbeelding = () => {
+const MissieAfbeelding = () => {
   return (
     <div>MissieAfbeelding</div>
   )
 }
+export default MissieAfbeelding
