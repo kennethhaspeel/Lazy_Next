@@ -24,7 +24,7 @@ const ToonGegevens = async ({ missieData, currentUser }: Props) => {
 
   return (
     <div className="pt-4 max-w-7xl mx-auto">
-      <div className="text-3xl">Missie '{missieData.titel}'</div>
+      <div className="text-3xl">Missie &apos;{missieData.titel}&apos;</div>
       <form className="hidden sm:grid">
         <div className="space-y-12">
           <div className="border">

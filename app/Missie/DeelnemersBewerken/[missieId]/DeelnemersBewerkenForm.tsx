@@ -42,7 +42,7 @@ const DeelnemersBewerkenForm = ({ missieData, allUsers }: Props) => {
     });
     setDeelnemers(arrDeel);
 
-  }, []);
+  }, [missieData]);
 
   return (
     <>
