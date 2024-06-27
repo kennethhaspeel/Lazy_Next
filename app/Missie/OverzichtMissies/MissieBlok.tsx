@@ -12,6 +12,7 @@ import { User } from "@prisma/client";
 import MissieBlokRemoteAfbeelding from "./MissieBlokRemoteAfbeelding";
 import MissieBlokNoImage from "./MissieBlokNoImage";
 
+
 interface Props {
   missie: MissieModel;
   naam: string;
@@ -19,6 +20,7 @@ interface Props {
   allUsers: User[];
 }
 const MissieBlok = async ({ missie, naam, voornaam, allUsers }: Props) => {
+
   const deelnemer = missie.deelnemers.filter((el) => {
     return `${el.naam}` === `${voornaam} ${naam}`;
   })[0];
@@ -67,20 +69,15 @@ const MissieBlok = async ({ missie, naam, voornaam, allUsers }: Props) => {
             <hr />
             {missie.publiekZichtbaar || deelnemer?.isOrganisator ? (
               <div className="columns-1">
-                <Button as={Link} href={detailurl} className="w-full">
-                  Details
-                </Button>
+                <Link href={detailurl}>
+                  <Button className="w-full">Details</Button>
+                </Link>
               </div>
             ) : (
               <div className="columns-1">
-                <Button
-                  as={Link}
-                  href={detailurl}
-                  className="w-full"
-                  isDisabled
-                >
-                  Nog Geen Details
-                </Button>
+                <Link href={detailurl}>
+                  <Button isDisabled>Nog Geen Details</Button>
+                </Link>
               </div>
             )}
           </div>

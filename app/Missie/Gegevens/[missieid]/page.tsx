@@ -6,6 +6,7 @@ import ToonGegevens from "./ToonGegevens";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/AuthOptions";
 import ToonDeelnemers from "./ToonDeelnemers";
+import ToonGegevensMobiel from "./ToonGegevensMobiel";
 
 interface Props {
   params: {
@@ -28,7 +29,16 @@ const page = async ({ params: { missieid } }: Props) => {
   })[0];
   return (
     <>
-      <ToonGegevens missieData={missie} currentUser={currentUser} />
+      <div className="pt-4 max-w-7xl mx-auto">
+        <div className="text-3xl">Missie &apos;{missie.titel}&apos;</div>
+        <div className="hidden sm:block">
+          <ToonGegevens missieData={missie} currentUser={currentUser} />
+        </div>
+        <div className="sm:hidden">
+          <ToonGegevensMobiel  missieData={missie} currentUser={currentUser} />
+        </div>
+      </div>
+
       <hr />
       <ToonDeelnemers
         deelnemers={missie?.deelnemers}
