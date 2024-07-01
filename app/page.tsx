@@ -10,7 +10,7 @@ export default async function Home() {
         </div>
         <div>
           <p className="mt-6 mb-6 text-3xl text-center dark:text-white">
-            Welkom bij Lazy Company
+            Welkom bij Lazy Company Virtual HQ
           </p>
         </div>
       </div>
