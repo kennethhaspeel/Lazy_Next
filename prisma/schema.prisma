@@ -28,6 +28,7 @@ model User {
   KostenVerdeling        KostenVerdeling[]
   FinTransactie          FinTransactie[]
   SpaarTransactie        SpaarTransactie[]
+  EtappeOnderdeel        EtappeOnderdeel[]
 }
 
 model Account {
@@ -141,10 +142,12 @@ model EtappeOnderdeel {
   id                     Int                      @id @default(autoincrement())
   etappe                 MissieEtappe             @relation(fields: [etappeId], references: [id])
   etappeId               Int
+  omschrijving           String?
   kost                   Decimal
-  betaaldDoor            String
+  betaaldDoor            User                     @relation(fields: [userId], references: [id])
   KostenVerdeling        KostenVerdeling[]
   EtappeOnderdeelBestand EtappeOnderdeelBestand[]
+  userId                 String
 }
 
 model EtappeOnderdeelBestand {
