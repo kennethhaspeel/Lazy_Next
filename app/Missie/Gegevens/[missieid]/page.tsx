@@ -1,6 +1,6 @@
 import { GetMission } from "@/lib/actions/MissieActions";
 import { GetAllUsers } from "@/lib/actions/UserActions";
-import { User } from "@prisma/client";
+import { MissieEtappe, User } from "@prisma/client";
 
 import ToonGegevens from "./ToonGegevens";
 import { getServerSession } from "next-auth";
@@ -8,6 +8,9 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/AuthOptions";
 import ToonDeelnemers from "./ToonDeelnemers";
 import ToonGegevensMobiel from "./ToonGegevensMobiel";
 import { Button, Link } from "@nextui-org/react";
+import { GetAllEtappes } from "@/lib/actions/MissieEtappeActions";
+import ToonEtappes from "./ToonEtappes";
+
 
 interface Props {
   params: {
@@ -23,8 +26,9 @@ const page = async ({ params: { missieid } }: Props) => {
 
   const missieData: Promise<MissieModel> = GetMission(Number(missieid));
   const allUsers: Promise<User[]> = GetAllUsers();
+  const allEtappes: Promise<MissieEtappe[]> = GetAllEtappes(Number(missieid))
 
-  const [missie, users] = await Promise.all([missieData, allUsers]);
+  const [missie, users, etappes] = await Promise.all([missieData, allUsers,allEtappes]);
   const currentUser = missie.deelnemers.filter((el) => {
     return `${el.naam}` === `${session?.user.voornaam} ${session?.user.naam}`;
   })[0];
@@ -35,7 +39,7 @@ const page = async ({ params: { missieid } }: Props) => {
         <div className="bg-slate-100 dark:bg-slate-800 p-2 mt-4">
         <h2 className="text-xl ps-2">Missie Details</h2>
       </div>
-        <div className="hidden sm:block w-full">
+        <div className="hidden sm:block w-full ps-2">
           <ToonGegevens missieData={missie} currentUser={currentUser} />
         </div>
 
@@ -84,6 +88,7 @@ const page = async ({ params: { missieid } }: Props) => {
             <div className="bg-slate-100 dark:bg-slate-800 p-2 mt-2">
         <h2 className="text-xl ps-2">Etappes</h2>
       </div>
+      <ToonEtappes Etaps={JSON.stringify(etappes)} Begindatum={missie.startDatum} Einddatum={missie.eindDatum} missieid={Number(missieid)}/>
     </>
   );
 };

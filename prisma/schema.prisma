@@ -9,26 +9,26 @@ datasource db {
 }
 
 model User {
-  id                     String                   @id @default(cuid())
-  naam                   String
-  voornaam               String
-  email                  String                   @unique
-  telefoon               String
-  emailBevestigd         Boolean                  @default(false)
-  image                  String?
-  accounts               Account[]
-  sessions               Session[]
-  paswoord               String
-  createdAt              DateTime                 @default(now())
-  updatedAt              DateTime                 @updatedAt
-  UserRoles              UserRoles[]
-  MissieUser             MissieUser[]
-  MissieEtappeBestand    MissieEtappeBestand[]
-  EtappeOnderdeelBestand EtappeOnderdeelBestand[]
-  KostenVerdeling        KostenVerdeling[]
-  FinTransactie          FinTransactie[]
-  SpaarTransactie        SpaarTransactie[]
-  EtappeOnderdeel        EtappeOnderdeel[]
+  id                  String                @id @default(cuid())
+  naam                String
+  voornaam            String
+  email               String                @unique
+  telefoon            String
+  emailBevestigd      Boolean               @default(false)
+  image               String?
+  accounts            Account[]
+  sessions            Session[]
+  paswoord            String
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
+  UserRoles           UserRoles[]
+  MissieUser          MissieUser[]
+  MissieEtappe        MissieEtappe[]
+  MissieEtappeBestand MissieEtappeBestand[]
+
+  FinTransactie   FinTransactie[]
+  SpaarTransactie SpaarTransactie[]
+  KostVerdelingen KostVerdeling[]
 }
 
 model Account {
@@ -91,8 +91,8 @@ model Missie {
   locatie          String?         @db.VarChar(100)
   afbeelding       String?         @db.VarChar(500)
   geom             String?         @db.VarChar(2500)
-  startDatum       DateTime
-  eindDatum        DateTime
+  startDatum       Int             @default(0)
+  eindDatum        Int             @default(0)
   publiekZichtbaar Boolean         @default(false)
   afgsloten        Boolean         @default(false)
   MissieUser       MissieUser[]
@@ -117,9 +117,22 @@ model MissieEtappe {
   omschrijving        String?               @db.VarChar(1000)
   locatie             String?               @db.VarChar(100)
   geom                String?               @db.VarChar(2500)
-  datumTijd           DateTime              @default(now())
-  EtappeOnderdeel     EtappeOnderdeel[]
+  startDatum          Int                   @default(0)
+  eindDatum           Int                   @default(0)
+  kost                Decimal               @default(0)
+  betaaldDoor         User?                 @relation(fields: [userId], references: [id])
+  userId              String?
+  KostenVerdeling     KostVerdeling[]
   MissieEtappeBestand MissieEtappeBestand[]
+}
+
+model KostVerdeling {
+  id             Int          @id @default(autoincrement())
+  user           User         @relation(fields: [userId], references: [id])
+  userId         String
+  missieEtappe   MissieEtappe @relation(fields: [missieEtappeId], references: [id])
+  missieEtappeId Int
+  bedrag         Decimal
 }
 
 model MissieEtappeBestand {
@@ -133,64 +146,27 @@ model MissieEtappeBestand {
   height         Int
   size           BigInt
   fileId         String       @db.VarChar(100)
-  uploadDatum    DateTime     @default(now())
+  uploadDatum    Int          @default(0)
   user           User         @relation(fields: [userId], references: [id])
   userId         String
 }
 
-model EtappeOnderdeel {
-  id                     Int                      @id @default(autoincrement())
-  etappe                 MissieEtappe             @relation(fields: [etappeId], references: [id])
-  etappeId               Int
-  omschrijving           String?
-  kost                   Decimal
-  betaaldDoor            User                     @relation(fields: [userId], references: [id])
-  KostenVerdeling        KostenVerdeling[]
-  EtappeOnderdeelBestand EtappeOnderdeelBestand[]
-  userId                 String
-}
-
-model EtappeOnderdeelBestand {
-  id                Int             @id @default(autoincrement())
-  etappeOnderdeel   EtappeOnderdeel @relation(fields: [etappeOnderdeelId], references: [id])
-  etappeOnderdeelId Int
-  bestandsNaam      String          @db.VarChar(500)
-  mime              String          @db.VarChar(500)
-  url               String          @db.VarChar(500)
-  width             Int
-  height            Int
-  size              BigInt
-  fileId            String          @db.VarChar(100)
-  uploadDatum       DateTime        @default(now())
-  user              User            @relation(fields: [userId], references: [id])
-  userId            String
-}
-
-model KostenVerdeling {
-  id                Int             @id @default(autoincrement())
-  etappeOnderdeel   EtappeOnderdeel @relation(fields: [etappeOnderdeelId], references: [id])
-  etappeOnderdeelId Int
-  user              User            @relation(fields: [userId], references: [id])
-  userId            String
-  bedrag            Decimal
-}
-
 model FinTransactie {
-  id         Int      @id @default(autoincrement())
-  user       User     @relation(fields: [userId], references: [id])
+  id         Int     @id @default(autoincrement())
+  user       User    @relation(fields: [userId], references: [id])
   userId     String
-  missie     Missie   @relation(fields: [missieId], references: [id])
+  missie     Missie  @relation(fields: [missieId], references: [id])
   missieId   Int
-  datum      DateTime
-  bedrag     Decimal  @default(0)
+  datum      Int     @default(0)
+  bedrag     Decimal @default(0)
   mededeling String?
 }
 
 model SpaarTransactie {
-  id         Int      @id @default(autoincrement())
-  datum      DateTime
-  bedrag     Decimal  @default(0)
+  id         Int     @id @default(autoincrement())
+  datum      Int     @default(0)
+  bedrag     Decimal @default(0)
   mededeling String?
-  user       User     @relation(fields: [userId], references: [id])
+  user       User    @relation(fields: [userId], references: [id])
   userId     String
 }

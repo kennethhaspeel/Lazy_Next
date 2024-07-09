@@ -1,4 +1,3 @@
-"use client";
 import { DateToDDMMYYYY } from "@/app/components/DatumHelper";
 
 interface Props {

@@ -3,6 +3,7 @@
 import { MissieUser } from "@prisma/client";
 import db from "../prisma";
 import { GetDatumAlgemeen } from "@/app/components/DatumHelper";
+import { getUnixTime,fromUnixTime } from "date-fns"
 
 export async function GetAllMissions() {
   const result = await db.missie.findMany({
@@ -40,8 +41,8 @@ export async function GetAllMissions() {
       omschrijving: missie.omschrijving ? missie.omschrijving : "",
       locatie: missie.locatie ? missie.locatie : "",
       afbeelding: missie.afbeelding,
-      startDatum: missie.startDatum,
-      eindDatum: missie.eindDatum,
+      startDatum: new Date(fromUnixTime(missie.startDatum)),
+      eindDatum: new Date(fromUnixTime(missie.eindDatum)),
       publiekZichtbaar: missie.publiekZichtbaar,
       afgesloten: missie.afgsloten,
       deelnemers: MissieDeelnemers,
@@ -84,8 +85,8 @@ export async function GetMission(id: number) {
     omschrijving: result?.omschrijving ? result.omschrijving : "",
     locatie: result!.locatie ? result!.locatie : "",
     afbeelding: result!.afbeelding,
-    startDatum: result!.startDatum,
-    eindDatum: result!.eindDatum,
+    startDatum: fromUnixTime(result!.startDatum),
+    eindDatum: fromUnixTime(result!.eindDatum),
     publiekZichtbaar: result!.publiekZichtbaar,
     afgesloten: result!.afgsloten,
     deelnemers: MissieDeelnemers,
@@ -99,8 +100,8 @@ export async function PostMissieNieuw(data: PostMissieNieuwModel) {
       titel: data.titel,
       omschrijving: data.omschrijving,
       locatie: data.locatie,
-      startDatum: data.startDatum,
-      eindDatum: data.eindDatum,
+      startDatum: getUnixTime(data.startDatum),
+      eindDatum: getUnixTime(data.eindDatum),
       publiekZichtbaar: false,
     },
   });
@@ -110,13 +111,6 @@ export async function PostMissieNieuw(data: PostMissieNieuwModel) {
       missieId: missie.id,
       userId: data.deelnemer!.id,
       isOrganisator: true,
-    },
-  });
-  const etappe = await db.missieEtappe.create({
-    data: {
-      titel: "Algemeen",
-      datumTijd: GetDatumAlgemeen(data.startDatum),
-      missieId: missie.id,
     },
   });
 
@@ -131,8 +125,8 @@ export async function UpdateMissie(model: PostMissieNieuwModel) {
       titel: model.titel,
       omschrijving: model.omschrijving,
       locatie: model.locatie,
-      startDatum: model.startDatum,
-      eindDatum: model.eindDatum,
+      startDatum: getUnixTime(model.startDatum),
+      eindDatum: getUnixTime(model.eindDatum),
       publiekZichtbaar: model.publiekZichtbaar,
     },
   });

@@ -44,7 +44,7 @@ const FormMissieNieuw = ({ userid }: Props) => {
         },
       };
       const result = await PostMissieNieuw(model);
-      router.push(`/missies/MissieDetail/${result}`)
+      router.push(`/Missie/Gegevens/${result}`)
     } catch (error) {
       if (error instanceof Error) {
         toast.error(`${error.message}`);
