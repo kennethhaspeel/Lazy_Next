@@ -10,6 +10,7 @@ interface Props {
   Begindatum: Date;
   Einddatum: Date;
   missieid: number;
+  missieDeelnemers: MissieDeelnemerModel[]
 }
 
 const ToonEtappes = ({ Etaps, Begindatum, Einddatum, missieid }: Props) => {
@@ -22,7 +23,7 @@ const ToonEtappes = ({ Etaps, Begindatum, Einddatum, missieid }: Props) => {
   );
 
   const redirectNieuweEtappe = (datum:Date)=>{
-    router.push(`/Missie/EtappeNieuw?missieid=${missieid}&d=${getUnixTime(datum)}`)
+    router.push(`/Missie/EtappeNieuw/${missieid}/${getUnixTime(datum)}`)
   }
   console.log(`Standaard begin: ${Begindatum}`);
   console.log(`Standaard eind: ${Einddatum}`);
