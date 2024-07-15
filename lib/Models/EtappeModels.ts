@@ -7,4 +7,6 @@ interface PostEtappeNieuwModel {
     startDatum: Date;
     eindDatum: Date;
     kost: number;
+    verschuldigDoor?: string[];
+    betaler?:string;
   }

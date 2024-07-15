@@ -1,5 +1,12 @@
 "use client";
-import { fromUnixTime } from "date-fns";
+import {
+  addHours,
+  addMinutes,
+  fromUnixTime,
+  getUnixTime,
+  setHours,
+  setMinutes,
+} from "date-fns";
 import { useSearchParams } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -52,12 +59,25 @@ interface missieDeelnemer {
 const EtappeNieuwForm = ({ deelnemers, missieid, datum }: Props) => {
   const router = useRouter();
   const [verschuldigdDoor, setVerschuldigdDoor] = useState<string[]>([]);
+  const [betalerslijst, setBetalersLijst] = useState<MissieDeelnemerModel[]>(
+    []
+  );
+  const [betaler, setBetaler] = useState<string>("clxucmprp0002p31rf6p6mux3");
   useEffect(() => {
     let arrDeel: string[] = [];
+    let betLijst: MissieDeelnemerModel[] = [
+      {
+        id: "clxucmprp0002p31rf6p6mux3",
+        naam: "Rekening Argenta",
+        isOrganisator: false,
+      },
+    ];
     deelnemers.map((deel) => {
       arrDeel.push(deel.id);
+      betLijst.push(deel);
     });
     setVerschuldigdDoor(arrDeel);
+    setBetalersLijst(betLijst);
   }, [deelnemers]);
 
   let [starttijdValue, setStarttijdValue] = useState(
@@ -78,11 +98,14 @@ const EtappeNieuwForm = ({ deelnemers, missieid, datum }: Props) => {
         startDatum: new Date(starttijdValue.toString()),
         eindDatum: new Date(eindtijdValue.toString()),
         kost: data.kost,
+        verschuldigDoor: verschuldigdDoor,
+        betaler: betaler,
       };
-      const result = await PostNieuweEtappe(model);
-      if (data.kost === 0) {
-        router.push(`/Missie/Gegevens/${missieid}`);
-      }
+      console.log(model);
+      // const result = await PostNieuweEtappe(model);
+      // if (data.kost === 0) {
+      //   router.push(`/Missie/Gegevens/${missieid}`);
+      // }
     } catch (error) {
       if (error instanceof Error) {
         console.log(error.message);
@@ -98,6 +121,13 @@ const EtappeNieuwForm = ({ deelnemers, missieid, datum }: Props) => {
   } = useForm<InputType>({
     resolver: zodResolver(formSchema),
   });
+
+  useEffect(() => {
+    console.log(errors);
+  }, [errors]);
+  const BetalerAanpassen = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setBetaler(e.target.value);
+  };
   return (
     <>
       <section className="pt-5">
@@ -139,10 +169,33 @@ const EtappeNieuwForm = ({ deelnemers, missieid, datum }: Props) => {
                 hideTimeZone
                 hourCycle={24}
                 value={starttijdValue}
+                errorMessage={errors.startTijd?.message}
                 onChange={(e) => {
-                  setStarttijdValue(parseAbsoluteToLocal(e.toAbsoluteString()));
-                  setValue("startTijd", e.toAbsoluteString());
-                  setEindtijdValue(parseAbsoluteToLocal(e.toAbsoluteString()));
+                  console.log(e.toAbsoluteString());
+
+                  setValue(
+                    "startTijd",
+                    `${e.hour.toString().padStart(2, "0")}:${e.minute
+                      .toString()
+                      .padStart(2, "0")}:00`
+                  );
+                  setValue(
+                    "eindTijd",
+                    `${e.hour.toString().padStart(2, "0")}:${e.minute
+                      .toString()
+                      .padStart(2, "0")}:00`
+                  );
+
+                  let tijd = `${e.hour.toString().padStart(2, "0")}:${e.minute
+                    .toString()
+                    .padStart(2, "0")}:00`;
+                  let tijdArr = tijd.split(":");
+
+                  let dat = setHours(datum, Number(tijdArr[0]));
+                  dat = setMinutes(dat, Number(tijdArr[1]));
+                  //console.log(dat);
+                  setStarttijdValue(parseAbsoluteToLocal(dat.toISOString()));
+                  setEindtijdValue(parseAbsoluteToLocal(dat.toISOString()));
                 }}
               ></TimeInput>
             </div>
@@ -152,9 +205,31 @@ const EtappeNieuwForm = ({ deelnemers, missieid, datum }: Props) => {
                 hideTimeZone
                 hourCycle={24}
                 value={eindtijdValue}
+                errorMessage={errors.eindTijd?.message}
                 onChange={(e) => {
-                  setValue("eindTijd", e.toAbsoluteString());
-                  setEindtijdValue(parseAbsoluteToLocal(e.toAbsoluteString()));
+                  setValue(
+                    "eindTijd",
+                    `${e.hour.toString().padStart(2, "0")}:${e.minute
+                      .toString()
+                      .padStart(2, "0")}:00`
+                  );
+
+                  let uur = e.hour;
+                  let minuut = e.minute;
+                  let start = datum.setHours(uur, minuut);
+                  
+                  console.log(fromUnixTime(start/1000));
+
+
+                  let tijd = `${e.hour.toString().padStart(2, "0")}:${e.minute
+                    .toString()
+                    .padStart(2, "0")}:00`;
+                  let tijdArr = tijd.split(":");
+
+                  let dat = setHours(datum, Number(tijdArr[0]));
+                  dat = setMinutes(dat, Number(tijdArr[1]));
+
+                  setEindtijdValue(parseAbsoluteToLocal(dat.toISOString()));
                 }}
               ></TimeInput>
             </div>
@@ -174,12 +249,12 @@ const EtappeNieuwForm = ({ deelnemers, missieid, datum }: Props) => {
                 label="Wie heeft betaald"
                 aria-label="Betaler"
                 variant="flat"
+                onChange={BetalerAanpassen}
               >
-                <SelectItem key="clxucmprp0002p31rf6p6mux3">
-                  Rekening Argenta
-                </SelectItem>
-                {deelnemers.map((deel) => (
-                  <SelectItem key={deel.id}>{deel.naam}</SelectItem>
+                {betalerslijst?.map((deel) => (
+                  <SelectItem key={deel.id} value={deel.id}>
+                    {deel.naam}
+                  </SelectItem>
                 ))}
               </Select>
             </div>
@@ -191,7 +266,9 @@ const EtappeNieuwForm = ({ deelnemers, missieid, datum }: Props) => {
                 color="success"
               >
                 {deelnemers.map((deel) => (
-                  <Checkbox value={deel.id}>{deel.naam}</Checkbox>
+                  <Checkbox value={deel.id} key={deel.id}>
+                    {deel.naam}
+                  </Checkbox>
                 ))}
               </CheckboxGroup>
             </div>
