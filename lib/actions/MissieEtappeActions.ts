@@ -2,6 +2,8 @@
 
 import { getUnixTime } from "date-fns";
 import db from "../prisma";
+import { GetUserById } from "./UserActions";
+import { MissieEtappe, Prisma } from "@prisma/client";
 
 export async function GetAllEtappes(missieid: number) {
   const result = await db.missieEtappe.findMany({
@@ -22,12 +24,26 @@ export async function PostNieuweEtappe(model: PostEtappeNieuwModel) {
     data: {
       missieId: model.missieid,
       titel: model.titel,
-      omschrijving: model.omschrijving,
-      locatie: model.locatie,
+      omschrijving: model.omschrijving ? model.omschrijving : "",
+      locatie: model.locatie ? model.locatie : "",
       startDatum: getUnixTime(model.startDatum),
       eindDatum: getUnixTime(model.eindDatum),
-      kost: model.kost,
+      kost: new Prisma.Decimal(model.kost),
+      userId: model.kost > 0 ? model.betaler : undefined,
     },
   });
+  if (model.kost > 0 && model.verschuldigDoor) {
+    let bedrag = model.kost / model.verschuldigDoor?.length;
+    model.verschuldigDoor.map(async (u) => {
+      await db.kostVerdeling.create({
+        data: {
+          missieEtappeId: etappe.id,
+          userId: u,
+          bedrag: bedrag,
+        },
+      });
+    });
+  }
+
   return etappe.id;
 }

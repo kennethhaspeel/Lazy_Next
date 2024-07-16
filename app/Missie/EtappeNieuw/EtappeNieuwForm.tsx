@@ -7,13 +7,11 @@ import {
   setHours,
   setMinutes,
 } from "date-fns";
-import { useSearchParams } from "next/navigation";
+
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
-import AfbeeldingNieuweEtappe from "../../afbeeldingen/NieuweEtappe.jpg";
 import {
   Button,
   Checkbox,
@@ -59,6 +57,7 @@ interface missieDeelnemer {
 const EtappeNieuwForm = ({ deelnemers, missieid, datum }: Props) => {
   const router = useRouter();
   const [verschuldigdDoor, setVerschuldigdDoor] = useState<string[]>([]);
+  const [verdelingOnzichtbaar, setVerdelingOnzichtbaar] = useState(false);
   const [betalerslijst, setBetalersLijst] = useState<MissieDeelnemerModel[]>(
     []
   );
@@ -95,14 +94,15 @@ const EtappeNieuwForm = ({ deelnemers, missieid, datum }: Props) => {
         titel: data.titel,
         omschrijving: data.omschrijving,
         locatie: data.locatie,
-        startDatum: new Date(starttijdValue.toString()),
-        eindDatum: new Date(eindtijdValue.toString()),
+        startDatum: new Date(starttijdValue.toAbsoluteString()),
+        eindDatum: new Date(eindtijdValue.toAbsoluteString()),
         kost: data.kost,
-        verschuldigDoor: verschuldigdDoor,
-        betaler: betaler,
+        verschuldigDoor: data.kost > 0 ? verschuldigdDoor : [],
+        betaler: data.kost > 0 ? betaler : "",
       };
       console.log(model);
-      // const result = await PostNieuweEtappe(model);
+      const result = await PostNieuweEtappe(model);
+      console.log(result)
       // if (data.kost === 0) {
       //   router.push(`/Missie/Gegevens/${missieid}`);
       // }
@@ -217,9 +217,8 @@ const EtappeNieuwForm = ({ deelnemers, missieid, datum }: Props) => {
                   let uur = e.hour;
                   let minuut = e.minute;
                   let start = datum.setHours(uur, minuut);
-                  
-                  console.log(fromUnixTime(start/1000));
 
+                  console.log(fromUnixTime(start / 1000));
 
                   let tijd = `${e.hour.toString().padStart(2, "0")}:${e.minute
                     .toString()
@@ -240,11 +239,14 @@ const EtappeNieuwForm = ({ deelnemers, missieid, datum }: Props) => {
                 isInvalid={!!errors.kost}
                 label="Kost"
                 type="number"
-                value="0.00"
+                
                 className="col-span-2"
               />
             </div>
-            <div className="mb-1 sm:mb-5 align-middle">
+            <div
+              className="mb-1 sm:mb-5 align-middle"
+              hidden={verdelingOnzichtbaar}
+            >
               <Select
                 label="Wie heeft betaald"
                 aria-label="Betaler"
@@ -258,7 +260,10 @@ const EtappeNieuwForm = ({ deelnemers, missieid, datum }: Props) => {
                 ))}
               </Select>
             </div>
-            <div className="mb-1 sm:mb-5 align-middle">
+            <div
+              className="mb-1 sm:mb-5 align-middle"
+              hidden={verdelingOnzichtbaar}
+            >
               <CheckboxGroup
                 label="Verschuldigd door"
                 value={verschuldigdDoor}

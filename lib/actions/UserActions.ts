@@ -15,6 +15,15 @@ export async function GetAllUsers() {
   return result;
 }
 
+export async function GetUserById(id:string) {
+  const result = await db.user.findFirst({
+    where: {
+      id: id,
+    },
+  });
+  return result;
+}
+
 export async function GetMissieDeelnemers(id: number) {
   const result = await db.missieUser.findMany({
     where: {

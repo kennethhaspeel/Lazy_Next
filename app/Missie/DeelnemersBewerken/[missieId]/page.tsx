@@ -38,12 +38,12 @@ const DeelnemersBewerken = async ({ params: {missieId} }: Props) => {
           </div>
 
           <div className="hidden md:flex md:flex-1 md:max-w-full">
-            {/* <Image
+            <Image
               src={AfbeeldingBewerk}
               alt="editformafbeelding"
               className="h-auto max-w-full"
               placeholder="blur"
-            /> */}
+            />
           </div>
         </section>
       </Suspense>
