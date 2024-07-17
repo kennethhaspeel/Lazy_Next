@@ -26,7 +26,7 @@ const page = async ({ params: { missieid } }: Props) => {
 
   const missieData: Promise<MissieModel> = GetMission(Number(missieid));
   const allUsers: Promise<User[]> = GetAllUsers();
-  const allEtappes: Promise<MissieEtappe[]> = GetAllEtappes(Number(missieid))
+  const allEtappes: Promise<MissieEtappe[]> = GetAllEtappes(Number(missieid),"asc")
   const allDeelnemers:Promise<MissieDeelnemerModel[]> = GetMissieDeelnemers(Number(missieid))
 
   const [missie, users, etappes,missieDeelnemers] = await Promise.all([missieData, allUsers,allEtappes,allDeelnemers]);
@@ -86,9 +86,7 @@ const page = async ({ params: { missieid } }: Props) => {
           <div className="sm:col-span-5"></div>
         </div>
       )}
-            <div className="bg-slate-100 dark:bg-slate-800 p-2 mt-2">
-        <h2 className="text-xl ps-2">Etappes</h2>
-      </div>
+
       <ToonEtappes Etaps={JSON.stringify(etappes)} Begindatum={missie.startDatum} Einddatum={missie.eindDatum} missieid={Number(missieid)} missieDeelnemers={missieDeelnemers} />
     </>
   );

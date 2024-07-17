@@ -5,14 +5,14 @@ import db from "../prisma";
 import { GetUserById } from "./UserActions";
 import { MissieEtappe, Prisma } from "@prisma/client";
 
-export async function GetAllEtappes(missieid: number) {
+export async function GetAllEtappes(missieid: number, sortOrder:string) {
   const result = await db.missieEtappe.findMany({
     where: {
       missieId: missieid,
     },
     orderBy: [
       {
-        startDatum: "desc",
+        startDatum: sortOrder === 'asc' ? "asc":"desc",
       },
     ],
   });
@@ -33,7 +33,7 @@ export async function PostNieuweEtappe(model: PostEtappeNieuwModel) {
     },
   });
   if (model.kost > 0 && model.verschuldigDoor) {
-    let bedrag = model.kost / model.verschuldigDoor?.length;
+    let bedrag = Math.round((model.kost / model.verschuldigDoor?.length)*100)/100;
     model.verschuldigDoor.map(async (u) => {
       await db.kostVerdeling.create({
         data: {

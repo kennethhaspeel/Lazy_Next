@@ -100,12 +100,9 @@ const EtappeNieuwForm = ({ deelnemers, missieid, datum }: Props) => {
         verschuldigDoor: data.kost > 0 ? verschuldigdDoor : [],
         betaler: data.kost > 0 ? betaler : "",
       };
-      console.log(model);
       const result = await PostNieuweEtappe(model);
-      console.log(result)
-      // if (data.kost === 0) {
-      //   router.push(`/Missie/Gegevens/${missieid}`);
-      // }
+      router.push(`/Missie/Gegevens/${missieid}`);
+
     } catch (error) {
       if (error instanceof Error) {
         console.log(error.message);
