@@ -29,6 +29,8 @@
     "next-auth": "^4.24.7",
     "next-themes": "^0.3.0",
     "nodemailer": "^6.9.13",
+    "ol": "^9.2.4",
+    "ol-ext": "^4.0.21",
     "plaiceholder": "^3.0.0",
     "react": "^18",
     "react-dom": "^18",

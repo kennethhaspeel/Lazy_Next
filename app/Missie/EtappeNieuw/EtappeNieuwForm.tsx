@@ -87,7 +87,6 @@ const EtappeNieuwForm = ({ deelnemers, missieid, datum }: Props) => {
   );
 
   const bewaarEtappe: SubmitHandler<InputType> = async (data) => {
-    console.log(data);
     try {
       const model: PostEtappeNieuwModel = {
         missieid: missieid,

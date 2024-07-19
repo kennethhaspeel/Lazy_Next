@@ -6,6 +6,7 @@ import Header from "./components/header";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Footer from "./components/footer";
+//import { useEffect } from "react";
 
 const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
@@ -21,6 +22,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
   const baseClasses = ''
   return (
     <html
@@ -42,6 +44,27 @@ export default function RootLayout({
             <ToastContainer />
           </div>
               </Providers>
+              {/* <script>
+              const registerServiceWorker = async () => {
+            if ("serviceWorker" in navigator) {
+                try {
+                    const registration = await navigator.serviceWorker.register("/serviceworker.js", {
+                        scope: "/",
+                    });
+                    if (registration.installing) {
+                        console.log("Service worker installing");
+                    } else if (registration.waiting) {
+                        console.log("Service worker installed");
+                    } else if (registration.active) {
+                        console.log("Service worker active");
+                    }
+                } catch (error) {
+                    console.error(`Registration failed with ${error}`);
+                }
+            }
+        };
+        registerServiceWorker();
+              </script> */}
       </body>
 
     </html>
