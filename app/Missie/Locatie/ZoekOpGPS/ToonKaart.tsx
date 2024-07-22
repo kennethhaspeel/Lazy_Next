@@ -17,24 +17,47 @@ import { Coordinate } from "ol/coordinate";
 const ToonKaart = () => {
   useGeographic();
   const mapContainer = useRef<HTMLDivElement>(null);
-  const [locatie, setLocatie] = useState<Coordinate>([3.0317848131950034, 50.77247797516819]);
+  const [locatie, setLocatie] = useState<[latitude: number,longitude: number]>([0,0])
 
-  let punt = new Point(locatie);
+  const [feature,setFeature]=useState<Feature>(new Feature({geometry:new Point(locatie)}))
+
+
+    useEffect(()=>{
+
+  })
+
+  if (navigator.geolocation) {
+    navigator.geolocation.watchPosition(function(position:any) {
+      setLocatie([position.coords[1], position.coords[0]])
+    });
+  }
+
+
+
+
+  // const getUserLocation = () => {
+  //   if (navigator.geolocation) {
+  //     // navigator.geolocation.getCurrentPosition(
+  //     //   (position) => {
+  //     //     const { latitude, longitude } = position.coords;
+
+  //     //     setLocatie({ latitude, longitude });
+  //     //   },
+
+  //     //   (error) => {
+  //     //     console.error("Error get user location: ", error);
+  //     //   }
+  //     // );
+
+  //   } else {
+  //     console.log("Geolocation is not supported by this browser");
+  //   } 
+  // };
+
+  let punt = new Point( [0,0]);
   const view = new View({
-    center: locatie, // Longitude, Latitude
+    center: punt.getCoordinates(), // Longitude, Latitude
     zoom: 18,
-  });
-  const geolocation = new Geolocation({
-    trackingOptions: {
-      enableHighAccuracy: true,
-    },
-    projection: view.getProjection(),
-    tracking:true,
-  });
-  geolocation.on("change:position", () => {
-    const coor = geolocation.getPosition();
-    console.log(coor);
-    punt.setCoordinates(coor ? coor : [4.3415546983145505, 50.8949328089402]);
   });
 
   useEffect(() => {
@@ -44,9 +67,9 @@ const ToonKaart = () => {
           source: new OSM(),
         }),
         new VectorLayer({
-          source: new VectorSource({
-            features: [new Feature(punt)],
-          }),
+          // source: new VectorSource({
+          //   features:[punt]
+          // }),
           style: new Style({
             image: new Circle({
               radius: 7,
@@ -62,8 +85,6 @@ const ToonKaart = () => {
       view: view,
     });
     map.setTarget(mapContainer.current || "");
-
-    // on component unmount remove the map refrences to avoid unexpected behaviour
     return () => {
       map.setTarget(undefined);
     };
