@@ -1,6 +1,9 @@
 /** @type {import('next').NextConfig} */
-
+import * as path from "path";
+import * as url from "url";
 import withSerwistInit from "@serwist/next";
+
+const dirname = path.dirname(url.fileURLToPath(import.meta.url));
 
 const withSerwist = withSerwistInit({
   swSrc: "app/sw.ts",
@@ -16,12 +19,22 @@ const nextConfig = {
       },
     ],
   },
-  experimental:{
-    staleTimes:{
-      dynamic:0,
-      static:180
-    }
-  }
+  experimental: {
+    staleTimes: {
+      dynamic: 0,
+      static: 180,
+    },
+    esmExternals: true,
+  },
+  webpack: (config) => {
+    config.resolve.alias["rlayers"] = path.resolve(
+      dirname,
+      "node_modules",
+      "rlayers",
+      "dist"
+    );
+    return config;
+  },
 };
 
 //export default nextConfig;

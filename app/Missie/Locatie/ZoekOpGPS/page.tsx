@@ -1,9 +1,13 @@
 import React from 'react'
-import ToonKaart from './ToonKaart2'
+import ToonKaart from './ToonKaart'
+
 
 const page = () => {
   return (
-    <><ToonKaart/></>
+    <>
+    <h2>Toon Kaart</h2>
+     <ToonKaart/> 
+    </>
   )
 }
 
