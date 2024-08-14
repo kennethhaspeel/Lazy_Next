@@ -15,10 +15,9 @@ export default function CameraCapture() {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        const bytes = Buffer.from(reader.result)
-        setImage(reader.result?);
+        setImage(reader.result);
       };
-      reader.readAsArrayBuffer(file);
+      reader.readAsDataURL(file);
     }
   };
 
