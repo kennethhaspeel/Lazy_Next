@@ -1,8 +1,13 @@
 import React from 'react'
+import NeemFoto from './NeemFoto'
 
 const MissieAfbeelding = () => {
   return (
-    <div>MissieAfbeelding</div>
+    <>
+    <h1>MissieAfbeelding</h1>
+    <NeemFoto/>
+    
+    </>
   )
 }
 export default MissieAfbeelding
