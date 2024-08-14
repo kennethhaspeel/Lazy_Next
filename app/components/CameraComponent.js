@@ -5,6 +5,11 @@ import Webcam from 'react-webcam';
 const CameraComponent = () => {
   const webcamRef = useRef(null);
   const [imageSrc, setImageSrc] = useState(null);
+  const videoConstraints = {
+    width: 1280,
+    height: 720,
+    facingMode: "environment"
+  };
 
   const capture = () => {
     const imageSrc = webcamRef.current.getScreenshot();
@@ -17,6 +22,7 @@ const CameraComponent = () => {
         audio={false}
         ref={webcamRef}
         screenshotFormat="image/jpeg"
+        videoConstraints={videoConstraints}
         width={320}
         height={240}
       />
