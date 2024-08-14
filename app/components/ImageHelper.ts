@@ -56,6 +56,7 @@ export const UploadImage = async (formData: FormData,tagList:string[]) => {
     useUniqueFileName:true,
     tags: tags,
   });
+  return response
 };
 
 export const getBase64 = async (url: string) => {

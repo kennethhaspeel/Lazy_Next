@@ -22,7 +22,7 @@ const LoginButton = () => {
         <>
           <Button onClick={() => signIn()}>Log in </Button>
           <Button as={Link} href="/identity/registreer">
-            Registreer{" "}
+            Registreer
           </Button>
         </>
       )}
