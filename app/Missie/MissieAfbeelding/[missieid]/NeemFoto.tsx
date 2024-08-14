@@ -1,11 +1,11 @@
 'use client'
-import CameraComponent from '../../../components/CameraComponent'
+import CameraInput from '../../../components/CameraInput'
 
 const NeemFoto = () => {
   return (
     <>
     <h1>NeemFoto</h1>
-    <CameraComponent/>
+    <CameraInput/>
     </>
   )
 }
