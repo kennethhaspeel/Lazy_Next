@@ -7,14 +7,15 @@ interface Props {
 const MissieBlokRemoteAfbeelding = async ({imageUrl}:Props) => {
     const blurred = await getBase64(GetImageSignedUrl(imageUrl, 100, 0, true));
     
-      const url = await getBase64(GetImageSignedUrl(imageUrl, 1000, 0, false));
+      const url = GetImageSignedUrl(imageUrl, 250, 0, false)
 
   return (
     <Image
     src={url!}
     alt="Card background"
     className="object-cover rounded-xl"
-    sizes="250px"
+    // sizes="250px"
+    sizes="(max-width:768px) 100vw,33vw"
     placeholder="blur"
     blurDataURL={blurred}
     fill

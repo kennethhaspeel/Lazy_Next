@@ -1,34 +1,57 @@
+"use client";
 import { Button } from "@nextui-org/react";
 import Image from "next/image";
 import { ChangeEvent, useRef, useState } from "react";
+import { UploadFoto, UpdateMissieAfbeeldingRecord } from "./BewaarFoto";
+import { User } from "next-auth";
+interface Props {
+  missieid: number;
+  etappeid: number;
+  currentUser: User;
+  isMissieAfbeelding: boolean;
+}
 
-export default function CameraCapture() {
+export default function CameraCapture({ missieid,etappeid, currentUser,isMissieAfbeelding }: Props) {
   const [image, setImage] = useState<string | null>(null);
+  const [afbeelding, setAfbeelding] = useState<File | null>(null);
   const [verbergNeemFoto, setVerbergNeemFoto] = useState(false);
+  const [Saving, setSaving] = useState(false);
   const triggerFoto = useRef<HTMLInputElement>(null);
 
   const handleCapture = (event: ChangeEvent<HTMLInputElement>) => {
-    if(!event.target.files){
-      throw new Error("Geen foto geselecteerd")
+    if (!event.target.files) {
+      throw new Error("Geen foto geselecteerd");
     }
     const file = event.target.files[0];
+    setAfbeelding(file);
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setImage(reader.result);
+        setImage(reader.result as string);
       };
       reader.readAsDataURL(file);
     }
   };
 
-  async function BewaarFoto(data: FormData) {
-    "use server";
-    const file = data.get("file") as unknown as File;
+  async function BewaarFoto() {
+    setSaving(true);
+    const data = new FormData();
+    data.append("image", afbeelding!);
+    const result = JSON.parse(await UploadFoto(data));
+    if(isMissieAfbeelding){
+          const update = await UpdateMissieAfbeeldingRecord({
+      missieid: missieid,
+      bestandsnaam: result["name"],
+    });
+    } else {
+      
+    }
+
   }
 
   return (
     <div>
-      <form hidden>
+      <form hidden action={BewaarFoto}>
         <input
           ref={triggerFoto}
           type="file"
@@ -37,6 +60,7 @@ export default function CameraCapture() {
           onChange={handleCapture}
           name="image"
         />
+        <input type="text" name="missieid" value={missieid} readOnly />
       </form>
 
       <div className="w-full" hidden={verbergNeemFoto}>
@@ -78,7 +102,13 @@ export default function CameraCapture() {
                 >
                   Opnieuw
                 </Button>
-                <Button className="w-full">Bewaar</Button>
+                <Button
+                  className="w-full"
+                  onClick={() => BewaarFoto()}
+                  isLoading={Saving}
+                >
+                  Bewaar
+                </Button>
               </div>
             </>
           )}
