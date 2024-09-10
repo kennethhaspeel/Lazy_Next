@@ -3,6 +3,8 @@ import AfbeeldingNieuweEtappe from "../../../../afbeeldingen/NieuweEtappe.jpg";
 import Image from "next/image";
 import { GetMissieDeelnemers } from "@/lib/actions/UserActions";
 import EtappeNieuwForm from "../../EtappeNieuwForm";
+import { Button } from "@nextui-org/react";
+import Link from "next/link";
 
 const EtappenNieuw = async ({
   params,
@@ -10,11 +12,17 @@ const EtappenNieuw = async ({
   params: { missieid: string; datum: string };
 }) => {
   const missieDeelnemers = await GetMissieDeelnemers(Number(params.missieid));
-  console.log(missieDeelnemers);
+
+  const urlTerug = `/Missie/Gegevens/${params.missieid}`;
   return (
     <>
       <section className="pt-5">
-        <p className="text-3xl pb-4 text-center">Nieuwe Etappe</p>
+        <p className="text-3xl pb-4">
+          Nieuwe Etappe{" "}
+          <Button as={Link} href={urlTerug}>
+            Terug naar missie
+          </Button>
+        </p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
           <EtappeNieuwForm
             deelnemers={missieDeelnemers}
