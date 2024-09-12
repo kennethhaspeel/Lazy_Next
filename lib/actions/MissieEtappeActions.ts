@@ -5,10 +5,26 @@ import db from "../prisma";
 import { GetUserById } from "./UserActions";
 import { MissieEtappe, Prisma } from "@prisma/client";
 
-export async function GetAllEtappes(missieid: number, sortOrder:string) {
+export async function GetAllEtappes(missieid: number, sortOrder: string) {
   const result = await db.missieEtappe.findMany({
     where: {
       missieId: missieid,
+    },
+    orderBy: [
+      {
+        startDatum: sortOrder === "asc" ? "asc" : "desc",
+      },
+    ],
+  });
+  return result;
+}
+export async function GetAllEtappesMetBewijsstuk(missieid: number, sortOrder:string) {
+  const result = await db.missieEtappe.findMany({
+    where: {
+      missieId: missieid,
+    },
+    include: {
+      MissieEtappeBestand:true,
     },
     orderBy: [
       {
@@ -18,6 +34,8 @@ export async function GetAllEtappes(missieid: number, sortOrder:string) {
   });
   return result;
 }
+
+
 
 export async function PostNieuweEtappe(model: PostEtappeNieuwModel) {
   const etappe = await db.missieEtappe.create({
@@ -33,7 +51,8 @@ export async function PostNieuweEtappe(model: PostEtappeNieuwModel) {
     },
   });
   if (model.kost > 0 && model.verschuldigDoor) {
-    let bedrag = Math.round((model.kost / model.verschuldigDoor?.length)*100)/100;
+    let bedrag =
+      Math.round((model.kost / model.verschuldigDoor?.length) * 100) / 100;
     model.verschuldigDoor.map(async (u) => {
       await db.kostVerdeling.create({
         data: {

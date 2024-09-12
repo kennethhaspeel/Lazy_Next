@@ -8,7 +8,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/AuthOptions";
 import ToonDeelnemers from "./ToonDeelnemers";
 import ToonGegevensMobiel from "./ToonGegevensMobiel";
 import { Button, Link } from "@nextui-org/react";
-import { GetAllEtappes } from "@/lib/actions/MissieEtappeActions";
+import { GetAllEtappesMetBewijsstuk } from "@/lib/actions/MissieEtappeActions";
 import ToonEtappes from "./ToonEtappes";
 
 
@@ -26,7 +26,7 @@ const page = async ({ params: { missieid } }: Props) => {
 
   const missieData: Promise<MissieModel> = GetMission(Number(missieid));
   const allUsers: Promise<User[]> = GetAllUsers();
-  const allEtappes: Promise<MissieEtappe[]> = GetAllEtappes(Number(missieid),"asc")
+  const allEtappes: Promise<MissieEtappe[]> = GetAllEtappesMetBewijsstuk(Number(missieid),"asc")
   const allDeelnemers:Promise<MissieDeelnemerModel[]> = GetMissieDeelnemers(Number(missieid))
 
   const [missie, users, etappes,missieDeelnemers] = await Promise.all([missieData, allUsers,allEtappes,allDeelnemers]);

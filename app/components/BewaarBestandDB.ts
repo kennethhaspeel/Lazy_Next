@@ -14,7 +14,6 @@ interface UpdateMissieAfbeeldingModel {
 export async function UpdateMissieAfbeeldingRecord(
   model: UpdateMissieAfbeeldingModel
 ) {
-    console.log(model.missieid)
   const update = await db.missie.update({
     where: {
       id: model.missieid,

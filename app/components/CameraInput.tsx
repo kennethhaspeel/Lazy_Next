@@ -2,7 +2,7 @@
 import { Button } from "@nextui-org/react";
 import Image from "next/image";
 import { ChangeEvent, useRef, useState } from "react";
-import { UploadFoto, UpdateMissieAfbeeldingRecord } from "./BewaarFoto";
+import { UploadFoto, UpdateMissieAfbeeldingRecord } from "./BewaarBestandDB";
 import { User } from "next-auth";
 interface Props {
   missieid: number;

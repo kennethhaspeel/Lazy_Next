@@ -1,11 +1,27 @@
 "use client";
 import { GetMissieDagen } from "@/app/components/DatumHelper";
-import { Accordion, AccordionItem, Button } from "@nextui-org/react";
+import {
+  Accordion,
+  AccordionItem,
+  Button,
+  ButtonGroup,
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
+} from "@nextui-org/react";
 import { MissieEtappe } from "@prisma/client";
 import { format, fromUnixTime, getDayOfYear, getUnixTime } from "date-fns";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Spinner } from "@nextui-org/react";
+import {
+  ArrowUpTrayIcon,
+  CameraIcon,
+  ChevronDownIcon,
+  EyeIcon,
+} from "@heroicons/react/16/solid";
+import Link from "next/link";
 
 interface Props {
   Etaps: string;
@@ -28,6 +44,7 @@ const ToonEtappes = ({ Etaps, Begindatum, Einddatum, missieid }: Props) => {
       totaal += Number(etap.kost);
     });
     setTotaleKost(totaal);
+    console.log(Etappes);
   }, [Etappes]);
 
   const MissieDatums: Date[] = GetMissieDagen(
@@ -55,7 +72,6 @@ const ToonEtappes = ({ Etaps, Begindatum, Einddatum, missieid }: Props) => {
               key={`tabel_${datum.toString()}`}
               aria-label="Algemeen"
               title={index === 0 ? "Algemeen" : format(datum, "dd/MM/yyyy")}
-              
               startContent={
                 <div
                   className="border-2 border-sky-500 rounded-lg  px-4 py-1"
@@ -98,7 +114,7 @@ const ToonEtappes = ({ Etaps, Begindatum, Einddatum, missieid }: Props) => {
                   Kost
                 </div>
                 <div className="md:col-span-2 bg-default-300 pt-1 pb-1 ps-1  rounded-r-lg ">
-                  &nbsp;
+                  Bewijsstuk
                 </div>
               </div>
               {Etappes.filter(
@@ -120,9 +136,62 @@ const ToonEtappes = ({ Etaps, Begindatum, Einddatum, missieid }: Props) => {
                     {Number(etappe.kost).toFixed(2)}
                   </div>
                   <div className="md:col-span-2 pt-1 content-center grow">
-                    <Button variant="shadow" className="grow">
-                      Details
-                    </Button>
+                    <ButtonGroup variant="flat">
+                      {/* <Button>
+                        <>
+                          {etappe.MissieEtappeBestand.length === 1 ? (
+                            <span>1 stuk</span>
+                          ) : (
+                            <span>
+                              {etappe.MissieEtappeBestand.length} stukken
+                            </span>
+                          )}
+                        </>
+                      </Button> */}
+                      <Dropdown placement="bottom-end">
+                        <DropdownTrigger>
+                          <Button isIconOnly>
+                            <ChevronDownIcon className="size-6" />
+                          </Button>
+                        </DropdownTrigger>
+                        <DropdownMenu
+                          disallowEmptySelection
+                          aria-label="Bewijsstuk"
+                          selectionMode="single"
+                          className="max-w-[300px]"
+                          // disabledKeys={
+                          //   etappe.MissieEtappeBestand.length === 0
+                          //     ? [`bekijk_${etappe.id}`]
+                          //     : []
+                          // }
+                        >
+                          <DropdownItem
+                            key={`bekijk_${etappe.id}`}
+                            startContent={<EyeIcon className="size-6" />}
+                            href="/"
+                          >
+                            Bekijk
+                          </DropdownItem>
+
+                          <DropdownItem
+                            key={`foto_${etappe.id}`}
+                            startContent={<CameraIcon className="size-6" />}
+                            href="/"
+                          >
+                            Neem Foto
+                          </DropdownItem>
+                          <DropdownItem
+                            key={`bestand_${etappe.id}`}
+                            startContent={
+                              <ArrowUpTrayIcon className="size-6" />
+                            }
+                            href="/"
+                          >
+                            Bestand Opladen
+                          </DropdownItem>
+                        </DropdownMenu>
+                      </Dropdown>
+                    </ButtonGroup>
                   </div>
                 </div>
               ))}
