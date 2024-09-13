@@ -11,7 +11,12 @@ interface Props {
   isMissieAfbeelding: boolean;
 }
 
-export default function CameraCapture({ missieid,etappeid, currentUser,isMissieAfbeelding }: Props) {
+export default function CameraCapture({
+  missieid,
+  etappeid,
+  currentUser,
+  isMissieAfbeelding,
+}: Props) {
   const [image, setImage] = useState<string | null>(null);
   const [afbeelding, setAfbeelding] = useState<File | null>(null);
   const [verbergNeemFoto, setVerbergNeemFoto] = useState(false);
@@ -38,15 +43,13 @@ export default function CameraCapture({ missieid,etappeid, currentUser,isMissieA
     const data = new FormData();
     data.append("image", afbeelding!);
     const result = JSON.parse(await UploadFoto(data));
-    if(isMissieAfbeelding){
-          const update = await UpdateMissieAfbeeldingRecord({
-      missieid: missieid,
-      bestandsnaam: result["name"],
-    });
+    if (isMissieAfbeelding) {
+      const update = await UpdateMissieAfbeeldingRecord({
+        missieid: missieid,
+        bestandsnaam: result["name"],
+      });
     } else {
-      
     }
-
   }
 
   return (

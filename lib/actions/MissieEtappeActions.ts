@@ -19,19 +19,8 @@ export async function GetAllEtappes(missieid: number, sortOrder: string) {
   return result;
 }
 export async function GetAllEtappesMetBewijsstuk(missieid: number, sortOrder:string) {
-  const result = await db.missieEtappe.findMany({
-    where: {
-      missieId: missieid,
-    },
-    include: {
-      MissieEtappeBestand:true,
-    },
-    orderBy: [
-      {
-        startDatum: sortOrder === 'asc' ? "asc":"desc",
-      },
-    ],
-  });
+  const result : GetEtappeMetAantallen[] = await db.$queryRaw `select  * from public.v_etappes_met_aantallen where "missieId" = ${missieid} `
+//console.log(result)
   return result;
 }
 

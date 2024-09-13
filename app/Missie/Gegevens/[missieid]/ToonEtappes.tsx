@@ -35,7 +35,7 @@ const ToonEtappes = ({ Etaps, Begindatum, Einddatum, missieid }: Props) => {
   const router = useRouter();
   //const Etappes: MissieEtappe[] = JSON.parse(Etaps);
 
-  const [Etappes, setEtappes] = useState<MissieEtappe[]>(JSON.parse(Etaps));
+  const [Etappes, setEtappes] = useState<GetEtappeMetAantallen[]>(JSON.parse(Etaps));
   const [totaleKost, setTotaleKost] = useState(0.0);
   const [ladenNieuweEtappe, setLadenNieuweEtappe] = useState(false);
   useEffect(() => {
@@ -137,17 +137,17 @@ const ToonEtappes = ({ Etaps, Begindatum, Einddatum, missieid }: Props) => {
                   </div>
                   <div className="md:col-span-2 pt-1 content-center grow">
                     <ButtonGroup variant="flat">
-                      {/* <Button>
+                      <Button>
                         <>
-                          {etappe.MissieEtappeBestand.length === 1 ? (
+                          {etappe.aantalbewijsstukken === 1 ? (
                             <span>1 stuk</span>
                           ) : (
                             <span>
-                              {etappe.MissieEtappeBestand.length} stukken
+                              {etappe.aantalbewijsstukken} stukken
                             </span>
                           )}
                         </>
-                      </Button> */}
+                      </Button>
                       <Dropdown placement="bottom-end">
                         <DropdownTrigger>
                           <Button isIconOnly>
@@ -159,11 +159,11 @@ const ToonEtappes = ({ Etaps, Begindatum, Einddatum, missieid }: Props) => {
                           aria-label="Bewijsstuk"
                           selectionMode="single"
                           className="max-w-[300px]"
-                          // disabledKeys={
-                          //   etappe.MissieEtappeBestand.length === 0
-                          //     ? [`bekijk_${etappe.id}`]
-                          //     : []
-                          // }
+                          disabledKeys={
+                            etappe.aantalbewijsstukken === 0
+                              ? [`bekijk_${etappe.id}`]
+                              : []
+                          }
                         >
                           <DropdownItem
                             key={`bekijk_${etappe.id}`}

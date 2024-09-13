@@ -1,12 +1,24 @@
-
 interface PostEtappeNieuwModel {
-    missieid:number;
-    titel: string;
-    omschrijving?: string | null;
-    locatie?: string | null;
-    startDatum: Date;
-    eindDatum: Date;
-    kost: number;
-    verschuldigDoor?: string[];
-    betaler?:string;
-  }
+  missieid: number;
+  titel: string;
+  omschrijving?: string | null;
+  locatie?: string | null;
+  startDatum: Date;
+  eindDatum: Date;
+  kost: number;
+  verschuldigDoor?: string[];
+  betaler?: string;
+}
+
+interface GetEtappeMetAantallen {
+  id: number;
+  missieid: number;
+  titel: string;
+  omschrijving?: string | null;
+  locatie?: string | null;
+  startDatum: number;
+  eindDatum: number;
+  kost: number;
+  aantalbijlages: number;
+  aantalbewijsstukken: number;
+}
