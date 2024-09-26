@@ -29,9 +29,10 @@ interface Props {
   Einddatum: Date;
   missieid: number;
   missieDeelnemers: MissieDeelnemerModel[];
+  afgesloten: boolean;
 }
 
-const ToonEtappes = ({ Etaps, Begindatum, Einddatum, missieid }: Props) => {
+const ToonEtappes = ({ Etaps, Begindatum, Einddatum, missieid,afgesloten }: Props) => {
   const router = useRouter();
   //const Etappes: MissieEtappe[] = JSON.parse(Etaps);
 
@@ -72,7 +73,7 @@ const ToonEtappes = ({ Etaps, Begindatum, Einddatum, missieid }: Props) => {
               key={`tabel_${datum.toString()}`}
               aria-label="Algemeen"
               title={index === 0 ? "Algemeen" : format(datum, "dd/MM/yyyy")}
-              startContent={
+              startContent={ !afgesloten &&
                 <div
                   className="border-2 border-sky-500 rounded-lg  px-4 py-1"
                   onClick={() => {

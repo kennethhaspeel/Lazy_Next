@@ -1,9 +1,9 @@
 "use server";
 
-import { MissieUser } from "@prisma/client";
+import { FinTransactie, MissieUser, Prisma } from "@prisma/client";
 import db from "../prisma";
 import { GetDatumAlgemeen } from "@/app/components/DatumHelper";
-import { getUnixTime,fromUnixTime } from "date-fns"
+import { getUnixTime, fromUnixTime } from "date-fns";
 
 export async function GetAllMissions() {
   const result = await db.missie.findMany({
@@ -155,3 +155,57 @@ export async function UpdateMissieDeelnemers(
   return model;
 }
 
+export async function GetMissieKosten(missieid: Number) {
+  const result: GetMissieKost[] =
+    await db.$queryRaw`select kost."userId",kost.bedrag::text,concat(deelnemer.voornaam,' ',deelnemer.naam) naam from
+(select  "userId",round(sum(bedrag),2) bedrag from public."KostVerdeling" where "KostVerdeling"."missieEtappeId" in (select  id from public."MissieEtappe" where "missieId" = ${missieid}) group by "userId") kost
+inner JOIN
+(select id, naam,voornaam from public."User" ) deelnemer
+on kost."userId" = deelnemer.id`;
+  return result;
+}
+
+interface PostMissieKostVerdelingModel {
+  kosten: GetMissieKost[];
+  missieid: number;
+  missienaam:string;
+}
+export async function PostMissieKosten({
+  kosten,
+  missieid,
+  missienaam
+}: PostMissieKostVerdelingModel) {
+  let d: FinTransactie[] = [];
+  kosten.map((record) => {
+    let rij: FinTransactie = {
+      bedrag: new Prisma.Decimal(Number(record.bedrag)),
+      userId: record.userId,
+      datum: getUnixTime(new Date()),
+      mededeling: `Afrekening missie "${atob(missienaam)}"`,
+      missieId: missieid,
+
+    };
+    d.push(rij);
+  });
+  const response = await db.finTransactie.createMany({
+    data: d,
+  });
+  return response
+}
+
+
+interface PostMissieAfsluitingModel {
+  missieid: number;
+  afsluiten:boolean;
+}
+export async function PostMissieAfsluiting ({missieid,afsluiten}:PostMissieAfsluitingModel){
+  const update = await db.missie.update({
+    where: {
+      id: missieid,
+    },
+    data: {
+      afgsloten: afsluiten
+    },
+  });
+  return update
+}

@@ -16,3 +16,9 @@ interface MissieDeelnemerModel {
   naam: string;
   isOrganisator: boolean;
 }
+
+interface GetMissieKost {
+  userId:string;
+  naam: string;
+  bedrag:string;
+}

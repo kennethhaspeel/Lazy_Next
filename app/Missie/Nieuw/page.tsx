@@ -1,7 +1,7 @@
 import FormMissieNieuw from "./FormMissieNieuw";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/AuthOptions";
-import AfbeeldingNieuw from "../../afbeeldingen/newmission.jpg";
+import AfbeeldingNieuw from "../../afbeeldingen/newmission.jpg"
 import Image from "next/image";
 import { Suspense } from "react";
 import LoadingSpinner from "@/app/components/LoadingSpinner";
