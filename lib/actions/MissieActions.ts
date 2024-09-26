@@ -183,7 +183,6 @@ export async function PostMissieKosten({
       datum: getUnixTime(new Date()),
       mededeling: `Afrekening missie "${atob(missienaam)}"`,
       missieId: missieid,
-
     };
     d.push(rij);
   });

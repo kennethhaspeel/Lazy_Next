@@ -177,7 +177,7 @@ const ToonEtappes = ({ Etaps, Begindatum, Einddatum, missieid,afgesloten }: Prop
                           <DropdownItem
                             key={`foto_${etappe.id}`}
                             startContent={<CameraIcon className="size-6" />}
-                            href="/"
+                            href="/Bestanden/FotoNemen"
                           >
                             Neem Foto
                           </DropdownItem>
