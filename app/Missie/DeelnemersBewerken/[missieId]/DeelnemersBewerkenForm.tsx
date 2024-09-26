@@ -48,7 +48,7 @@ const DeelnemersBewerkenForm = ({
     });
     setDeelnemers(arrDeel);
     orgKnopInstellen(arrDeel);
-  }, [missieData]);
+  }, [missieData,allUsers]);
 
   const orgKnopInstellen = (arr: MissieDeelnemersModel[]) => {
     arr.filter((x) => x.organisator).length < 2

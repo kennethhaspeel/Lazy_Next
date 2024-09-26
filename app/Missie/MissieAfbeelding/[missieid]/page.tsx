@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import AfbeeldingNeemFoto from "../../../afbeeldingen/TakePicture.jpg";
-import CameraInput from "@/app/components/CameraInput";
+
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/AuthOptions";
 
@@ -21,14 +21,14 @@ const MissieAfbeelding = async ({ params: { missieid } }: Props) => {
       <section className="pt-5">
         <p className="text-3xl pb-4 text-center">Nieuwe Foto</p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-          <div>
+          {/* <div>
             <CameraInput
               missieid={Number(missieid)}
               etappeid={0}
               isMissieAfbeelding={true}
               currentUser={session?.user}
             />
-          </div>
+          </div> */}
           <div className="hidden md:block p-3">
             <Image
               src={AfbeeldingNeemFoto}
