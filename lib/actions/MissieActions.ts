@@ -168,43 +168,51 @@ on kost."userId" = deelnemer.id`;
 interface PostMissieKostVerdelingModel {
   kosten: GetMissieKost[];
   missieid: number;
-  missienaam:string;
+  missienaam: string;
 }
+
+interface PostMissieKostenArr {
+  bedrag: Prisma.Decimal;
+  userId: string;
+  datum:number;
+  mededeling:string;
+  missieId: number;
+}
+
 export async function PostMissieKosten({
   kosten,
   missieid,
-  missienaam
+  missienaam,
 }: PostMissieKostVerdelingModel) {
-  let d: FinTransactie[] = [];
-  kosten.map((record) => {
-    let rij: FinTransactie = {
+  let arr: PostMissieKostenArr[] = []
+  kosten.map(async (record) => {
+    arr.push({
       bedrag: new Prisma.Decimal(Number(record.bedrag)),
       userId: record.userId,
       datum: getUnixTime(new Date()),
       mededeling: `Afrekening missie "${atob(missienaam)}"`,
       missieId: missieid,
-    };
-    d.push(rij);
+    })
   });
-  const response = await db.finTransactie.createMany({
-    data: d,
-  });
-  return response
+  const response = await db.finTransactie.createMany({data: arr})
+  return `${kosten.length} records bewaard`;
 }
-
 
 interface PostMissieAfsluitingModel {
   missieid: number;
-  afsluiten:boolean;
+  afsluiten: boolean;
 }
-export async function PostMissieAfsluiting ({missieid,afsluiten}:PostMissieAfsluitingModel){
+export async function PostMissieAfsluiting({
+  missieid,
+  afsluiten,
+}: PostMissieAfsluitingModel) {
   const update = await db.missie.update({
     where: {
       id: missieid,
     },
     data: {
-      afgsloten: afsluiten
+      afgsloten: afsluiten,
     },
   });
-  return update
+  return update;
 }
