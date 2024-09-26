@@ -26,11 +26,13 @@
 // export default NeemFoto
 
 import React from 'react'
-
-const page = () => {
+import NeemFotoComponent from './NeemFotoComponent'
+const NeemFoto = () => {
   return (
-    <div>page</div>
+    <>
+    <NeemFotoComponent/>
+    </>
   )
 }
 
-export default page
+export default NeemFoto
