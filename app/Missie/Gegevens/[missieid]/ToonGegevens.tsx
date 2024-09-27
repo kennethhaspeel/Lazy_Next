@@ -1,10 +1,18 @@
+
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/AuthOptions";
 import { DateToDDMMYYYY } from "@/app/components/DatumHelper";
 import Link from "next/link";
 import {
   Button,
+  ButtonGroup,
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
 } from "@nextui-org/react";
+import { ArrowUpTrayIcon, CameraIcon, ChevronDownIcon, EyeIcon } from "@heroicons/react/16/solid";
+import ToonMissieAfbeelding from "./ToonMissieAfbeelding";
 
 interface Props {
   missieData: MissieModel;
@@ -12,7 +20,6 @@ interface Props {
 }
 
 const ToonGegevens = async ({ missieData, currentUser }: Props) => {
-
   const session = await getServerSession(authOptions);
 
   if (!session?.user) {
@@ -44,18 +51,7 @@ const ToonGegevens = async ({ missieData, currentUser }: Props) => {
               <div className="ps-2 font-extrabold">Afbeelding</div>
               <div className="sm:col-span-5">
                 {currentUser.isOrganisator ? (
-                  <div>
-                    {missieData.afbeelding ? (
-                      <Button>Bekijk Afbeelding</Button>
-                    ) : (
-                      <Button
-                        as={Link}
-                        href={`/Missie/MissieAfbeelding/${missieData.id}`}
-                      >
-                        Afbeelding toevoegen
-                      </Button>
-                    )}
-                  </div>
+                  <ToonMissieAfbeelding hasImage={missieData.afbeelding != null} missieid={missieData.id}/>
                 ) : (
                   <div>
                     {missieData.afbeelding ? (

@@ -34,8 +34,6 @@ interface Props {
 
 const ToonEtappes = ({ Etaps, Begindatum, Einddatum, missieid,afgesloten }: Props) => {
   const router = useRouter();
-  //const Etappes: MissieEtappe[] = JSON.parse(Etaps);
-
   const [Etappes, setEtappes] = useState<GetEtappeMetAantallen[]>(JSON.parse(Etaps));
   const [totaleKost, setTotaleKost] = useState(0.0);
   const [ladenNieuweEtappe, setLadenNieuweEtappe] = useState(false);
@@ -45,7 +43,7 @@ const ToonEtappes = ({ Etaps, Begindatum, Einddatum, missieid,afgesloten }: Prop
       totaal += Number(etap.kost);
     });
     setTotaleKost(totaal);
-    console.log(Etappes);
+
   }, [Etappes]);
 
   const MissieDatums: Date[] = GetMissieDagen(
@@ -177,7 +175,7 @@ const ToonEtappes = ({ Etaps, Begindatum, Einddatum, missieid,afgesloten }: Prop
                           <DropdownItem
                             key={`foto_${etappe.id}`}
                             startContent={<CameraIcon className="size-6" />}
-                            href="/Bestanden/FotoNemen"
+                            href={`/Bestanden/FotoNemen/${missieid}/${etappe.id}/${true}`}
                           >
                             Neem Foto
                           </DropdownItem>

@@ -7,6 +7,10 @@ var imagekit = new ImageKit({
   urlEndpoint: process.env.IMAGEKIT_ENDPOINT!,
 });
 
+export const generateRandom = () => {
+ return   Math.random().toString(36).substring(2, 15) + Math.random().toString(23).substring(2, 5)
+}
+
 export const GetImageSignedUrl = (
   url: string,
   hoogte = 0,
@@ -46,13 +50,14 @@ const bitm = await createImageBitmap(bestand)
 }
 
 export const UploadImage = async (formData: FormData,tagList:string[]) => {
-  const image = formData.get("image") as unknown as File;
+  console.log(typeof formData.get("image"))
+  const image = formData.get("image") as string;
   const tags = tagList.join(',')
-  const arrayBuffer = await image.arrayBuffer();
-  const buffer = Buffer.from(arrayBuffer);
+  // const arrayBuffer = await image.arrayBuffer();
+  // const buffer = Buffer.from(arrayBuffer);
   const response = await imagekit.upload({
-    file: buffer,
-    fileName: image.name,
+    file: image,
+    fileName: `${generateRandom()}.jpeg`,
     useUniqueFileName:true,
     tags: tags,
   });
