@@ -45,7 +45,7 @@ const page = async ({ params: { missieid } }: Props) => {
   return (
     <>
       <div className="pt-4 w-full">
-        <div className="text-2xl">
+        <div className="text-2xl ps-2">
           Missie &apos;{missie.titel}&apos;
           {!missie.afgesloten && (
             <BevestigAfsluiten

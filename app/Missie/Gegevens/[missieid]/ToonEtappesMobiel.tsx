@@ -198,7 +198,7 @@ const ToonEtappesMobiel = ({
                       </div>
                     </div>
                     <div className="grid grid-cols-8 ps-2 pt-2  items-center">
-                      <div className="font-bold col-span-3">Foto's</div>
+                      <div className="font-bold col-span-3">Foto&lsque;s</div>
                       <div className="col-span-5 place-items-end">
                         <ButtonGroup variant="flat">
                           <Button>{etappe.aantalbijlages}</Button>

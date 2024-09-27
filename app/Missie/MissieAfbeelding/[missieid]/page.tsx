@@ -4,7 +4,8 @@ import AfbeeldingNeemFoto from "../../../afbeeldingen/TakePicture.jpg";
 
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/AuthOptions";
-import NeemFotoComponent from "../../../components/NeemFotoComponent";
+
+import FotoInput from "@/app/Bestanden/FotoInput/[missieid]/[etappeid]/[isBewijsstuk]/FotoInput";
 
 interface Props {
   params: {
@@ -23,7 +24,7 @@ const MissieAfbeelding = async ({ params: { missieid } }: Props) => {
         <p className="text-3xl pb-4 text-center">Nieuwe Foto</p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
           <div>
-            <NeemFotoComponent missieid={Number(missieid)} etappeid={0} currentUser={session?.user.id} isBewijsstuk={false}/>
+            <FotoInput missieid={Number(missieid)} etappeid={0} currentUser={session?.user.id} isBewijsstuk={false}/>
           </div>
           <div className="hidden md:block p-3">
             <Image

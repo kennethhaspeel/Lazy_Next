@@ -1,4 +1,5 @@
 import { DateToDDMMYYYY } from "@/app/components/DatumHelper";
+import ToonMissieAfbeelding from "./ToonMissieAfbeelding";
 
 interface Props {
   missieData: MissieModel;
@@ -21,10 +22,16 @@ const ToonGegevensMobiel = ({ missieData, currentUser }: Props) => {
             <tr>
               <th className="pb-2 pe-2 text-left">Afbeelding</th>
               <td className="pb-2 ps-2">
-              {missieData.afbeelding ? (
-                  <p>Bekijk afbeelding</p>
+              {currentUser.isOrganisator ? (
+                  <ToonMissieAfbeelding hasImage={missieData.afbeelding != null} missieid={missieData.id}/>
                 ) : (
-                  "Nog geen afbeelding"
+                  <div>
+                    {missieData.afbeelding ? (
+                      <p>Bekijk afbeelding</p>
+                    ) : (
+                      "Nog geen afbeelding"
+                    )}
+                  </div>
                 )}
               </td>
             </tr>
