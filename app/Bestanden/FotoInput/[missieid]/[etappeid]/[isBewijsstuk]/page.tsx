@@ -26,7 +26,7 @@ interface Props {
         <section className="pt-5">
           <p className="text-3xl pb-4 text-center">Nieuwe Foto</p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-            <div>
+            <div className="p-3">
               <FotoInput
                 missieid={missieid}
                 etappeid={etappeid}

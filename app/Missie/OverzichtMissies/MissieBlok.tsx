@@ -20,7 +20,7 @@ interface Props {
   allUsers: User[];
 }
 const MissieBlok = async ({ missie, naam, voornaam, allUsers }: Props) => {
-
+console.log(missie.afbeelding)
   const deelnemer = missie.deelnemers.filter((el) => {
     return `${el.naam}` === `${voornaam} ${naam}`;
   })[0];
@@ -46,7 +46,7 @@ const MissieBlok = async ({ missie, naam, voornaam, allUsers }: Props) => {
           </small>
         </CardHeader>
         <CardBody className="w-[250px] h-[250px] rounded-2xl overflow-hidden p-2">
-          {missie.afbeelding ? (
+          {missie.afbeelding != null ? (
             <MissieBlokRemoteAfbeelding imageUrl={missie.afbeelding} />
           ) : (
             <div className="pt-2 mt-2">

@@ -53,6 +53,7 @@ const FotoInput = ({
         setImageSrc(reader.result as string);
       };
       reader.readAsDataURL(file);
+      setVerbergNeemFoto(true);
     }
   };
 
@@ -84,7 +85,7 @@ const FotoInput = ({
         fileId: result.fileId,
         uploadDatum: getUnixTime(new Date()),
         userId: currentUser,
-        isBewijsstuk: Boolean(isBewijsstuk),
+        isBewijsstuk: isBewijsstuk === true,
       };
       const dbResult = await BewaarMissieBestand(dbdata);
     }
@@ -116,7 +117,48 @@ const FotoInput = ({
           Neem Foto
         </Button>
       </div>
-
+      <div className="grid grid-cols-1">
+        <div>
+          {imageSrc && (
+            <>
+              <div>
+                <div className="flex justify-center items-center">
+                  <Image
+                    src={imageSrc}
+                    alt="voorbeeld"
+                    height={0}
+                    width={0}
+                    sizes="100vw"
+                    style={{
+                      width: "auto",
+                      height: "auto",
+                      maxHeight: "600px",
+                    }}
+                  />
+                </div>
+              </div>
+              <div className="flex justify-between pt-6 gap-4">
+                <Button
+                  className="w-full inline-flex"
+                  onClick={() => {
+                    setImageSrc(null);
+                    triggerFoto.current!.click();
+                  }}
+                >
+                  Opnieuw
+                </Button>
+                <Button
+                  className="w-full"
+                  onClick={() => BewaarFoto()}
+                  isLoading={saving}
+                >
+                  Bewaar
+                </Button>
+              </div>
+            </>
+          )}
+        </div>
+      </div>
       <Modal
         backdrop="opaque"
         isOpen={isOpen}

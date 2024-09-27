@@ -44,7 +44,7 @@ export const metadata: Metadata = {
   },
   title: "Lazy Company",
   icons: {
-    icon: "/afbeeldingen/favicon.ico",
+    icon: "/favicon.ico",
   },
 };
 export const viewport: Viewport = {

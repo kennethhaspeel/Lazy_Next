@@ -11,6 +11,7 @@ import { Button, Link } from "@nextui-org/react";
 import { GetAllEtappesMetBewijsstuk } from "@/lib/actions/MissieEtappeActions";
 import ToonEtappes from "./ToonEtappes";
 import BevestigAfsluiten from "./BevestigAfsluiten";
+import ToonEtappesMobiel from "./ToonEtappesMobiel";
 
 interface Props {
   params: {
@@ -44,7 +45,15 @@ const page = async ({ params: { missieid } }: Props) => {
   return (
     <>
       <div className="pt-4 w-full">
-        <div className="text-2xl">Missie &apos;{missie.titel}&apos;{!missie.afgesloten && <BevestigAfsluiten missieid={Number(missieid)} missienaam={missie.titel}/>}</div>
+        <div className="text-2xl">
+          Missie &apos;{missie.titel}&apos;
+          {!missie.afgesloten && (
+            <BevestigAfsluiten
+              missieid={Number(missieid)}
+              missienaam={missie.titel}
+            />
+          )}
+        </div>
         <div className="bg-slate-100 dark:bg-slate-800 p-2 mt-4">
           <h2 className="text-xl ps-2">Missie Details</h2>
         </div>
@@ -55,7 +64,7 @@ const page = async ({ params: { missieid } }: Props) => {
         <div className="sm:hidden">
           <ToonGegevensMobiel missieData={missie} currentUser={currentUser} />
         </div>
-        {(!!currentUser.isOrganisator && !missie.afgesloten) && (
+        {!!currentUser.isOrganisator && !missie.afgesloten && (
           <div className="mt-3 mb-3 grid grid-cols-1 gap-x-6 gap-y-3 sm:grid-cols-6">
             <div className="ps-2">
               <Button
@@ -71,6 +80,7 @@ const page = async ({ params: { missieid } }: Props) => {
           </div>
         )}
       </div>
+
       <div className="bg-slate-100 dark:bg-slate-800 p-2 mt-2">
         <h2 className="text-xl ps-2">Deelnemers</h2>
       </div>
@@ -79,7 +89,7 @@ const page = async ({ params: { missieid } }: Props) => {
         currentUser={currentUser}
         missieId={missieid}
       />
-      {(!!currentUser.isOrganisator && !missie.afgesloten) && (
+      {!!currentUser.isOrganisator && !missie.afgesloten && (
         <div className="mt-3 mb-3 grid grid-cols-1 gap-x-6 gap-y-3 sm:grid-cols-6">
           <div className="ps-2">
             <Button
@@ -95,16 +105,30 @@ const page = async ({ params: { missieid } }: Props) => {
         </div>
       )}
 
-      <ToonEtappes
-        Etaps={JSON.stringify(etappes, (key, value) =>
-          typeof value === "bigint" ? Number(value) : value
-        )}
-        Begindatum={missie.startDatum}
-        Einddatum={missie.eindDatum}
-        missieid={Number(missieid)}
-        missieDeelnemers={missieDeelnemers}
-        afgesloten={missie.afgesloten}
-      />
+      <div className="sm:hidden">
+        <ToonEtappesMobiel
+          Etaps={JSON.stringify(etappes, (key, value) =>
+            typeof value === "bigint" ? Number(value) : value
+          )}
+          Begindatum={missie.startDatum}
+          Einddatum={missie.eindDatum}
+          missieid={Number(missieid)}
+          missieDeelnemers={missieDeelnemers}
+          afgesloten={missie.afgesloten}
+        />
+      </div>
+      <div className="hidden sm:block w-full ps-2">
+        <ToonEtappes
+          Etaps={JSON.stringify(etappes, (key, value) =>
+            typeof value === "bigint" ? Number(value) : value
+          )}
+          Begindatum={missie.startDatum}
+          Einddatum={missie.eindDatum}
+          missieid={Number(missieid)}
+          missieDeelnemers={missieDeelnemers}
+          afgesloten={missie.afgesloten}
+        />
+      </div>
     </>
   );
 };
