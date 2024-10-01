@@ -27,7 +27,7 @@ interface Props {
   isBewijsstuk: boolean;
 }
 
-const FotoInput = ({
+const BestandInput = ({
   missieid,
   etappeid,
   currentUser,
@@ -98,8 +98,7 @@ const FotoInput = ({
         <input
           ref={triggerFoto}
           type="file"
-          accept="image/*"
-          capture="environment"
+          accept="image/*,.pdf"
           onChange={handleCapture}
           name="image"
         />
@@ -222,4 +221,4 @@ const FotoInput = ({
   );
 };
 
-export default FotoInput;
+export default BestandInput;
