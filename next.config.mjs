@@ -10,6 +10,7 @@ const withSerwist = withSerwistInit({
   swDest: "public/sw.js",
 });
 const nextConfig = {
+  reactStrictMode: true,
   images: {
     remotePatterns: [
       {
@@ -23,6 +24,10 @@ const nextConfig = {
     staleTimes: {
       dynamic: 0,
       static: 180,
+    },
+
+    serverActions: {
+      bodySizeLimit: "10mb",
     },
     esmExternals: true,
   },

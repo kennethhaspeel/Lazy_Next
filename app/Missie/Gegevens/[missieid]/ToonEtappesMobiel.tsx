@@ -25,6 +25,7 @@ import {
   ArrowUpTrayIcon,
   CameraIcon,
   ChevronDownIcon,
+  DocumentPlusIcon,
   EyeIcon,
 } from "@heroicons/react/16/solid";
 
@@ -228,20 +229,11 @@ const ToonEtappesMobiel = ({
                               </DropdownItem>
 
                               <DropdownItem
-                                key={`foto_${etappe.id}`}
-                                startContent={<CameraIcon className="size-6" />}
-                                href={`/Bestanden/FotoInput/${missieid}/${etappe.id}/${false}`}
+                            key={`foto_${etappe.id}`}
+                            startContent={<DocumentPlusIcon className="size-6" />}
+                            href={`/Bestanden/UploadBestand/${missieid}/${etappe.id}/false`}
                               >
-                                Neem Foto
-                              </DropdownItem>
-                              <DropdownItem
-                                key={`bestand_${etappe.id}`}
-                                startContent={
-                                  <ArrowUpTrayIcon className="size-6" />
-                                }
-                                href="/"
-                              >
-                                Bestand Opladen
+                                Toevoegen
                               </DropdownItem>
                             </DropdownMenu>
                           </Dropdown>

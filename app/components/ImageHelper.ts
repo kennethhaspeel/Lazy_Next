@@ -8,8 +8,11 @@ var imagekit = new ImageKit({
 });
 
 export const generateRandom = () => {
- return   Math.random().toString(36).substring(2, 15) + Math.random().toString(23).substring(2, 5)
-}
+  return (
+    Math.random().toString(36).substring(2, 15) +
+    Math.random().toString(23).substring(2, 5)
+  );
+};
 
 export const GetImageSignedUrl = (
   url: string,
@@ -41,45 +44,51 @@ export const GetImageSignedUrl = (
   return imageUrl;
 };
 
-export const ResizeImage = async (maxWidth = 2500,maxHeight = 2500,bestand:File)=>{
-const img = new Image()
+// export const ResizeImage = async (maxWidth = 2500,maxHeight = 2500,bestand:File)=>{
+// const img = new Image()
 
-const bitm = await createImageBitmap(bestand)
+// const bitm = await createImageBitmap(bestand)
 
+// }
 
-}
-
-export const UploadImage = async (formData: FormData,tagList:string[]) => {
-  console.log(typeof formData.get("image"))
-  const image = formData.get("image") as string;
-  const tags = tagList.join(',')
-  // const arrayBuffer = await image.arrayBuffer();
-  // const buffer = Buffer.from(arrayBuffer);
+export const BestandNaarImagekit = async (
+  bestand: FormData,
+  tagList: string[]
+) => {
+  const tags = tagList.join(",");
+  //const base:string = await getBase64(bestand)
   const response = await imagekit.upload({
-    file: image,
+    file: bestand.get("image") as string,
     fileName: `${generateRandom()}.jpeg`,
-    useUniqueFileName:true,
+    useUniqueFileName: true,
     tags: tags,
   });
-  return response
+  return response;
+};
+
+export const UploadImage = async (dataUrl: string, tagList: string[]) => {
+  const tags = tagList.join(",");
+  const response = await imagekit.upload({
+    file: dataUrl,
+    fileName: `${generateRandom()}.jpeg`,
+    useUniqueFileName: true,
+    tags: tags,
+  });
+  return response;
 };
 
 export const getBase64 = async (url: string) => {
-  try {
-    const res = await fetch(url);
+  const res = await fetch(url);
 
-    if (!res.ok) {
-      throw new Error(`Failed to fetch image: ${res.status} ${res.statusText}`);
-    }
-
-    const buffer = await res.arrayBuffer();
-
-    const { base64 } = await getPlaiceholder(Buffer.from(buffer));
-
-    console.log(`base64: ${base64}`);
-
-    return base64;
-  } catch (e) {
-    if (e instanceof Error) console.log(e.stack);
+  if (!res.ok) {
+    throw new Error(`Failed to fetch image: ${res.status} ${res.statusText}`);
   }
+
+  const buffer = await res.arrayBuffer();
+
+  const { base64 } = await getPlaiceholder(Buffer.from(buffer));
+
+  console.log(`base64: ${base64}`);
+
+  return base64;
 };

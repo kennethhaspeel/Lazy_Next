@@ -53,17 +53,11 @@ const ToonMissieAfbeelding = ({ hasImage, missieid }: Props) => {
           <DropdownItem
             key="MissieAfbeeldingNeemFoto"
             startContent={<CameraIcon className="size-6" />}
-            href={`/Missie/MissieAfbeelding/${missieid}`}
+            href={`/Bestanden/UploadBestand/${missieid}/0/false`}
           >
-            Neem Foto
+            Aanpassen
           </DropdownItem>
-          <DropdownItem
-            key="MissieAfbeeldingOpladen"
-            startContent={<ArrowUpTrayIcon className="size-6" />}
-            href="/"
-          >
-            Bestand Opladen
-          </DropdownItem>
+
         </DropdownMenu>
       </Dropdown>
     </ButtonGroup>

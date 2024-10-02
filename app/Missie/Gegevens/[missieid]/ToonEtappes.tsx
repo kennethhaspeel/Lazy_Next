@@ -19,6 +19,7 @@ import {
   ArrowUpTrayIcon,
   CameraIcon,
   ChevronDownIcon,
+  DocumentPlusIcon,
   EyeIcon,
 } from "@heroicons/react/16/solid";
 import Link from "next/link";
@@ -106,14 +107,17 @@ const ToonEtappes = ({ Etaps, Begindatum, Einddatum, missieid,afgesloten }: Prop
                     Omschrijving
                   </div>
                 </div>
-                <div className="md:col-span-2 bg-default-300 pt-1 pb-1 ps-1 content-center">
+                <div className="md:col-span-1 bg-default-300 pt-1 pb-1 ps-1 content-center">
                   Tijdstip
                 </div>
-                <div className="md:col-span-2 bg-default-300 pt-1 pb-1 ps-1">
+                <div className="md:col-span-1 bg-default-300 pt-1 pb-1 ps-1">
                   Kost
                 </div>
-                <div className="md:col-span-2 bg-default-300 pt-1 pb-1 ps-1  rounded-r-lg ">
+                <div className="md:col-span-2 bg-default-300 pt-1 pb-1 ps-1">
                   Bewijsstuk
+                </div>
+                <div className="md:col-span-2 bg-default-300 pt-1 pb-1 ps-1  rounded-r-lg ">
+                  Foto&lsquo;s
                 </div>
               </div>
               {Etappes.filter(
@@ -128,10 +132,10 @@ const ToonEtappes = ({ Etaps, Begindatum, Einddatum, missieid,afgesloten }: Prop
                   <div className="md:col-span-5 pt-1  content-center">
                     {etappe.omschrijving}
                   </div>
-                  <div className="md:col-span-2 pt-1 content-center">
+                  <div className="md:col-span-1 pt-1 content-center">
                     {format(fromUnixTime(etappe.startDatum), "HH:mm")}
                   </div>
-                  <div className="md:col-span-2 pt-1 content-center">
+                  <div className="md:col-span-1 pt-1 content-center">
                     {Number(etappe.kost).toFixed(2)}
                   </div>
                   <div className="md:col-span-2 pt-1 content-center grow">
@@ -174,19 +178,59 @@ const ToonEtappes = ({ Etaps, Begindatum, Einddatum, missieid,afgesloten }: Prop
 
                           <DropdownItem
                             key={`foto_${etappe.id}`}
-                            startContent={<CameraIcon className="size-6" />}
-                            href={`/Bestanden/FotoInput/${missieid}/${etappe.id}/${true}`}
+                            startContent={<DocumentPlusIcon className="size-6" />}
+                            href={`/Bestanden/UploadBestand/${missieid}/${etappe.id}/true`}
                           >
-                            Neem Foto
+                            Toevoegen
                           </DropdownItem>
+                        </DropdownMenu>
+                      </Dropdown>
+                    </ButtonGroup>
+                  </div>
+                  <div className="md:col-span-2 pt-1 content-center grow">
+                    <ButtonGroup variant="flat">
+                      <Button>
+                        <>
+                          {etappe.aantalbijlages === 1 ? (
+                            <span>1 stuk</span>
+                          ) : (
+                            <span>
+                              {etappe.aantalbijlages} stukken
+                            </span>
+                          )}
+                        </>
+                      </Button>
+                      <Dropdown placement="bottom-end">
+                        <DropdownTrigger>
+                          <Button isIconOnly>
+                            <ChevronDownIcon className="size-6" />
+                          </Button>
+                        </DropdownTrigger>
+                        <DropdownMenu
+                          disallowEmptySelection
+                          aria-label="Bewijsstuk"
+                          selectionMode="single"
+                          className="max-w-[300px]"
+                          disabledKeys={
+                            etappe.aantalbijlages === 0
+                              ? [`bekijk_${etappe.id}`]
+                              : []
+                          }
+                        >
                           <DropdownItem
-                            key={`bestand_${etappe.id}`}
-                            startContent={
-                              <ArrowUpTrayIcon className="size-6" />
-                            }
+                            key={`bekijk_${etappe.id}`}
+                            startContent={<EyeIcon className="size-6" />}
                             href="/"
                           >
-                            Bestand Opladen
+                            Bekijk
+                          </DropdownItem>
+
+                          <DropdownItem
+                            key={`foto_${etappe.id}`}
+                            startContent={<DocumentPlusIcon className="size-6" />}
+                            href={`/Bestanden/UploadBestand/${missieid}/${etappe.id}/false`}
+                          >
+                            Toevoegen
                           </DropdownItem>
                         </DropdownMenu>
                       </Dropdown>
