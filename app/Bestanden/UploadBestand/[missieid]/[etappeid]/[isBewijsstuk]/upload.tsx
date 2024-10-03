@@ -14,6 +14,7 @@ import {
 import Image from "next/image";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import FotoNemen from "./FotoNemen";
+import BestandOpladen from "./BestandOpladen";
 
 interface Props {
   missieid: number;
@@ -70,9 +71,6 @@ const Upload = ({
     }
   }, [toonUploadKeuzes]);
 
-  const BewaarBestand = (actietype: number) => {
-    console.log("Bestand Bewaren");
-  };
   return (
     <>
       <div>
@@ -139,26 +137,32 @@ const Upload = ({
       </div>
       <div>
         {toonUploadFoto && (
-          <>
-            <p>Upload Foto</p>
-            <div>
-              <Button color="default" onClick={() => ToggleZichtbaarheid("")}>
-                Annuleer
-              </Button>
-            </div>
-          </>
+          <BestandOpladen
+            setToonUploadKeuzes={setToonUploadKeuzes}
+            setAllesBewaard={setAllesBewaard}
+            missieid={missieid}
+            etappeid={etappeid}
+            currentUser={currentUser}
+            naam={naam}
+            voornaam={voornaam}
+            isBewijsstuk={isBewijsstuk}
+            isAfbeelding={true}
+          />
         )}
       </div>
       <div>
-        {toonUploadPDF && etappeid > 0 && (
-          <>
-            <p>Upload PDF</p>
-            <div>
-              <Button color="default" onClick={() => ToggleZichtbaarheid("")}>
-                Annuleer
-              </Button>
-            </div>
-          </>
+        {toonUploadPDF && isBewijsstuk && (
+          <BestandOpladen
+            setToonUploadKeuzes={setToonUploadKeuzes}
+            setAllesBewaard={setAllesBewaard}
+            missieid={missieid}
+            etappeid={etappeid}
+            currentUser={currentUser}
+            naam={naam}
+            voornaam={voornaam}
+            isBewijsstuk={isBewijsstuk}
+            isAfbeelding={false}
+          />
         )}
       </div>
 

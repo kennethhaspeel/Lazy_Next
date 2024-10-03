@@ -15,7 +15,8 @@ import {
   UploadFoto,
 } from "@/app/components/BewaarBestandDB";
 import { getUnixTime } from "date-fns";
-
+import pdfIcon from "../../../../../afbeeldingen/fileicons/pdf.png";
+import { isatty } from "tty";
 
 interface Props {
   setToonUploadKeuzes: Dispatch<SetStateAction<boolean>>;
@@ -26,8 +27,9 @@ interface Props {
   currentUser: string;
   naam?: string;
   voornaam?: string;
+  isAfbeelding: boolean;
 }
-const FotoNemen = ({
+const BestandOpladen = ({
   setToonUploadKeuzes,
   setAllesBewaard,
   missieid,
@@ -36,55 +38,62 @@ const FotoNemen = ({
   naam,
   voornaam,
   isBewijsstuk,
+  isAfbeelding,
 }: Props) => {
-  const [NeemFotoSrc, setNeemFotoSrc] = useState<string | null>(null);
+  const [bestand, setBestand] = useState<string | null>(null);
   const [bestandsnaam, setBestandsnaam] = useState<string | null>(null);
   const [bestandsgrootte, setBestandsgrootte] = useState<string | null>(null);
-  const triggerNeemFoto = useRef<HTMLInputElement>(null);
+  const [toonPDF, setToonPDF] = useState<boolean>(false);
+  const [saving, setSaving] = useState(false);
+  const triggerUploadBestand = useRef<HTMLInputElement>(null);
 
   const triggerFunction = () => {
-    triggerNeemFoto.current!.click();
+    triggerUploadBestand.current!.click();
   };
   useEffect(() => {
-    triggerNeemFoto.current!.click();
+    triggerUploadBestand.current!.click();
   }, []);
 
-  const ToonVoorbeeldNeemFoto = (event: ChangeEvent<HTMLInputElement>) => {
+  const ToonVoorbeeld = (event: ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files) {
       throw new Error("Geen foto geselecteerd");
     }
     const file = event.target.files[0];
     if (file) {
+      const reader = new FileReader();
       setBestandsnaam(file.name);
       setBestandsgrootte((Number(file.size) / 1024 / 1024).toFixed(2));
-      const reader = new FileReader();
+      console.log((Number(file.size) / 1024 / 1024).toFixed(2));
+      console.log(file.name);
       reader.onloadend = () => {
-        setNeemFotoSrc(reader.result as string);
+        setBestand(reader.result as string);
       };
       reader.readAsDataURL(file);
     }
   };
 
-  async function BewaarFoto() {
-    if (NeemFotoSrc) {
+  async function BewaarBestand() {
+    if (bestand) {
+      setSaving(true)
       if (etappeid == 0) {
-        const result = JSON.parse(await UploadFoto(NeemFotoSrc, [],bestandsnaam!));
+        const result = JSON.parse(await UploadFoto(bestand, [], bestandsnaam!));
         const update = await UpdateMissieAfbeeldingRecord({
           missieid: missieid,
           bestandsnaam: result["name"],
         });
       } else {
-        NeemFotoSrc;
         const tags: string[] = [naam!, voornaam!];
-        const result = JSON.parse(await UploadFoto(NeemFotoSrc, tags,bestandsnaam!));
+        const result = JSON.parse(
+          await UploadFoto(bestand, tags, bestandsnaam!)
+        );
         console.log(result);
         const dbdata = {
           missieEtappeId: Number(etappeid),
           bestandsNaam: result.name,
           mime: result.fileType,
           url: result.url,
-          width: result.width,
-          height: result.height,
+          width: result.width || 0,
+          height: result.height || 0,
           size: result.size,
           fileId: result.fileId,
           uploadDatum: getUnixTime(new Date()),
@@ -93,6 +102,7 @@ const FotoNemen = ({
         };
         const dbResult = await BewaarMissieBestand(dbdata);
       }
+      setSaving(false)
       setToonUploadKeuzes(true);
       setAllesBewaard(true);
     }
@@ -102,26 +112,42 @@ const FotoNemen = ({
       <div>
         <form hidden>
           <input
-            ref={triggerNeemFoto}
+            ref={triggerUploadBestand}
             type="file"
-            accept="image/*"
-            capture="environment"
-            onChange={ToonVoorbeeldNeemFoto}
+            accept={isAfbeelding ? "image/*" : "application/pdf"}
+            onChange={ToonVoorbeeld}
             name="image"
           />
         </form>
       </div>
       <div>
-      {NeemFotoSrc && (
+        {bestand && isAfbeelding && (
+          <div className="flex justify-center items-center">
+            <Image
+              src={bestand}
+              alt="voorbeeld"
+              height={0}
+              width={0}
+              sizes="100vw"
+              style={{
+                width: "auto",
+                height: "auto",
+                maxHeight: "600px",
+              }}
+            />
+          </div>
+        )}
+      </div>
+      {!isAfbeelding && bestand != null && (
         <div className="flex w-full justify-center items-center">
-          <Card className="max-w-[600px]">
+          <Card className="max-w-[250px]">
             <CardHeader className="flex gap-3">
               <Image
                 alt="pdf icoon"
                 className="object-cover"
-                height={300}
-                width={300}
-                src={NeemFotoSrc}
+                height={250}
+                width={250}
+                src={pdfIcon}
               />
             </CardHeader>
             <CardFooter>
@@ -137,30 +163,14 @@ const FotoNemen = ({
           </Card>
         </div>
       )}
-      </div>
-      {/* <div>
-        {NeemFotoSrc && (
-          <div className="flex justify-center items-center">
-            <Image
-              src={NeemFotoSrc}
-              alt="voorbeeld"
-              height={0}
-              width={0}
-              sizes="100vw"
-              style={{
-                width: "auto",
-                height: "auto",
-                maxHeight: "600px",
-              }}
-            />
-          </div>
-        )}
-      </div> */}
+
       <div className="flex w-full justify-items-stretch gap-4  pt-4">
         <div className="grow">
           <Button
             className="w-full"
             color="danger"
+            disabled={saving}
+            isLoading={saving}
             onClick={() => {
               setToonUploadKeuzes(true);
             }}
@@ -172,6 +182,8 @@ const FotoNemen = ({
           <Button
             className="w-full"
             color="warning"
+            disabled={saving}
+            isLoading={saving}
             onClick={() => triggerFunction()}
           >
             Opnieuw
@@ -181,8 +193,9 @@ const FotoNemen = ({
           <Button
             className="w-full"
             color="success"
-            isDisabled={NeemFotoSrc == null}
-            onClick={() => BewaarFoto()}
+            isDisabled={bestand == null || saving}
+            isLoading={saving}
+            onClick={() => BewaarBestand()}
           >
             Bewaren
           </Button>
@@ -192,4 +205,4 @@ const FotoNemen = ({
   );
 };
 
-export default FotoNemen;
+export default BestandOpladen;

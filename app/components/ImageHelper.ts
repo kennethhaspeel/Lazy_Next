@@ -44,13 +44,6 @@ export const GetImageSignedUrl = (
   return imageUrl;
 };
 
-// export const ResizeImage = async (maxWidth = 2500,maxHeight = 2500,bestand:File)=>{
-// const img = new Image()
-
-// const bitm = await createImageBitmap(bestand)
-
-// }
-
 export const BestandNaarImagekit = async (
   bestand: FormData,
   tagList: string[]
@@ -66,11 +59,11 @@ export const BestandNaarImagekit = async (
   return response;
 };
 
-export const UploadImage = async (dataUrl: string, tagList: string[]) => {
+export const UploadImage = async (dataUrl: string, tagList: string[],bestandsnaam:string) => {
   const tags = tagList.join(",");
   const response = await imagekit.upload({
     file: dataUrl,
-    fileName: `${generateRandom()}.jpeg`,
+    fileName: bestandsnaam,
     useUniqueFileName: true,
     tags: tags,
   });

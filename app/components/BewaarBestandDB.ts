@@ -2,8 +2,8 @@
 import db from "@/lib/prisma";
 import { UploadImage } from "./ImageHelper";
 
-export async function UploadFoto(data: string, tags: string[]) {
-  const response = await UploadImage(data, tags);
+export async function UploadFoto(data: string, tags: string[],bestandsnaam:string) {
+  const response = await UploadImage(data, tags,bestandsnaam);
   return JSON.stringify(response);
 }
 
