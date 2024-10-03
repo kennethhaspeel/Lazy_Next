@@ -1,5 +1,6 @@
 import ImageKit from "imagekit";
 import { getPlaiceholder } from "plaiceholder";
+import { ParseDMS } from "./geolocation";
 
 var imagekit = new ImageKit({
   publicKey: process.env.IMAGEKIT_PUBLICKEY!,
@@ -21,8 +22,9 @@ export const GetImageSignedUrl = (
   blur = false,
   watermerk = false
 ) => {
+  console.log(url)
   let imageUrl = imagekit.url({
-    path: url,
+    src: url,
     signed: true,
     expireSeconds: 3600,
     transformation: [
@@ -40,9 +42,19 @@ export const GetImageSignedUrl = (
     ],
     transformationPosition: "query",
   });
-  console.log(imageUrl);
+  //console.log(imageUrl);
   return imageUrl;
 };
+
+export const GetMetaData = async (url:string)=>{
+  let meta:any = await imagekit.getFileMetadata(url)
+  
+  const {gps} = meta.exif
+  const LatLon = ParseDMS(gps.GPSLatitude,gps.GPSLongitude)
+  console.log(gps)
+  console.log(LatLon)
+  return meta
+}
 
 export const BestandNaarImagekit = async (
   bestand: FormData,
@@ -55,6 +67,7 @@ export const BestandNaarImagekit = async (
     fileName: `${generateRandom()}.jpeg`,
     useUniqueFileName: true,
     tags: tags,
+    isPrivateFile:true
   });
   return response;
 };
@@ -81,7 +94,7 @@ export const getBase64 = async (url: string) => {
 
   const { base64 } = await getPlaiceholder(Buffer.from(buffer));
 
-  console.log(`base64: ${base64}`);
+  //console.log(`base64: ${base64}`);
 
   return base64;
 };

@@ -14,6 +14,9 @@ export async function GetAfbeeldingenPerEtappe(etappeid:number){
         where:{
             missieEtappeId: {
                 equals: etappeid
+            },
+            mime:{
+                equals: 'image'
             }
         }
     })

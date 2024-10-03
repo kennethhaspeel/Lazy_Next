@@ -220,7 +220,7 @@ const ToonEtappes = ({ Etaps, Begindatum, Einddatum, missieid,afgesloten }: Prop
                           <DropdownItem
                             key={`bekijk_${etappe.id}`}
                             startContent={<EyeIcon className="size-6" />}
-                            href="/"
+                            href={`/Bestanden/FotoGallerij/${missieid}/${etappe.id}`}
                           >
                             Bekijk
                           </DropdownItem>

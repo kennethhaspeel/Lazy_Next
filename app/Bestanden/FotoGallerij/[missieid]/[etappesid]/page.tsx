@@ -2,11 +2,12 @@ import React from "react";
 import Image from "next/image";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../../../api/auth/[...nextauth]/AuthOptions";
-import { MissieEtappeBestand } from "@prisma/client";
+import { MissieEtappeBestand, User } from "@prisma/client";
 import { GetAfbeeldingenPerEtappe } from "../../../../../lib/actions/AfbeeldingActions";
 import { Suspense } from "react";
 import LoadingSpinner from "../../../../components/LoadingSpinner";
 import AfbeeldingCard from "./AfbeeldingCard";
+import { GetAllUsers } from "@/lib/actions/UserActions";
 
 interface Props {
   params: {
@@ -21,8 +22,12 @@ const ToonGallerij = async ({ params: { missieid, etappeid } }: Props) => {
     return <h1 className="text-5xl">Geen Toegang</h1>;
   }
 
-  const afbeeldingen: MissieEtappeBestand[] =
-    await GetAfbeeldingenPerEtappe(etappeid);
+  const getAfbeeldingen: Promise<MissieEtappeBestand[]> = GetAfbeeldingenPerEtappe(etappeid)
+  const getAllUsers: Promise<User[]> = GetAllUsers();
+  const [afbeeldingen,users] = await Promise.all([getAfbeeldingen,getAllUsers])
+
+
+
 
   return (
     <>
@@ -30,7 +35,7 @@ const ToonGallerij = async ({ params: { missieid, etappeid } }: Props) => {
       <Suspense fallback={<LoadingSpinner />}>
         <div className="gap-2 grid grid-cols-2 sm:grid-cols-4">
           {afbeeldingen?.map((afb, index) => (
-            <AfbeeldingCard data={afb} key={afb.id} />
+            <AfbeeldingCard key={afb.id} data={afb} user={users.find(x=>x.id === afb.userId)!} />
           ))}
         </div>
       </Suspense>
