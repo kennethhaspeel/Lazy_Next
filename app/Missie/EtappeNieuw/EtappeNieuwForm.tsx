@@ -39,7 +39,6 @@ const formSchema = z.object({
     .min(1, "Geef een korte omschrijving van de missie")
     .optional(),
   startTijd: z.string().time("Gelieve een starttijd in te geven"),
-  eindTijd: z.string().time("Gelieve een eindtijd in te geven"),
   kost: z.number(),
 });
 type InputType = z.infer<typeof formSchema>;
@@ -62,6 +61,7 @@ const EtappeNieuwForm = ({ deelnemers, missieid, datum }: Props) => {
     []
   );
   const [betaler, setBetaler] = useState<string>("clxucmprp0002p31rf6p6mux3");
+
   useEffect(() => {
     let arrDeel: string[] = [];
     let betLijst: MissieDeelnemerModel[] = [
@@ -82,9 +82,6 @@ const EtappeNieuwForm = ({ deelnemers, missieid, datum }: Props) => {
   let [starttijdValue, setStarttijdValue] = useState(
     parseAbsoluteToLocal(datum.toISOString())
   );
-  let [eindtijdValue, setEindtijdValue] = useState(
-    parseAbsoluteToLocal(datum.toISOString())
-  );
 
   const bewaarEtappe: SubmitHandler<InputType> = async (data) => {
     try {
@@ -94,14 +91,12 @@ const EtappeNieuwForm = ({ deelnemers, missieid, datum }: Props) => {
         omschrijving: data.omschrijving,
         locatie: data.locatie,
         startDatum: new Date(starttijdValue.toAbsoluteString()),
-        eindDatum: new Date(eindtijdValue.toAbsoluteString()),
         kost: data.kost,
         verschuldigDoor: data.kost > 0 ? verschuldigdDoor : [],
         betaler: data.kost > 0 ? betaler : "",
       };
       const result = await PostNieuweEtappe(model);
       router.push(`/Missie/Gegevens/${missieid}`);
-
     } catch (error) {
       if (error instanceof Error) {
         console.log(error.message);
@@ -121,9 +116,11 @@ const EtappeNieuwForm = ({ deelnemers, missieid, datum }: Props) => {
   useEffect(() => {
     console.log(errors);
   }, [errors]);
+
   const BetalerAanpassen = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setBetaler(e.target.value);
   };
+
   return (
     <>
       <section className="pt-5">
@@ -175,12 +172,6 @@ const EtappeNieuwForm = ({ deelnemers, missieid, datum }: Props) => {
                       .toString()
                       .padStart(2, "0")}:00`
                   );
-                  setValue(
-                    "eindTijd",
-                    `${e.hour.toString().padStart(2, "0")}:${e.minute
-                      .toString()
-                      .padStart(2, "0")}:00`
-                  );
 
                   let tijd = `${e.hour.toString().padStart(2, "0")}:${e.minute
                     .toString()
@@ -191,40 +182,6 @@ const EtappeNieuwForm = ({ deelnemers, missieid, datum }: Props) => {
                   dat = setMinutes(dat, Number(tijdArr[1]));
                   //console.log(dat);
                   setStarttijdValue(parseAbsoluteToLocal(dat.toISOString()));
-                  setEindtijdValue(parseAbsoluteToLocal(dat.toISOString()));
-                }}
-              ></TimeInput>
-            </div>
-            <div className="mb-1 sm:mb-5 align-middle">
-              <TimeInput
-                label="Eindtijd"
-                hideTimeZone
-                hourCycle={24}
-                value={eindtijdValue}
-                errorMessage={errors.eindTijd?.message}
-                onChange={(e) => {
-                  setValue(
-                    "eindTijd",
-                    `${e.hour.toString().padStart(2, "0")}:${e.minute
-                      .toString()
-                      .padStart(2, "0")}:00`
-                  );
-
-                  let uur = e.hour;
-                  let minuut = e.minute;
-                  let start = datum.setHours(uur, minuut);
-
-                  console.log(fromUnixTime(start / 1000));
-
-                  let tijd = `${e.hour.toString().padStart(2, "0")}:${e.minute
-                    .toString()
-                    .padStart(2, "0")}:00`;
-                  let tijdArr = tijd.split(":");
-
-                  let dat = setHours(datum, Number(tijdArr[0]));
-                  dat = setMinutes(dat, Number(tijdArr[1]));
-
-                  setEindtijdValue(parseAbsoluteToLocal(dat.toISOString()));
                 }}
               ></TimeInput>
             </div>
@@ -235,7 +192,6 @@ const EtappeNieuwForm = ({ deelnemers, missieid, datum }: Props) => {
                 isInvalid={!!errors.kost}
                 label="Kost"
                 type="number"
-                
                 className="col-span-2"
               />
             </div>

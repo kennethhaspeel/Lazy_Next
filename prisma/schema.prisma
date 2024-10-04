@@ -118,7 +118,6 @@ model MissieEtappe {
   locatie             String?               @db.VarChar(100)
   geom                String?               @db.VarChar(2500)
   startDatum          Int                   @default(0)
-  eindDatum           Int                   @default(0)
   kost                Decimal               @default(0)
   betaaldDoor         User?                 @relation(fields: [userId], references: [id])
   userId              String?
