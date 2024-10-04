@@ -17,6 +17,10 @@ import {
 import { getUnixTime } from "date-fns";
 
 
+import { GetGeoLocatie } from "@/app/components/ImageHelper";
+import ExifReader from "exifreader";
+
+
 interface Props {
   setToonUploadKeuzes: Dispatch<SetStateAction<boolean>>;
   setAllesBewaard: Dispatch<SetStateAction<boolean>>;
@@ -40,6 +44,7 @@ const FotoNemen = ({
   const [NeemFotoSrc, setNeemFotoSrc] = useState<string | null>(null);
   const [bestandsnaam, setBestandsnaam] = useState<string | null>(null);
   const [bestandsgrootte, setBestandsgrootte] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
   const triggerNeemFoto = useRef<HTMLInputElement>(null);
 
   const triggerFunction = () => {
@@ -49,17 +54,24 @@ const FotoNemen = ({
     triggerNeemFoto.current!.click();
   }, []);
 
-  const ToonVoorbeeldNeemFoto = (event: ChangeEvent<HTMLInputElement>) => {
+      const GetGeoLocatie = async (bestand:string)=>{
+        const {gps} =  await ExifReader.load(bestand,{expanded:true})
+        return gps
+      }
+
+  const ToonVoorbeeldNeemFoto = async (event: ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files) {
       throw new Error("Geen foto geselecteerd");
     }
     const file = event.target.files[0];
     if (file) {
+
       setBestandsnaam(file.name);
       setBestandsgrootte((Number(file.size) / 1024 / 1024).toFixed(2));
       const reader = new FileReader();
-      reader.onloadend = () => {
+      reader.onloadend = async () => {
         setNeemFotoSrc(reader.result as string);
+
       };
       reader.readAsDataURL(file);
     }
@@ -67,17 +79,17 @@ const FotoNemen = ({
 
   async function BewaarFoto() {
     if (NeemFotoSrc) {
-      if (etappeid == 0) {
+      setSaving(true)
+      if (etappeid === 0) {
         const result = JSON.parse(await UploadFoto(NeemFotoSrc, [],bestandsnaam!));
         const update = await UpdateMissieAfbeeldingRecord({
           missieid: missieid,
           bestandsnaam: result["name"],
         });
       } else {
-        NeemFotoSrc;
+        const gps = await GetGeoLocatie(NeemFotoSrc)
         const tags: string[] = [naam!, voornaam!];
         const result = JSON.parse(await UploadFoto(NeemFotoSrc, tags,bestandsnaam!));
-        console.log(result);
         const dbdata = {
           missieEtappeId: Number(etappeid),
           bestandsNaam: result.name,
@@ -90,9 +102,11 @@ const FotoNemen = ({
           uploadDatum: getUnixTime(new Date()),
           userId: currentUser,
           isBewijsstuk: isBewijsstuk === true,
+          locatie: gps != undefined ? JSON.stringify(gps) : null
         };
         const dbResult = await BewaarMissieBestand(dbdata);
       }
+      setSaving(false)
       setToonUploadKeuzes(true);
       setAllesBewaard(true);
     }
@@ -138,29 +152,14 @@ const FotoNemen = ({
         </div>
       )}
       </div>
-      {/* <div>
-        {NeemFotoSrc && (
-          <div className="flex justify-center items-center">
-            <Image
-              src={NeemFotoSrc}
-              alt="voorbeeld"
-              height={0}
-              width={0}
-              sizes="100vw"
-              style={{
-                width: "auto",
-                height: "auto",
-                maxHeight: "600px",
-              }}
-            />
-          </div>
-        )}
-      </div> */}
+
       <div className="flex w-full justify-items-stretch gap-4  pt-4">
         <div className="grow">
           <Button
             className="w-full"
             color="danger"
+            disabled={saving}
+            isLoading={saving}
             onClick={() => {
               setToonUploadKeuzes(true);
             }}
@@ -172,6 +171,8 @@ const FotoNemen = ({
           <Button
             className="w-full"
             color="warning"
+            disabled={saving}
+            isLoading={saving}
             onClick={() => triggerFunction()}
           >
             Opnieuw
@@ -181,7 +182,8 @@ const FotoNemen = ({
           <Button
             className="w-full"
             color="success"
-            isDisabled={NeemFotoSrc == null}
+            isDisabled={NeemFotoSrc == null || saving}
+            isLoading={saving}
             onClick={() => BewaarFoto()}
           >
             Bewaren

@@ -17,6 +17,7 @@ import {
 import { getUnixTime } from "date-fns";
 import pdfIcon from "../../../../../afbeeldingen/fileicons/pdf.png";
 import { isatty } from "tty";
+import ExifReader from "exifreader";
 
 interface Props {
   setToonUploadKeuzes: Dispatch<SetStateAction<boolean>>;
@@ -53,7 +54,16 @@ const BestandOpladen = ({
   useEffect(() => {
     triggerUploadBestand.current!.click();
   }, []);
+  const GetGeoLocatie = async (bestand:string)=>{
+    try {
+          const {gps} =  await ExifReader.load(bestand,{expanded:true})
+    return gps
+    } catch {
+      console.log('Geen gps data gevonden')
+      return undefined
+    }
 
+  }
   const ToonVoorbeeld = (event: ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files) {
       throw new Error("Geen foto geselecteerd");
@@ -83,10 +93,12 @@ const BestandOpladen = ({
         });
       } else {
         const tags: string[] = [naam!, voornaam!];
+        
         const result = JSON.parse(
           await UploadFoto(bestand, tags, bestandsnaam!)
         );
         console.log(result);
+        const gps = await GetGeoLocatie(bestand)
         const dbdata = {
           missieEtappeId: Number(etappeid),
           bestandsNaam: result.name,
@@ -99,6 +111,7 @@ const BestandOpladen = ({
           uploadDatum: getUnixTime(new Date()),
           userId: currentUser,
           isBewijsstuk: isBewijsstuk === true,
+          locatie: gps != undefined ? JSON.stringify(gps) : null
         };
         const dbResult = await BewaarMissieBestand(dbdata);
       }

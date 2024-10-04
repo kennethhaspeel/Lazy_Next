@@ -1,6 +1,7 @@
 import ImageKit from "imagekit";
 import { getPlaiceholder } from "plaiceholder";
 import { ParseDMS } from "./geolocation";
+import ExifReader from 'exifreader'
 
 var imagekit = new ImageKit({
   publicKey: process.env.IMAGEKIT_PUBLICKEY!,
@@ -14,6 +15,11 @@ export const generateRandom = () => {
     Math.random().toString(23).substring(2, 5)
   );
 };
+
+export const GetGeoLocatie = async (bestand:string)=>{
+  const tags = await ExifReader.load(bestand,{expanded:true})
+  return tags
+}
 
 export const GetImageSignedUrl = (
   url: string,

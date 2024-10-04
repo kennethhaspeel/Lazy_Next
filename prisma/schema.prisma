@@ -126,7 +126,7 @@ model MissieEtappe {
   MissieEtappeBestand MissieEtappeBestand[]
 }
 
-model KostVerdeling {np
+model KostVerdeling {
   id             Int          @id @default(autoincrement())
   user           User         @relation(fields: [userId], references: [id])
   userId         String
@@ -150,6 +150,7 @@ model MissieEtappeBestand {
   user           User         @relation(fields: [userId], references: [id])
   userId         String
   isBewijsstuk   Boolean      @default(false)
+  locatie        String?       @db.VarChar(500)
 }
 
 model FinTransactie {
