@@ -60,7 +60,7 @@ const ToonEtappes = ({ Etaps, Begindatum, Einddatum, missieid,afgesloten }: Prop
 
   return (
     <>
-      <div className="bg-slate-100 dark:bg-slate-800 p-2 mt-2">
+      <div className="bg-slate-300 dark:bg-slate-800 p-2 mt-2">
         <h2 className="text-xl ps-2">
           Etappes (Totaalbedrag: {totaleKost.toFixed(2)})
         </h2>

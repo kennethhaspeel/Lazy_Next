@@ -16,7 +16,6 @@ interface GetEtappeMetAantallen {
   omschrijving?: string | null;
   locatie?: string | null;
   startDatum: number;
-  eindDatum: number;
   kost: number;
   aantalbijlages: number;
   aantalbewijsstukken: number;

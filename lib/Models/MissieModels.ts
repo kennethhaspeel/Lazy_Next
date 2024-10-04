@@ -7,7 +7,7 @@ interface MissieModel {
   eindDatum: Date;
   publiekZichtbaar: boolean;
   afgesloten: boolean;
-  afbeelding?: string |null;
+  afbeelding?: string | null;
   deelnemers: MissieDeelnemerModel[];
 }
 
@@ -18,7 +18,7 @@ interface MissieDeelnemerModel {
 }
 
 interface GetMissieKost {
-  userId:string;
+  userId: string;
   naam: string;
-  bedrag:string;
+  bedrag: string;
 }

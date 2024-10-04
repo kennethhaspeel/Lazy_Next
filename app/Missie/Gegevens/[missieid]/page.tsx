@@ -54,7 +54,7 @@ const page = async ({ params: { missieid } }: Props) => {
             />
           )}
         </div>
-        <div className="bg-slate-100 dark:bg-slate-800 p-2 mt-4">
+        <div className="bg-slate-300 dark:bg-slate-800 p-2 mt-4">
           <h2 className="text-xl ps-2">Missie Details</h2>
         </div>
         <div className="hidden sm:block w-full ps-2">
@@ -81,7 +81,7 @@ const page = async ({ params: { missieid } }: Props) => {
         )}
       </div>
 
-      <div className="bg-slate-100 dark:bg-slate-800 p-2 mt-2">
+      <div className="bg-slate-300 dark:bg-slate-800 p-2 mt-2">
         <h2 className="text-xl ps-2">Deelnemers</h2>
       </div>
       <ToonDeelnemers
