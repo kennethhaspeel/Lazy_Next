@@ -16,15 +16,16 @@ const APP_DESCRIPTION = "Lazy Company Virtual HQ";
 export const metadata: Metadata = {
   applicationName: APP_NAME,
   description: APP_DESCRIPTION,
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: "default",
-    title: APP_DEFAULT_TITLE,
-    // startUpImage: [],
-  },
+  // appleWebApp: {
+  //   capable: true,
+  //   statusBarStyle: "default",
+  //   title: APP_DEFAULT_TITLE,
+  //   // startUpImage: [],
+  // },
   formatDetection: {
     telephone: false,
   },
+  
   openGraph: {
     type: "website",
     siteName: APP_NAME,
