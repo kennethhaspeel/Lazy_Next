@@ -45,12 +45,12 @@ export async function PostNieuweEtappe(model: PostEtappeNieuwModel) {
       data: {
         missieEtappeId: etappe.id,
         userId: model.betaler!,
-        bedrag: model.kost * -1,
+        bedrag: model.kost,
       },
     });
 
     let bedrag =
-      Math.round((model.kost / model.verschuldigDoor?.length) * 100) / 100;
+      (Math.round((model.kost / model.verschuldigDoor?.length) * 100) / 100)*-1;
     model.verschuldigDoor.map(async (u) => {
       await db.kostVerdeling.create({
         data: {

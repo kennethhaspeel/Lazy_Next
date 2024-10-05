@@ -70,3 +70,7 @@ export const GMTtoDate=(datum)=>{
 export const YYYYMMDDtoDate = (datumstring) => {
   return parse(datumstring, "yyyy-MM-dd", new Date());
 };
+
+export const DDMMYYYYtoDate = (datumstring) => {
+  return parse(datumstring, "dd/MM/yyyy", new Date());
+};

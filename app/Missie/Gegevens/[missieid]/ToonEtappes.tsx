@@ -130,7 +130,7 @@ const ToonEtappes = ({ Etaps, Begindatum, Einddatum, missieid,afgesloten }: Prop
                   key={`rij_${etappe.id}`}
                 >
                   <div className="md:col-span-5 pt-1  content-center">
-                    {etappe.omschrijving}
+                    {etappe.titel}
                   </div>
                   <div className="md:col-span-1 pt-1 content-center">
                     {format(fromUnixTime(etappe.startDatum), "HH:mm")}

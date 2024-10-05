@@ -32,11 +32,9 @@ const formSchema = z.object({
   titel: z.string().min(1, "Geef de missie een titel"),
   omschrijving: z
     .string()
-    .min(1, "Geef een korte omschrijving van de missie")
     .optional(),
   locatie: z
     .string()
-    .min(1, "Geef een korte omschrijving van de missie")
     .optional(),
   startTijd: z.string().time("Gelieve een starttijd in te geven"),
   kost: z.number(),

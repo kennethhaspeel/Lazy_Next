@@ -96,7 +96,6 @@ model Missie {
   publiekZichtbaar Boolean         @default(false)
   afgsloten        Boolean         @default(false)
   MissieUser       MissieUser[]
-  FinTransactie    FinTransactie[]
   MissieEtappe     MissieEtappe[]
 }
 
@@ -149,15 +148,13 @@ model MissieEtappeBestand {
   user           User         @relation(fields: [userId], references: [id])
   userId         String
   isBewijsstuk   Boolean      @default(false)
-  locatie        String?       @db.VarChar(500)
+  locatie        String?      @db.VarChar(500)
 }
 
 model FinTransactie {
   id         Int     @id @default(autoincrement())
   user       User    @relation(fields: [userId], references: [id])
   userId     String
-  missie     Missie  @relation(fields: [missieId], references: [id])
-  missieId   Int
   datum      Int     @default(0)
   bedrag     Decimal @default(0)
   mededeling String?

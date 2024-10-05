@@ -23,7 +23,7 @@ const Overzicht = async () => {
         </div>
         <Suspense fallback={<LoadingSpinner />}>
           <div className="py-2">
-            <FinListBox items={rijen} />
+            <FinListBox items={JSON.parse(JSON.stringify(rijen))} />
           </div>
         </Suspense>
       </div>
