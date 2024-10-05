@@ -1,130 +1,34 @@
-import React from "react";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/AuthOptions";
+import { GetTransactiesPerPersoon } from "@/lib/actions/FinancieelActions";
+import Uitleg from "./Uitleg";
+import { Suspense } from "react";
+import LoadingSpinner from "@/app/components/LoadingSpinner";
+import FinListBox from './Listbox/FinListbox'
 
-const page = () => {
+const Overzicht = async () => {
+  const session = await getServerSession(authOptions);
+  if (session?.user.rollen.indexOf("deelnemer") === -1 || session === null) {
+    return <h1 className="text-5xl">Geen Toegang</h1>;
+  }
+
+  const rijen = await GetTransactiesPerPersoon(session?.user.id);
+  console.log(rijen);
   return (
     <>
-      <p className="pt-5">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Commodo elit at
-        imperdiet dui accumsan sit amet nulla facilisi. Quis viverra nibh cras
-        pulvinar mattis nunc sed. Suspendisse faucibus interdum posuere lorem
-        ipsum. Consequat id porta nibh venenatis cras sed felis eget velit.
-        Magna etiam tempor orci eu lobortis elementum. Fringilla phasellus
-        faucibus scelerisque eleifend donec pretium. Semper viverra nam libero
-        justo laoreet sit amet cursus. Nec feugiat in fermentum posuere urna nec
-        tincidunt. Fames ac turpis egestas sed tempus urna et. Venenatis lectus
-        magna fringilla urna porttitor rhoncus dolor.
-      </p>
-      <p className="pt-5">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Commodo elit at
-        imperdiet dui accumsan sit amet nulla facilisi. Quis viverra nibh cras
-        pulvinar mattis nunc sed. Suspendisse faucibus interdum posuere lorem
-        ipsum. Consequat id porta nibh venenatis cras sed felis eget velit.
-        Magna etiam tempor orci eu lobortis elementum. Fringilla phasellus
-        faucibus scelerisque eleifend donec pretium. Semper viverra nam libero
-        justo laoreet sit amet cursus. Nec feugiat in fermentum posuere urna nec
-        tincidunt. Fames ac turpis egestas sed tempus urna et. Venenatis lectus
-        magna fringilla urna porttitor rhoncus dolor.
-      </p>
-      <p className="pt-5">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Commodo elit at
-        imperdiet dui accumsan sit amet nulla facilisi. Quis viverra nibh cras
-        pulvinar mattis nunc sed. Suspendisse faucibus interdum posuere lorem
-        ipsum. Consequat id porta nibh venenatis cras sed felis eget velit.
-        Magna etiam tempor orci eu lobortis elementum. Fringilla phasellus
-        faucibus scelerisque eleifend donec pretium. Semper viverra nam libero
-        justo laoreet sit amet cursus. Nec feugiat in fermentum posuere urna nec
-        tincidunt. Fames ac turpis egestas sed tempus urna et. Venenatis lectus
-        magna fringilla urna porttitor rhoncus dolor.
-      </p>
-      <p className="pt-5">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Commodo elit at
-        imperdiet dui accumsan sit amet nulla facilisi. Quis viverra nibh cras
-        pulvinar mattis nunc sed. Suspendisse faucibus interdum posuere lorem
-        ipsum. Consequat id porta nibh venenatis cras sed felis eget velit.
-        Magna etiam tempor orci eu lobortis elementum. Fringilla phasellus
-        faucibus scelerisque eleifend donec pretium. Semper viverra nam libero
-        justo laoreet sit amet cursus. Nec feugiat in fermentum posuere urna nec
-        tincidunt. Fames ac turpis egestas sed tempus urna et. Venenatis lectus
-        magna fringilla urna porttitor rhoncus dolor.
-      </p>
-      <p className="pt-5">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Commodo elit at
-        imperdiet dui accumsan sit amet nulla facilisi. Quis viverra nibh cras
-        pulvinar mattis nunc sed. Suspendisse faucibus interdum posuere lorem
-        ipsum. Consequat id porta nibh venenatis cras sed felis eget velit.
-        Magna etiam tempor orci eu lobortis elementum. Fringilla phasellus
-        faucibus scelerisque eleifend donec pretium. Semper viverra nam libero
-        justo laoreet sit amet cursus. Nec feugiat in fermentum posuere urna nec
-        tincidunt. Fames ac turpis egestas sed tempus urna et. Venenatis lectus
-        magna fringilla urna porttitor rhoncus dolor.
-      </p>
-      <p className="pt-5">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Commodo elit at
-        imperdiet dui accumsan sit amet nulla facilisi. Quis viverra nibh cras
-        pulvinar mattis nunc sed. Suspendisse faucibus interdum posuere lorem
-        ipsum. Consequat id porta nibh venenatis cras sed felis eget velit.
-        Magna etiam tempor orci eu lobortis elementum. Fringilla phasellus
-        faucibus scelerisque eleifend donec pretium. Semper viverra nam libero
-        justo laoreet sit amet cursus. Nec feugiat in fermentum posuere urna nec
-        tincidunt. Fames ac turpis egestas sed tempus urna et. Venenatis lectus
-        magna fringilla urna porttitor rhoncus dolor.
-      </p>
-      <p className="pt-5">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Commodo elit at
-        imperdiet dui accumsan sit amet nulla facilisi. Quis viverra nibh cras
-        pulvinar mattis nunc sed. Suspendisse faucibus interdum posuere lorem
-        ipsum. Consequat id porta nibh venenatis cras sed felis eget velit.
-        Magna etiam tempor orci eu lobortis elementum. Fringilla phasellus
-        faucibus scelerisque eleifend donec pretium. Semper viverra nam libero
-        justo laoreet sit amet cursus. Nec feugiat in fermentum posuere urna nec
-        tincidunt. Fames ac turpis egestas sed tempus urna et. Venenatis lectus
-        magna fringilla urna porttitor rhoncus dolor.
-      </p>
-      <p className="pt-5">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Commodo elit at
-        imperdiet dui accumsan sit amet nulla facilisi. Quis viverra nibh cras
-        pulvinar mattis nunc sed. Suspendisse faucibus interdum posuere lorem
-        ipsum. Consequat id porta nibh venenatis cras sed felis eget velit.
-        Magna etiam tempor orci eu lobortis elementum. Fringilla phasellus
-        faucibus scelerisque eleifend donec pretium. Semper viverra nam libero
-        justo laoreet sit amet cursus. Nec feugiat in fermentum posuere urna nec
-        tincidunt. Fames ac turpis egestas sed tempus urna et. Venenatis lectus
-        magna fringilla urna porttitor rhoncus dolor.
-      </p>
-      <p className="pt-5">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Commodo elit at
-        imperdiet dui accumsan sit amet nulla facilisi. Quis viverra nibh cras
-        pulvinar mattis nunc sed. Suspendisse faucibus interdum posuere lorem
-        ipsum. Consequat id porta nibh venenatis cras sed felis eget velit.
-        Magna etiam tempor orci eu lobortis elementum. Fringilla phasellus
-        faucibus scelerisque eleifend donec pretium. Semper viverra nam libero
-        justo laoreet sit amet cursus. Nec feugiat in fermentum posuere urna nec
-        tincidunt. Fames ac turpis egestas sed tempus urna et. Venenatis lectus
-        magna fringilla urna porttitor rhoncus dolor.
-      </p>
-      <p className="pt-5">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Commodo elit at
-        imperdiet dui accumsan sit amet nulla facilisi. Quis viverra nibh cras
-        pulvinar mattis nunc sed. Suspendisse faucibus interdum posuere lorem
-        ipsum. Consequat id porta nibh venenatis cras sed felis eget velit.
-        Magna etiam tempor orci eu lobortis elementum. Fringilla phasellus
-        faucibus scelerisque eleifend donec pretium. Semper viverra nam libero
-        justo laoreet sit amet cursus. Nec feugiat in fermentum posuere urna nec
-        tincidunt. Fames ac turpis egestas sed tempus urna et. Venenatis lectus
-        magna fringilla urna porttitor rhoncus dolor.
-      </p>
+      <div className="w-7xl w-full p-2">
+        <div className="text-2xl">
+          Spaarboekske&nbsp;
+          <Uitleg />
+        </div>
+        <Suspense fallback={<LoadingSpinner />}>
+          <div className="py-2">
+            <FinListBox items={rijen} />
+          </div>
+        </Suspense>
+      </div>
     </>
   );
 };
 
-export default page;
+export default Overzicht;

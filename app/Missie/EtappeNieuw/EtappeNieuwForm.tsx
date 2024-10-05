@@ -95,6 +95,7 @@ const EtappeNieuwForm = ({ deelnemers, missieid, datum }: Props) => {
         verschuldigDoor: data.kost > 0 ? verschuldigdDoor : [],
         betaler: data.kost > 0 ? betaler : "",
       };
+      console.log(model);
       const result = await PostNieuweEtappe(model);
       router.push(`/Missie/Gegevens/${missieid}`);
     } catch (error) {
@@ -120,6 +121,13 @@ const EtappeNieuwForm = ({ deelnemers, missieid, datum }: Props) => {
   const BetalerAanpassen = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setBetaler(e.target.value);
   };
+
+  // useEffect(() => {
+  //   console.log(betaler);
+  // }, [betaler]);
+  // useEffect(() => {
+  //   console.log(verschuldigdDoor);
+  // }, [verschuldigdDoor]);
 
   return (
     <>

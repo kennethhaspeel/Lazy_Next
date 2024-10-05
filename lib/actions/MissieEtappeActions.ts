@@ -18,13 +18,15 @@ export async function GetAllEtappes(missieid: number, sortOrder: string) {
   });
   return result;
 }
-export async function GetAllEtappesMetBewijsstuk(missieid: number, sortOrder:string) {
-  const result : GetEtappeMetAantallen[] = await db.$queryRaw `select  * from public.v_etappes_met_aantallen where "missieId" = ${missieid} `
-//console.log(result)
+export async function GetAllEtappesMetBewijsstuk(
+  missieid: number,
+  sortOrder: string
+) {
+  const result: GetEtappeMetAantallen[] =
+    await db.$queryRaw`select  * from public.v_etappes_met_aantallen where "missieId" = ${missieid} `;
+  //console.log(result)
   return result;
 }
-
-
 
 export async function PostNieuweEtappe(model: PostEtappeNieuwModel) {
   const etappe = await db.missieEtappe.create({
@@ -39,6 +41,14 @@ export async function PostNieuweEtappe(model: PostEtappeNieuwModel) {
     },
   });
   if (model.kost > 0 && model.verschuldigDoor) {
+    await db.kostVerdeling.create({
+      data: {
+        missieEtappeId: etappe.id,
+        userId: model.betaler!,
+        bedrag: model.kost * -1,
+      },
+    });
+
     let bedrag =
       Math.round((model.kost / model.verschuldigDoor?.length) * 100) / 100;
     model.verschuldigDoor.map(async (u) => {
