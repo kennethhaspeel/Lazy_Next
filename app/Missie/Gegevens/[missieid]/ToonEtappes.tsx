@@ -21,6 +21,7 @@ import {
   ChevronDownIcon,
   DocumentPlusIcon,
   EyeIcon,
+  PencilSquareIcon,
 } from "@heroicons/react/16/solid";
 import Link from "next/link";
 
@@ -33,9 +34,17 @@ interface Props {
   afgesloten: boolean;
 }
 
-const ToonEtappes = ({ Etaps, Begindatum, Einddatum, missieid,afgesloten }: Props) => {
+const ToonEtappes = ({
+  Etaps,
+  Begindatum,
+  Einddatum,
+  missieid,
+  afgesloten,
+}: Props) => {
   const router = useRouter();
-  const [Etappes, setEtappes] = useState<GetEtappeMetAantallen[]>(JSON.parse(Etaps));
+  const [Etappes, setEtappes] = useState<GetEtappeMetAantallen[]>(
+    JSON.parse(Etaps)
+  );
   const [totaleKost, setTotaleKost] = useState(0.0);
   const [ladenNieuweEtappe, setLadenNieuweEtappe] = useState(false);
   useEffect(() => {
@@ -44,7 +53,6 @@ const ToonEtappes = ({ Etaps, Begindatum, Einddatum, missieid,afgesloten }: Prop
       totaal += Number(etap.kost);
     });
     setTotaleKost(totaal);
-
   }, [Etappes]);
 
   const MissieDatums: Date[] = GetMissieDagen(
@@ -72,33 +80,35 @@ const ToonEtappes = ({ Etaps, Begindatum, Einddatum, missieid,afgesloten }: Prop
               key={`tabel_${datum.toString()}`}
               aria-label="Algemeen"
               title={index === 0 ? "Algemeen" : format(datum, "dd/MM/yyyy")}
-              startContent={ !afgesloten &&
-                <div
-                  className="border-2 border-sky-500 rounded-lg  px-4 py-1"
-                  onClick={() => {
-                    setLadenNieuweEtappe(true);
-                    redirectNieuweEtappe(datum);
-                  }}
-                >
-                  {ladenNieuweEtappe ? (
-                    <Spinner size="sm" />
-                  ) : (
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={1.5}
-                      stroke="currentColor"
-                      className="size-6"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M12 4.5v15m7.5-7.5h-15"
-                      />
-                    </svg>
-                  )}
-                </div>
+              startContent={
+                !afgesloten && (
+                  <div
+                    className="border-2 border-sky-500 rounded-lg  px-4 py-1"
+                    onClick={() => {
+                      setLadenNieuweEtappe(true);
+                      redirectNieuweEtappe(datum);
+                    }}
+                  >
+                    {ladenNieuweEtappe ? (
+                      <Spinner size="sm" />
+                    ) : (
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="size-6"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M12 4.5v15m7.5-7.5h-15"
+                        />
+                      </svg>
+                    )}
+                  </div>
+                )
               }
             >
               <div className="hidden md:grid md:grid-cols-11">
@@ -130,6 +140,13 @@ const ToonEtappes = ({ Etaps, Begindatum, Einddatum, missieid,afgesloten }: Prop
                   key={`rij_${etappe.id}`}
                 >
                   <div className="md:col-span-5 pt-1  content-center">
+                    <Button
+                      isIconOnly
+                      as={Link}
+                      href={`/Etappe/Bewerk/${missieid}/${etappe.id}`}
+                    >
+                      <PencilSquareIcon />
+                    </Button>&nbsp;
                     {etappe.titel}
                   </div>
                   <div className="md:col-span-1 pt-1 content-center">
@@ -145,9 +162,7 @@ const ToonEtappes = ({ Etaps, Begindatum, Einddatum, missieid,afgesloten }: Prop
                           {etappe.aantalbewijsstukken === 1 ? (
                             <span>1 stuk</span>
                           ) : (
-                            <span>
-                              {etappe.aantalbewijsstukken} stukken
-                            </span>
+                            <span>{etappe.aantalbewijsstukken} stukken</span>
                           )}
                         </>
                       </Button>
@@ -178,7 +193,9 @@ const ToonEtappes = ({ Etaps, Begindatum, Einddatum, missieid,afgesloten }: Prop
 
                           <DropdownItem
                             key={`foto_${etappe.id}`}
-                            startContent={<DocumentPlusIcon className="size-6" />}
+                            startContent={
+                              <DocumentPlusIcon className="size-6" />
+                            }
                             href={`/Bestanden/UploadBestand/${missieid}/${etappe.id}/true`}
                           >
                             Toevoegen
@@ -194,9 +211,7 @@ const ToonEtappes = ({ Etaps, Begindatum, Einddatum, missieid,afgesloten }: Prop
                           {etappe.aantalbijlages === 1 ? (
                             <span>1 stuk</span>
                           ) : (
-                            <span>
-                              {etappe.aantalbijlages} stukken
-                            </span>
+                            <span>{etappe.aantalbijlages} stukken</span>
                           )}
                         </>
                       </Button>
@@ -227,7 +242,9 @@ const ToonEtappes = ({ Etaps, Begindatum, Einddatum, missieid,afgesloten }: Prop
 
                           <DropdownItem
                             key={`foto_${etappe.id}`}
-                            startContent={<DocumentPlusIcon className="size-6" />}
+                            startContent={
+                              <DocumentPlusIcon className="size-6" />
+                            }
                             href={`/Bestanden/UploadBestand/${missieid}/${etappe.id}/false`}
                           >
                             Toevoegen
