@@ -31,7 +31,7 @@ export async function GetAllEtappesMetBewijsstuk(
 export async function PostNieuweEtappe(model: PostEtappeNieuwModel) {
   const etappe = await db.missieEtappe.create({
     data: {
-      missieId: model.missieid,
+      missieId: model.missieid!,
       titel: model.titel,
       omschrijving: model.omschrijving ? model.omschrijving : "",
       locatie: model.locatie ? model.locatie : "",
@@ -50,7 +50,8 @@ export async function PostNieuweEtappe(model: PostEtappeNieuwModel) {
     });
 
     let bedrag =
-      (Math.round((model.kost / model.verschuldigDoor?.length) * 100) / 100)*-1;
+      (Math.round((model.kost / model.verschuldigDoor?.length) * 100) / 100) *
+      -1;
     model.verschuldigDoor.map(async (u) => {
       await db.kostVerdeling.create({
         data: {
@@ -63,4 +64,47 @@ export async function PostNieuweEtappe(model: PostEtappeNieuwModel) {
   }
 
   return etappe.id;
+}
+
+export async function PostUpdateEtappe(model: PostEtappeNieuwModel) {
+  const deleteKosten = await db.kostVerdeling.deleteMany({
+    where: {
+      missieEtappeId: model.missieid,
+    },
+  });
+  const updateEtappe = await db.missieEtappe.update({
+    where: {
+      id: model.missieid,
+    },
+    data: {
+      titel: model.titel,
+      omschrijving: model.omschrijving,
+      locatie: model.locatie,
+      startDatum: getUnixTime(model.startDatum),
+      kost: model.kost,
+      userId: model.betaler,
+    },
+  });
+  if (model.kost > 0 && model.verschuldigDoor) {
+    await db.kostVerdeling.create({
+      data: {
+        missieEtappeId: model.missieid!,
+        userId: model.betaler!,
+        bedrag: model.kost,
+      },
+    });
+  let bedrag =
+  (Math.round((model.kost / model.verschuldigDoor?.length) * 100) / 100) *
+  -1;
+model.verschuldigDoor.map(async (u) => {
+  await db.kostVerdeling.create({
+    data: {
+      missieEtappeId: model.missieid!,
+      userId: u,
+      bedrag: bedrag,
+    },
+  });
+
+});
+  }
 }

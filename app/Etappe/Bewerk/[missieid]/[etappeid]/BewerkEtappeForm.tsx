@@ -38,7 +38,7 @@ interface Props {
   details: EtappeDetail;
 }
 const BewerkEtappeForm = ({ deelnemers, details }: Props) => {
-  //console.log(deelnemers,details)
+  console.log(deelnemers,details)
   const router = useRouter();
   const [verschuldigdDoor, setVerschuldigdDoor] = useState<string[]>([]);
   const [betalerslijst, setBetalersLijst] = useState<MissieDeelnemerModel[]>(
@@ -51,10 +51,11 @@ const BewerkEtappeForm = ({ deelnemers, details }: Props) => {
   let [datum, setDatum] = useState<Date>(new Date());
   const bewaarEtappe: SubmitHandler<InputType> = async (data) => {
     try {
-        let d = datum
-        d.setHours(starttijdValue.hour)
-        d.setMinutes(starttijdValue.minute)
+      let d = datum;
+      d.setHours(starttijdValue.hour);
+      d.setMinutes(starttijdValue.minute);
       const model: PostEtappeNieuwModel = {
+        missieid:details.id,
         titel: data.titel,
         omschrijving: data.omschrijving,
         locatie: data.locatie,
@@ -63,6 +64,8 @@ const BewerkEtappeForm = ({ deelnemers, details }: Props) => {
         verschuldigDoor: data.kost > 0 ? verschuldigdDoor : [],
         betaler: data.kost > 0 ? betaler : "",
       };
+
+
     } catch (error) {
       if (error instanceof Error) {
         console.log(error.message);

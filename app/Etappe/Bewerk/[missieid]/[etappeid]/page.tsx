@@ -30,7 +30,7 @@ const BewerkEtappe = async ({ params: { missieid, etappeid } }: Props) => {
     <>
       <section className="pt-5">
         <p className="text-3xl pb-4">
-          Bewerk "{(await EtappeDetails).titel}"
+          Bewerk &quot;{(await EtappeDetails).titel}&quot;
           <Button as={Link} href={`/Missie/Gegevens/${missieid}`}>
             Terug naar missie
           </Button>
