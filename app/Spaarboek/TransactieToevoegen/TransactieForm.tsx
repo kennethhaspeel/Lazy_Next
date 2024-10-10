@@ -19,6 +19,7 @@ import {
 } from "@/lib/actions/FinancieelActions";
 
 import { prisma } from "@/lib/prisma";
+import { toast } from "react-toastify";
 
 const formSchema = z.object({
   mededeling: z.string().optional(),
@@ -40,15 +41,22 @@ const TransactieForm = ({ users }: Props) => {
       datum: data.datum,
       mededeling: data.mededeling ? data.mededeling : "Storting",
     };
-    const SpaarboekTransactie = await PostTransactieSpaarboek(d);
-const fTransactie = await PostTransactie(d)
+    try {
+      const SpaarboekTransactie = await PostTransactieSpaarboek(d);
+      const fTransactie = await PostTransactie(d);
 
-    alert('ok')
+      toast.success("Transactie werd bewaard...");
+      reset();
+    } catch (error) {
+      toast.error("Fout bij bewaren");
+      console.log(error);
+    }
   };
   const {
     register,
     handleSubmit,
     setValue,
+    reset,
     formState: { errors, isSubmitting },
   } = useForm<InputType>({
     resolver: zodResolver(formSchema),
@@ -119,7 +127,7 @@ const fTransactie = await PostTransactie(d)
                 disabled={isSubmitting}
                 isLoading={isSubmitting}
               >
-                {isSubmitting ? "Etappe wordt bewaard" : "Bewaar"}
+                {isSubmitting ? "Transactie wordt bewaard" : "Bewaar"}
               </Button>
             </div>
           </form>

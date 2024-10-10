@@ -17,9 +17,10 @@ interface Props {
   items: FinTransactie[];
 }
 const FinListbox = ({ items }: Props) => {
+
   return (
     <>
-
+<div className="w-full m-3 p-3 rounded-xl dark:bg-slate-800">Totaal: {items.reduce((accumulator, current) => accumulator + Number(current.bedrag), 0)}</div>
       <Table aria-label="tabel" isCompact fullWidth>
         <TableHeader>
           <TableColumn>Datum</TableColumn>
