@@ -93,18 +93,17 @@ export async function PostUpdateEtappe(model: PostEtappeNieuwModel) {
         bedrag: model.kost,
       },
     });
-  let bedrag =
-  (Math.round((model.kost / model.verschuldigDoor?.length) * 100) / 100) *
-  -1;
-model.verschuldigDoor.map(async (u) => {
-  await db.kostVerdeling.create({
-    data: {
-      missieEtappeId: model.missieid!,
-      userId: u,
-      bedrag: bedrag,
-    },
-  });
-
-});
+    let bedrag =
+      (Math.round((model.kost / model.verschuldigDoor?.length) * 100) / 100) *
+      -1;
+    model.verschuldigDoor.map(async (u) => {
+      await db.kostVerdeling.create({
+        data: {
+          missieEtappeId: model.missieid!,
+          userId: u,
+          bedrag: bedrag,
+        },
+      });
+    });
   }
 }

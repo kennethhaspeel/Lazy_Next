@@ -49,7 +49,7 @@ const FormMissieBewerk = ({ missieData }: Props) => {
         publiekZichtbaar: zichtbaar,
       };
       const result = await UpdateMissie(model);
-      router.push(`/Missie/Gegevens/${missieData.id}`);
+       router.push(`/Missie/Gegevens/${missieData.id}`);
     } catch (error) {
       if (error instanceof Error) {
         toast.error(`${error.message}`);
@@ -90,15 +90,6 @@ const FormMissieBewerk = ({ missieData }: Props) => {
           errorMessage={errors.omschrijving?.message}
           isInvalid={!!errors.omschrijving}
           label="Korte omschrijving"
-          className="col-span-2"
-        />
-      </div>
-      <div className="mb-1 sm:mb-5 align-middle">
-        <Input
-          {...register("locatie")}
-          errorMessage={errors.locatie?.message}
-          isInvalid={!!errors.locatie}
-          label="Algemene locatie"
           className="col-span-2"
         />
       </div>

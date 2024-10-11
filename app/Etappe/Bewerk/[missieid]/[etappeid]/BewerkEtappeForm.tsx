@@ -24,6 +24,7 @@ import {
 import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
 import { parseAbsoluteToLocal, Time } from "@internationalized/date";
+import { PostUpdateEtappe } from "@/lib/actions/MissieEtappeActions";
 const formSchema = z.object({
   titel: z.string().min(1, "Geef de missie een titel"),
   omschrijving: z.string().optional(),
@@ -38,7 +39,7 @@ interface Props {
   details: EtappeDetail;
 }
 const BewerkEtappeForm = ({ deelnemers, details }: Props) => {
-  console.log(deelnemers,details)
+  console.log(details);
   const router = useRouter();
   const [verschuldigdDoor, setVerschuldigdDoor] = useState<string[]>([]);
   const [betalerslijst, setBetalersLijst] = useState<MissieDeelnemerModel[]>(
@@ -54,8 +55,9 @@ const BewerkEtappeForm = ({ deelnemers, details }: Props) => {
       let d = datum;
       d.setHours(starttijdValue.hour);
       d.setMinutes(starttijdValue.minute);
+      console.log(d)
       const model: PostEtappeNieuwModel = {
-        missieid:details.id,
+        missieid: details.id,
         titel: data.titel,
         omschrijving: data.omschrijving,
         locatie: data.locatie,
@@ -64,8 +66,10 @@ const BewerkEtappeForm = ({ deelnemers, details }: Props) => {
         verschuldigDoor: data.kost > 0 ? verschuldigdDoor : [],
         betaler: data.kost > 0 ? betaler : "",
       };
-
-
+      //console.log(model);
+      const result = await PostUpdateEtappe(model);
+      //console.log(result);
+      toast.success("Aanpassing Bewaard");
     } catch (error) {
       if (error instanceof Error) {
         console.log(error.message);
@@ -92,11 +96,12 @@ const BewerkEtappeForm = ({ deelnemers, details }: Props) => {
       },
     ];
     deelnemers.map((deel) => {
+      //console.log(deel)
       betLijst.push(deel);
     });
     setBetalersLijst(betLijst);
     setVerschuldigdDoor(details.kostenverdeling);
-
+    setDatum(fromUnixTime(details.startDatum));
     let dat = fromUnixTime(details.startDatum);
     let tijd = new Time(dat.getHours(), dat.getMinutes());
     setStarttijdValue(new Time(dat.getHours(), dat.getMinutes()));
@@ -105,12 +110,13 @@ const BewerkEtappeForm = ({ deelnemers, details }: Props) => {
   useEffect(() => {
     console.log(errors);
   }, [errors]);
+
   const BetalerAanpassen = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setBetaler(e.target.value);
   };
   useEffect(() => {
-    console.log(datum);
-  }, [datum]);
+    console.log(verschuldigdDoor);
+  }, [verschuldigdDoor]);
 
   return (
     <>
