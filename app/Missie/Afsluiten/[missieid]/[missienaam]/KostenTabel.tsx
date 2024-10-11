@@ -34,39 +34,48 @@ const KostenTabel = ({ kosten, missieid, missienaam }: Props) => {
 
   return (
     <>
-          <Table aria-label="Overzicht Kosten" hideHeader>
+      <Table aria-label="Overzicht Kosten" hideHeader>
         <TableHeader>
           <TableColumn>Naam</TableColumn>
           <TableColumn>Bedrag</TableColumn>
         </TableHeader>
         <TableBody items={kosten} emptyContent={"Geen gegevens"}>
-      
-            {kosten.filter((kost)=>kost.userId === 'clxucmprp0002p31rf6p6mux3').map((kost) => (
+          {kosten
+            .filter((kost) => kost.userId === "clxucmprp0002p31rf6p6mux3")
+            .map((kost) => (
               <TableRow key={kost.userId}>
                 <TableCell>{kost.naam}</TableCell>
                 <TableCell>{kost.bedrag}</TableCell>
               </TableRow>
             ))}
-
-  
         </TableBody>
       </Table>
-      <Divider className="mt-2 mb-2"/>
+      <Divider className="mt-2 mb-2" />
       <Table aria-label="Overzicht Kosten">
         <TableHeader>
           <TableColumn>Naam</TableColumn>
           <TableColumn>Bedrag</TableColumn>
         </TableHeader>
         <TableBody items={kosten} emptyContent={"Geen gegevens"}>
-      
-            {kosten.filter((kost)=>kost.userId != 'clxucmprp0002p31rf6p6mux3').map((kost) => (
+          {kosten
+            .filter((kost) => kost.userId != "clxucmprp0002p31rf6p6mux3")
+            .sort((a, b) => {
+              const naamA = a.naam;
+              const naamB = b.naam;
+              if (naamA < naamB) {
+                return -1;
+              }
+              if (naamA > naamB) {
+                return 1;
+              }
+              return 0;
+            })
+            .map((kost) => (
               <TableRow key={kost.userId}>
                 <TableCell>{kost.naam}</TableCell>
                 <TableCell>{kost.bedrag}</TableCell>
               </TableRow>
             ))}
-
-  
         </TableBody>
       </Table>
       <div className="mb-5 mt-5 w-full">

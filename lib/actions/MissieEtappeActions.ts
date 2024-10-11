@@ -23,7 +23,7 @@ export async function GetAllEtappesMetBewijsstuk(
   sortOrder: string
 ) {
   const result: GetEtappeMetAantallen[] =
-    await db.$queryRaw`select  * from public.v_etappes_met_aantallen where "missieId" = ${missieid} `;
+    await db.$queryRaw`select  * from public.v_etappes_met_aantallen where "missieId" = ${missieid} order by "startDatum"`;
   //console.log(result)
   return result;
 }

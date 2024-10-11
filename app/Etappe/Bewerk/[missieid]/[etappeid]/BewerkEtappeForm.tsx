@@ -39,7 +39,7 @@ interface Props {
   details: EtappeDetail;
 }
 const BewerkEtappeForm = ({ deelnemers, details }: Props) => {
-  console.log(details);
+  //console.log(details);
   const router = useRouter();
   const [verschuldigdDoor, setVerschuldigdDoor] = useState<string[]>([]);
   const [betalerslijst, setBetalersLijst] = useState<MissieDeelnemerModel[]>(
@@ -114,9 +114,9 @@ const BewerkEtappeForm = ({ deelnemers, details }: Props) => {
   const BetalerAanpassen = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setBetaler(e.target.value);
   };
-  useEffect(() => {
-    console.log(verschuldigdDoor);
-  }, [verschuldigdDoor]);
+  // useEffect(() => {
+  //   console.log(verschuldigdDoor);
+  // }, [verschuldigdDoor]);
 
   return (
     <>
@@ -212,7 +212,7 @@ const BewerkEtappeForm = ({ deelnemers, details }: Props) => {
                 onValueChange={setVerschuldigdDoor}
                 color="success"
               >
-                {deelnemers.map((deel) => (
+                {deelnemers.filter((deel)=>deel.id != 'clxucmprp0002p31rf6p6mux3').map((deel) => (
                   <Checkbox value={deel.id} key={deel.id}>
                     {deel.naam}
                   </Checkbox>

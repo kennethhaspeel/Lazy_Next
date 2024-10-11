@@ -28,7 +28,7 @@ const page = async ({ params: { missieid } }: Props) => {
   const missieData: Promise<MissieModel> = GetMission(Number(missieid));
   const allUsers: Promise<User[]> = GetAllUsers();
   const allEtappes: Promise<GetEtappeMetAantallen[]> =
-    GetAllEtappesMetBewijsstuk(Number(missieid), "ASC");
+    GetAllEtappesMetBewijsstuk(Number(missieid), "desc");
   const allDeelnemers: Promise<MissieDeelnemerModel[]> = GetMissieDeelnemers(
     Number(missieid)
   );

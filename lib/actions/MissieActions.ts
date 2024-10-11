@@ -176,7 +176,6 @@ interface PostMissieKostenArr {
   userId: string;
   datum:number;
   mededeling:string;
-  missieId: number;
 }
 
 export async function PostMissieKosten({
@@ -191,7 +190,6 @@ export async function PostMissieKosten({
       userId: record.userId,
       datum: getUnixTime(new Date()),
       mededeling: `Afrekening missie "${atob(missienaam)}"`,
-      missieId: missieid,
     })
   });
   const response = await db.finTransactie.createMany({data: arr})
