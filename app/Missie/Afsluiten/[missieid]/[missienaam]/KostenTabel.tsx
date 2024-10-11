@@ -14,57 +14,89 @@ import {
   ModalFooter,
   useDisclosure,
   Link,
+  Divider,
 } from "@nextui-org/react";
 import { useState } from "react";
-import { PostMissieAfsluiting, PostMissieKosten } from "@/lib/actions/MissieActions";
+import {
+  PostMissieAfsluiting,
+  PostMissieKosten,
+} from "@/lib/actions/MissieActions";
 
 interface Props {
   kosten: GetMissieKost[];
   missieid: number;
-  missienaam:string;
+  missienaam: string;
 }
 
-const KostenTabel = ({ kosten,missieid,missienaam }: Props) => {
-  const [loading, setLoading] = useState(false)
+const KostenTabel = ({ kosten, missieid, missienaam }: Props) => {
+  const [loading, setLoading] = useState(false);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   return (
     <>
+          <Table aria-label="Overzicht Kosten" hideHeader>
+        <TableHeader>
+          <TableColumn>Naam</TableColumn>
+          <TableColumn>Bedrag</TableColumn>
+        </TableHeader>
+        <TableBody items={kosten} emptyContent={"Geen gegevens"}>
+      
+            {kosten.filter((kost)=>kost.userId === 'clxucmprp0002p31rf6p6mux3').map((kost) => (
+              <TableRow key={kost.userId}>
+                <TableCell>{kost.naam}</TableCell>
+                <TableCell>{kost.bedrag}</TableCell>
+              </TableRow>
+            ))}
+
+  
+        </TableBody>
+      </Table>
+      <Divider className="mt-2 mb-2"/>
       <Table aria-label="Overzicht Kosten">
         <TableHeader>
           <TableColumn>Naam</TableColumn>
           <TableColumn>Bedrag</TableColumn>
         </TableHeader>
         <TableBody items={kosten} emptyContent={"Geen gegevens"}>
-          {kosten.map((kost) => (
-            <TableRow key={kost.userId}>
-              <TableCell>{kost.naam}</TableCell>
-              <TableCell>{kost.bedrag}</TableCell>
-            </TableRow>
-          ))}
+      
+            {kosten.filter((kost)=>kost.userId != 'clxucmprp0002p31rf6p6mux3').map((kost) => (
+              <TableRow key={kost.userId}>
+                <TableCell>{kost.naam}</TableCell>
+                <TableCell>{kost.bedrag}</TableCell>
+              </TableRow>
+            ))}
+
+  
         </TableBody>
       </Table>
       <div className="mb-5 mt-5 w-full">
-          <Button
-            className="w-full"
-            color="primary"
-            type="submit"
-            disabled={loading}
-            isLoading={loading}
-            onClick={async()=>{
-              setLoading(true)
-              let response = await PostMissieKosten({kosten,missieid,missienaam})
-              console.log(response)
-              let afsluiten:boolean = true
-              let afsluiting = await PostMissieAfsluiting({missieid,afsluiten})
-              onOpen()
-            }}
-          >
-            {loading ? "Alles wordt verwerkt" : "Bewaar"}
-          </Button>
-        </div>
+        <Button
+          className="w-full"
+          color="primary"
+          type="submit"
+          disabled={loading}
+          isLoading={loading}
+          onClick={async () => {
+            setLoading(true);
+            let response = await PostMissieKosten({
+              kosten,
+              missieid,
+              missienaam,
+            });
+            console.log(response);
+            let afsluiten: boolean = true;
+            let afsluiting = await PostMissieAfsluiting({
+              missieid,
+              afsluiten,
+            });
+            onOpen();
+          }}
+        >
+          {loading ? "Alles wordt verwerkt" : "Bewaar"}
+        </Button>
+      </div>
 
-        <Modal
+      <Modal
         backdrop="opaque"
         isOpen={isOpen}
         onOpenChange={onOpenChange}

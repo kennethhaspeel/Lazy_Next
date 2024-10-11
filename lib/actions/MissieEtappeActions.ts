@@ -93,9 +93,9 @@ export async function PostUpdateEtappe(model: PostEtappeNieuwModel) {
         bedrag: model.kost,
       },
     });
-    let bedrag =
-      (Math.round((model.kost / model.verschuldigDoor?.length) * 100) / 100) *
-      -1;
+    let bedrag =  parseFloat((model.kost/model.verschuldigDoor.length).toFixed(3)) * -1
+      // (Math.round((model.kost / model.verschuldigDoor?.length) * 100) / 100) *
+      // -1;
     model.verschuldigDoor.map(async (u) => {
       await db.kostVerdeling.create({
         data: {

@@ -39,7 +39,7 @@ console.log(missie.afbeelding)
       <Card className="py-4 px-2 border w-[280px] items-center" key={missie.id}>
         <CardHeader className="pb-0 pt-2 px-4 flex-col items-center">
           <h4 className="font-bold text-large uppercase">{missie.titel}</h4>
-          <p className="text-tiny font-bold">{missie.locatie}</p>
+          <p className="text-tiny font-bold">{missie!.locatie!.length > 30 ? `${missie.locatie?.substring(0,35)}...` : missie.locatie}</p>
 
           <small className="text-default-500">
             {DateToDDMMYYYY(missie.startDatum)}
