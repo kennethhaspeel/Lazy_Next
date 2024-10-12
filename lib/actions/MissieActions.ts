@@ -4,6 +4,8 @@ import { FinTransactie, MissieUser, Prisma } from "@prisma/client";
 import db from "../prisma";
 import { GetDatumAlgemeen } from "@/app/components/DatumHelper";
 import { getUnixTime, fromUnixTime } from "date-fns";
+import he from 'he';
+import { unescape } from "querystring";
 
 export async function GetAllMissions() {
   const result = await db.missie.findMany({
@@ -184,15 +186,16 @@ export async function PostMissieKosten({
   missienaam,
 }: PostMissieKostVerdelingModel) {
   let arr: PostMissieKostenArr[] = []
-  kosten.map(async (record) => {
+  kosten.map((record) => {
     arr.push({
       bedrag: new Prisma.Decimal(Number(record.bedrag)),
       userId: record.userId,
       datum: getUnixTime(new Date()),
-      mededeling: `Afrekening missie "${atob(missienaam)}"`,
+      mededeling: `Afrekening missie "${atob(unescape(missienaam))}"`,
     })
   });
   const response = await db.finTransactie.createMany({data: arr})
+  console.log(response)
   return `${kosten.length} records bewaard`;
 }
 

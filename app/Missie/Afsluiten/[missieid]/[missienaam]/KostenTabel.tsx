@@ -31,7 +31,7 @@ interface Props {
 const KostenTabel = ({ kosten, missieid, missienaam }: Props) => {
   const [loading, setLoading] = useState(false);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-
+console.log(missienaam)
   return (
     <>
       <Table aria-label="Overzicht Kosten" hideHeader>
@@ -98,6 +98,7 @@ const KostenTabel = ({ kosten, missieid, missienaam }: Props) => {
               missieid,
               afsluiten,
             });
+            console.log(afsluiting)
             onOpen();
           }}
         >

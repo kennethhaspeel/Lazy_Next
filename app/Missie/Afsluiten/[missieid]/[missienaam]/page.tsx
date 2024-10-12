@@ -13,7 +13,6 @@ interface Props {
 
 const Afsluiten = async ({ params: { missieid ,missienaam} }: Props) => {
   const kosten = await GetMissieKosten(Number(missieid));
-console.log(missienaam)
   return (
     <>
       <Suspense fallback={<LoadingSpinner />}>
