@@ -9,8 +9,9 @@ import {
   Input,
   Select,
   SelectItem,
+  Switch,
 } from "@nextui-org/react";
-import { useEffect, useState } from "react";
+import { useEffect, useState ,useRef} from "react";
 import { DDMMYYYYtoDate } from "@/app/components/DatumHelper";
 import { getUnixTime } from "date-fns";
 import {
@@ -34,12 +35,17 @@ interface Props {
 }
 const TransactieForm = ({ users }: Props) => {
   const [user, setUser] = useState("");
+  const [userslijst, setUserslijst] = useState<MissieDeelnemerModel[]>(
+    []
+  );
+
   const BewaarTransactie: SubmitHandler<InputType> = async (data) => {
     const d: PostTransactieSpaarboekModel = {
       userId: user,
       bedrag: data.kost,
       datum: data.datum,
       mededeling: data.mededeling ? data.mededeling : "Storting",
+
     };
     try {
       const SpaarboekTransactie = await PostTransactieSpaarboek(d);
@@ -65,7 +71,26 @@ const TransactieForm = ({ users }: Props) => {
   const userInstellen = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setUser(e.target.value);
   };
-
+  useEffect(()=>{
+    let betLijst: MissieDeelnemerModel[] = [
+      {
+        id: "clxucmprp0002p31rf6p6mux3",
+        naam: "Rekening Argenta",
+        isOrganisator: false,
+      },
+    ];
+    users.map((u)=>{
+      betLijst.push({
+        id: u.id,
+        naam: `${u.voornaam} ${u.naam}`,
+        isOrganisator: false
+      })
+    })
+    setUserslijst(betLijst)
+  },[users])
+  useEffect(() => {
+    console.log(errors);
+  }, [errors]);
   useEffect(() => {
     console.log(user);
   }, [user]);
@@ -83,10 +108,11 @@ const TransactieForm = ({ users }: Props) => {
                 aria-label="Betaler"
                 variant="flat"
                 onChange={userInstellen}
+
               >
-                {users.map((item) => (
+                {userslijst.map((item) => (
                   <SelectItem key={item.id} value={item.id}>
-                    {`${item.voornaam} ${item.naam}`}
+                    {`${item.naam}`}
                   </SelectItem>
                 ))}
               </Select>
