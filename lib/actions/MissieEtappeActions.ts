@@ -49,18 +49,17 @@ export async function PostNieuweEtappe(model: PostEtappeNieuwModel) {
       },
     });
 
-    let bedrag =
-      (Math.round((model.kost / model.verschuldigDoor?.length) * 100) / 100) *
-      -1;
-    model.verschuldigDoor.map(async (u) => {
-      await db.kostVerdeling.create({
+    let bedrag = parseFloat((model.kost / model.verschuldigDoor.length).toFixed(3)) * -1;
+    for await (const u of model.verschuldigDoor) {
+      const res = await db.kostVerdeling.create({
         data: {
           missieEtappeId: etappe.id,
           userId: u,
           bedrag: bedrag,
         },
       });
-    });
+      console.log(res);
+    }
   }
 
   return etappe.id;
@@ -93,17 +92,19 @@ export async function PostUpdateEtappe(model: PostEtappeNieuwModel) {
         bedrag: model.kost,
       },
     });
-    let bedrag =  parseFloat((model.kost/model.verschuldigDoor.length).toFixed(3)) * -1
-      // (Math.round((model.kost / model.verschuldigDoor?.length) * 100) / 100) *
-      // -1;
-    model.verschuldigDoor.map(async (u) => {
-      await db.kostVerdeling.create({
+    let bedrag =
+      parseFloat((model.kost / model.verschuldigDoor.length).toFixed(3)) * -1;
+    // (Math.round((model.kost / model.verschuldigDoor?.length) * 100) / 100) *
+    // -1;
+    for await (const u of model.verschuldigDoor) {
+      const res = await db.kostVerdeling.create({
         data: {
           missieEtappeId: model.missieid!,
           userId: u,
           bedrag: bedrag,
         },
       });
-    });
+      console.log(res);
+    }
   }
 }
