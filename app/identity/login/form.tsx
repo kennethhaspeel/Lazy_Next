@@ -20,7 +20,7 @@ interface Props {
 }
 
 const FormSchema = z.object({
-  email: z.string().email("Dit lijkt geen geldig email adres te zijn"),
+  email: z.string().email("Dit lijkt geen geldig email adres te zijn").toLowerCase(),
   paswoord: z.string({ required_error: "Gelieve uw paswoord in te geven" }),
 });
 

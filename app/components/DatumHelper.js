@@ -54,18 +54,16 @@ export const DateToDDMMYYYY = (datum) => {
 };
 
 export const DateToYYYYMMDDstring = (datum) => {
-  console.log(datum)
   return format(datum, "yyyy-MM-dd").toString();
 };
 
-export const GMTtoDate=(datum)=>{
-  let jaar = datum.getFullYear()
-  let maand = datum.getMonth() +1
-  let dag = datum.getDate()
-  let dat = `${jaar}-${String(maand).padStart(2,'0')}-${String(dag).padStart(2,'0')}`
-  return dat
-
-}
+export const GMTtoDate = (datum) => {
+  let jaar = datum.getFullYear();
+  let maand = datum.getMonth() + 1;
+  let dag = datum.getDate();
+  let dat = `${jaar}-${String(maand).padStart(2, "0")}-${String(dag).padStart(2, "0")}`;
+  return dat;
+};
 
 export const YYYYMMDDtoDate = (datumstring) => {
   return parse(datumstring, "yyyy-MM-dd", new Date());

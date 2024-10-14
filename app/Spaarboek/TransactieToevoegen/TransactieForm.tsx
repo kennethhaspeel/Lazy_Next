@@ -5,14 +5,19 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { FinTransactie, Prisma, SpaarTransactie, User } from "@prisma/client";
 import {
   Button,
+  CalendarDate,
   DateInput,
   Input,
   Select,
   SelectItem,
   Switch,
 } from "@nextui-org/react";
-import { useEffect, useState ,useRef} from "react";
-import { DDMMYYYYtoDate } from "@/app/components/DatumHelper";
+import { useEffect, useState, useRef } from "react";
+import {
+  DateToYYYYMMDDstring,
+  DDMMYYYYtoDate,
+  YYYYMMDDtoDate,
+} from "@/app/components/DatumHelper";
 import { getUnixTime } from "date-fns";
 import {
   PostTransactie,
@@ -21,11 +26,13 @@ import {
 
 import { prisma } from "@/lib/prisma";
 import { toast } from "react-toastify";
+import { parseAbsolute, parseDate } from "@internationalized/date";
 
 const formSchema = z.object({
-  mededeling: z.string().optional(),
-  user: z.string().optional(),
-  datum: z.string().transform((d) => getUnixTime(DDMMYYYYtoDate(d))),
+  mededeling: z.string().default("Storting"),
+  user: z.string({ required_error: "Gelieve een gebruiker te selecteren" }),
+  //datum: z.string().transform((d) => getUnixTime(DDMMYYYYtoDate(d))),
+  datum: z.string().date("Gelieve een datum in te geven"),
   kost: z.number(),
 });
 type InputType = z.infer<typeof formSchema>;
@@ -34,18 +41,19 @@ interface Props {
   users: User[];
 }
 const TransactieForm = ({ users }: Props) => {
-  const [user, setUser] = useState("");
-  const [userslijst, setUserslijst] = useState<MissieDeelnemerModel[]>(
-    []
+  const [user, setUser] = useState<string | null>(null);
+  const [mededeling, setMededeling] = useState<string>("Storting");
+  const [userslijst, setUserslijst] = useState<MissieDeelnemerModel[]>([]);
+  const [datum, setDatum] = useState(
+    parseDate(DateToYYYYMMDDstring(new Date()))
   );
 
   const BewaarTransactie: SubmitHandler<InputType> = async (data) => {
     const d: PostTransactieSpaarboekModel = {
-      userId: user,
+      userId: data.user,
       bedrag: data.kost,
-      datum: data.datum,
+      datum: getUnixTime(YYYYMMDDtoDate(data.datum)),
       mededeling: data.mededeling ? data.mededeling : "Storting",
-
     };
     try {
       const SpaarboekTransactie = await PostTransactieSpaarboek(d);
@@ -62,6 +70,7 @@ const TransactieForm = ({ users }: Props) => {
     register,
     handleSubmit,
     setValue,
+    getValues,
     reset,
     formState: { errors, isSubmitting },
   } = useForm<InputType>({
@@ -71,7 +80,7 @@ const TransactieForm = ({ users }: Props) => {
   const userInstellen = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setUser(e.target.value);
   };
-  useEffect(()=>{
+  useEffect(() => {
     let betLijst: MissieDeelnemerModel[] = [
       {
         id: "clxucmprp0002p31rf6p6mux3",
@@ -79,21 +88,20 @@ const TransactieForm = ({ users }: Props) => {
         isOrganisator: false,
       },
     ];
-    users.map((u)=>{
+    users.map((u) => {
       betLijst.push({
         id: u.id,
         naam: `${u.voornaam} ${u.naam}`,
-        isOrganisator: false
-      })
-    })
-    setUserslijst(betLijst)
-  },[users])
+        isOrganisator: false,
+      });
+    });
+    setUserslijst(betLijst);
+  }, [users]);
+
   useEffect(() => {
     console.log(errors);
   }, [errors]);
-  useEffect(() => {
-    console.log(user);
-  }, [user]);
+
   return (
     <>
       <section className="pt-5">
@@ -104,11 +112,16 @@ const TransactieForm = ({ users }: Props) => {
           >
             <div className="mb-1 sm:mb-5 align-middle">
               <Select
+                {...register("user")}
                 label="Gebruiker"
                 aria-label="Betaler"
                 variant="flat"
-                onChange={userInstellen}
-
+                onChange={(e) => {
+                  setUser(e.target.value);
+                  setValue("user", e.target.value);
+                }}
+                errorMessage={errors.user?.message}
+                isInvalid={!!errors.user}
               >
                 {userslijst.map((item) => (
                   <SelectItem key={item.id} value={item.id}>
@@ -128,21 +141,34 @@ const TransactieForm = ({ users }: Props) => {
               />
             </div>
             <div className="mb-1 sm:mb-5 align-middle">
-              <Input
+              <DateInput
                 {...register("datum")}
+                label={"Datum"}
+                value={datum}
+                onChange={(e) => {
+                  setDatum(e);
+                  setValue("datum", e.toString());
+                }}
                 errorMessage={errors.datum?.message}
                 isInvalid={!!errors.datum}
-                label="Datum"
-                className="col-span-2"
               />
             </div>
             <div className="mb-1 sm:mb-5 align-middle">
               <Input
-                {...register("mededeling")}
+                {...register("mededeling", {
+                  required:true,
+                  validate: (value) => value.length > 5,
+                })}
                 errorMessage={errors.mededeling?.message}
                 isInvalid={!!errors.mededeling}
                 label="Mededeling"
                 className="col-span-2"
+                value={mededeling}
+                onChange={(e) => {
+                  console.log(e.target.value)
+                  setValue("mededeling", e.target.value);
+                  setMededeling(e.target.value);
+                }}
               />
             </div>
             <div className="mb-5 mt-5 w-full">
