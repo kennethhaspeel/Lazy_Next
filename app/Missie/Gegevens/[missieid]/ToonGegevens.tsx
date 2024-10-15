@@ -66,7 +66,8 @@ const ToonGegevens = async ({ missieData, currentUser }: Props) => {
             <div className="mt-3 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
               <div className="ps-2 font-extrabold">Startdatum</div>
               <div className="sm:col-span-5">
-                <p>{DateToDDMMYYYY(missieData.startDatum)}</p>
+                {/* <p>{DateToDDMMYYYY(missieData.startDatum)}</p> */}
+                <p>{missieData.startDatum.toString()}</p>
               </div>
             </div>
             <div className="mt-3 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">

@@ -85,16 +85,16 @@ model Role {
 }
 
 model Missie {
-  id               Int             @id @default(autoincrement())
-  titel            String          @db.VarChar(100)
-  omschrijving     String?         @db.VarChar(1000)
-  locatie          String?         @db.VarChar(100)
-  afbeelding       String?         @db.VarChar(500)
-  geom             String?         @db.VarChar(2500)
-  startDatum       Int             @default(0)
-  eindDatum        Int             @default(0)
-  publiekZichtbaar Boolean         @default(false)
-  afgsloten        Boolean         @default(false)
+  id               Int            @id @default(autoincrement())
+  titel            String         @db.VarChar(100)
+  omschrijving     String?        @db.VarChar(1000)
+  locatie          String?        @db.VarChar(100)
+  afbeelding       String?        @db.VarChar(500)
+  geom             String?        @db.VarChar(2500)
+  startDatum       Int            @default(0)
+  eindDatum        Int            @default(0)
+  publiekZichtbaar Boolean        @default(false)
+  afgsloten        Boolean        @default(false)
   MissieUser       MissieUser[]
   MissieEtappe     MissieEtappe[]
 }
@@ -119,6 +119,7 @@ model MissieEtappe {
   startDatum          Int                   @default(0)
   kost                Decimal               @default(0)
   betaaldDoor         User?                 @relation(fields: [userId], references: [id])
+  url                 String?               @db.VarChar(1000)
   userId              String?
   KostenVerdeling     KostVerdeling[]
   MissieEtappeBestand MissieEtappeBestand[]
