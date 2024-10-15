@@ -1,4 +1,6 @@
 import { format, parse, parseISO } from "date-fns";
+import { formatInTimeZone, toZonedTime, zonedTimeToUtc } from 'date-fns-tz'
+
 
 Date.prototype.addDay = function (days) {
   let date = new Date(this.valueOf());
@@ -50,7 +52,11 @@ export const CompareDates = (date1, date2) => {
 };
 
 export const DateToDDMMYYYY = (datum) => {
-  return format(datum, "dd/MM/yyyy");
+  
+  const d = toZonedTime(datum,"Europe/Brussels")
+  console.log(d)
+  return format(d, "dd/MM/yyyy");
+
 };
 
 export const DateToYYYYMMDDstring = (datum) => {

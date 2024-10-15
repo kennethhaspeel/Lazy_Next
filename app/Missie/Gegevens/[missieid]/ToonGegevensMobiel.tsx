@@ -37,8 +37,8 @@ const ToonGegevensMobiel = ({ missieData, currentUser }: Props) => {
             </tr>
             <tr>
               <th className="pb-2 pe-2 text-left">Startdatum</th>
-              {/* <td className="pb-2 ps-2">{DateToDDMMYYYY(missieData.startDatum)}</td> */}
-              <td>{missieData.startDatum.toString()}</td>
+              <td className="pb-2 ps-2">{DateToDDMMYYYY(missieData.startDatum)}</td>
+
             </tr>
             <tr>
               <th className="pb-2 pe-2 text-left">Einddatum</th>
