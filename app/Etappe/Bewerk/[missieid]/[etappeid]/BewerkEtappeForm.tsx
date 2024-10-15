@@ -31,6 +31,7 @@ const formSchema = z.object({
   locatie: z.string().optional(),
   startTijd: z.string().time("Gelieve een starttijd in te geven"),
   kost: z.number(),
+  url: z.string().optional(),
 });
 type InputType = z.infer<typeof formSchema>;
 
@@ -55,7 +56,7 @@ const BewerkEtappeForm = ({ deelnemers, details }: Props) => {
       let d = datum;
       d.setHours(starttijdValue.hour);
       d.setMinutes(starttijdValue.minute);
-      console.log(d)
+      console.log(d);
       const model: PostEtappeNieuwModel = {
         missieid: details.id,
         titel: data.titel,
@@ -65,6 +66,7 @@ const BewerkEtappeForm = ({ deelnemers, details }: Props) => {
         kost: data.kost,
         verschuldigDoor: data.kost > 0 ? verschuldigdDoor : [],
         betaler: data.kost > 0 ? betaler : "",
+        url: data.url ? data.url : "",
       };
       //console.log(model);
       const result = await PostUpdateEtappe(model);
@@ -147,6 +149,16 @@ const BewerkEtappeForm = ({ deelnemers, details }: Props) => {
               />
             </div>
             <div className="mb-1 sm:mb-5 align-middle">
+              <Textarea
+                {...register("url")}
+                errorMessage={errors.url?.message}
+                isInvalid={!!errors.url}
+                label="Link naar site"
+                className="col-span-2"
+                value={details.url}
+              />
+            </div>
+            <div className="mb-1 sm:mb-5 align-middle">
               <Input
                 {...register("locatie")}
                 errorMessage={errors.locatie?.message}
@@ -212,11 +224,13 @@ const BewerkEtappeForm = ({ deelnemers, details }: Props) => {
                 onValueChange={setVerschuldigdDoor}
                 color="success"
               >
-                {deelnemers.filter((deel)=>deel.id != 'clxucmprp0002p31rf6p6mux3').map((deel) => (
-                  <Checkbox value={deel.id} key={deel.id}>
-                    {deel.naam}
-                  </Checkbox>
-                ))}
+                {deelnemers
+                  .filter((deel) => deel.id != "clxucmprp0002p31rf6p6mux3")
+                  .map((deel) => (
+                    <Checkbox value={deel.id} key={deel.id}>
+                      {deel.naam}
+                    </Checkbox>
+                  ))}
               </CheckboxGroup>
             </div>
             <div className="mb-5 mt-5 w-full">

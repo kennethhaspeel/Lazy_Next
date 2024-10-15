@@ -7,12 +7,14 @@ interface PostEtappeNieuwModel {
   kost: number;
   verschuldigDoor?: string[];
   betaler?: string;
+  url?:string;
 }
 
 interface GetEtappeMetAantallen {
   id: number;
   missieid: number;
   titel: string;
+  url?:string;
   omschrijving?: string | null;
   locatie?: string | null;
   startDatum: number;
@@ -28,6 +30,7 @@ interface EtappeDetail {
   locatie?: string;
   geom?: string;
   startDatum: number;
+  url?:string;
   kost: number;
   betaaldDoor?: string;
   kostenverdeling:string[]

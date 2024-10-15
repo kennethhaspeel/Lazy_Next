@@ -14,7 +14,7 @@ interface SpaarboekTransactie {
   mededeling?: string;
 }
 
-interface FinTransactie {
+interface FinTransactieModel {
   id:number,
   userId:string,
   voornaam: string;

@@ -15,13 +15,14 @@ interface Props {
 const Tabel = ({ items }: Props) => {
   const columns = [
     {
-      key: "naam",
-      label: "Naam",
-    },
-    {
       key: "datum",
       label: "Datum",
     },
+    {
+      key: "naam",
+      label: "Naam",
+    },
+
     {
       key: "bedrag",
       label: "Bedrag",
@@ -32,24 +33,37 @@ const Tabel = ({ items }: Props) => {
     },
   ];
   return (
-    <Table aria-label="rekening overzicht" isStriped>
-      <TableHeader columns={columns}>
-        {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
-      </TableHeader>
-      <TableBody items={items}>
-        {(item) => (
-          <TableRow key={item.id}>
-            <TableCell>{DateToDDMMYYYY(item.datum)}</TableCell>
-            <TableCell>
-              {item.voornaam} {item.naam}
-            </TableCell>
-            <TableCell>{item.bedrag}</TableCell>
+    <>
+      <div className="w-full m-3 p-3 rounded-xl dark:bg-slate-800">
+        Totaal:{" "}
+        {items
+          .reduce(
+            (accumulator, current) => accumulator + Number(current.bedrag),
+            0
+          )
+          .toFixed(2)}
+      </div>
+      <Table aria-label="rekening overzicht" isStriped>
+        <TableHeader columns={columns}>
+          {(column) => (
+            <TableColumn key={column.key}>{column.label}</TableColumn>
+          )}
+        </TableHeader>
+        <TableBody items={items}>
+          {(item) => (
+            <TableRow key={item.id}>
+              <TableCell>{DateToDDMMYYYY(item.datum)}</TableCell>
+              <TableCell>
+                {item.voornaam} {item.naam}
+              </TableCell>
+              <TableCell>{item.bedrag}</TableCell>
 
-            <TableCell>{item.mededeling}</TableCell>
-          </TableRow>
-        )}
-      </TableBody>
-    </Table>
+              <TableCell>{item.mededeling}</TableCell>
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+    </>
   );
 };
 

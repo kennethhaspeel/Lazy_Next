@@ -44,6 +44,7 @@ const TransactieForm = ({ users }: Props) => {
   const [user, setUser] = useState<string | null>(null);
   const [mededeling, setMededeling] = useState<string>("Storting");
   const [userslijst, setUserslijst] = useState<MissieDeelnemerModel[]>([]);
+  const [isKost,setIsKost]=useState<boolean>(false)
   const [datum, setDatum] = useState(
     parseDate(DateToYYYYMMDDstring(new Date()))
   );
@@ -57,7 +58,7 @@ const TransactieForm = ({ users }: Props) => {
     };
     try {
       const SpaarboekTransactie = await PostTransactieSpaarboek(d);
-      const fTransactie = await PostTransactie(d);
+      !isKost && await PostTransactie(d);
 
       toast.success("Transactie werd bewaard...");
       reset();
@@ -110,6 +111,11 @@ const TransactieForm = ({ users }: Props) => {
             onSubmit={handleSubmit(BewaarTransactie)}
             className="w-full p-5 border"
           >
+            <div className="mb-1 sm:mb-5 align-middle">
+            <Switch isSelected={isKost} onValueChange={setIsKost}>
+        Kost ?
+      </Switch>
+      </div>
             <div className="mb-1 sm:mb-5 align-middle">
               <Select
                 {...register("user")}

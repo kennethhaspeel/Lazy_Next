@@ -51,12 +51,9 @@ export const CompareDates = (date1, date2) => {
   return datum1 === datum2 ? true : false;
 };
 
-export const DateToDDMMYYYY = (datum) => {
-  
+export const DateToDDMMYYYY = (datum) => { 
   const d = toZonedTime(datum,"Europe/Brussels")
-  console.log(d)
   return format(d, "dd/MM/yyyy");
-
 };
 
 export const DateToYYYYMMDDstring = (datum) => {

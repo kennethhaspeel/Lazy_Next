@@ -10,7 +10,7 @@ const page = async () => {
     if (session?.user.rollen.indexOf("financieel") === -1 || session === null) {
       return <h1 className="text-5xl">Geen Toegang</h1>;
     }
-    const allUsers:User[]= await GetAllUsers();
+    const allUsers:User[]= await GetAllUsers(true);
   return (
     <>
     <Tabel users={allUsers}/>

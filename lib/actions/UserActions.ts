@@ -1,21 +1,34 @@
 "use server";
+import { User } from "@prisma/client";
 import db from "../prisma";
 
-export async function GetAllUsers() {
-  const result = await db.user.findMany({
-    where: {
-      emailBevestigd: true,
-    },
-    orderBy: [
-      {
-        voornaam: "asc",
+export async function GetAllUsers(alle: boolean = false) {
+  let result: User[] = [];
+  if (alle) {
+    result = await db.user.findMany({
+      orderBy: [
+        {
+          voornaam: "asc",
+        },
+      ],
+    });
+  } else {
+    result = await db.user.findMany({
+      where: {
+        emailBevestigd: true,
       },
-    ],
-  });
+      orderBy: [
+        {
+          voornaam: "asc",
+        },
+      ],
+    });
+  }
+
   return result;
 }
 
-export async function GetUserById(id:string) {
+export async function GetUserById(id: string) {
   const result = await db.user.findFirst({
     where: {
       id: id,

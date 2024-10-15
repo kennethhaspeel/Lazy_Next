@@ -24,9 +24,9 @@ export async function GetSpaarboekTransacties() {
   return result;
 }
 
-export async function GetFinTransacties(userid:string) {
-    const result: FinTransactie[] =
-      await db.$queryRaw`select  * from public.v_fintransacties where userId=${userid} order by datum desc`;
+export async function GetFinTransactiesPerGebruiker(userid:string) {
+    const result: FinTransactieModel[] =
+      await db.$queryRaw`select  * from public.v_fintransacties where "userId"=${userid} order by datum desc`;
     return result;
   }
 
