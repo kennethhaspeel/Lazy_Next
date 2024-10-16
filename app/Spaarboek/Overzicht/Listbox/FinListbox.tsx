@@ -20,7 +20,7 @@ const FinListbox = ({ items }: Props) => {
 
   return (
     <>
-<div className="w-full m-3 p-3 rounded-xl dark:bg-slate-800">Totaal: {items.reduce((accumulator, current) => accumulator + Number(current.bedrag), 0)}</div>
+<div className="w-full m-3 p-3 rounded-xl dark:bg-slate-800">Totaal: {(items.reduce((accumulator, current) => accumulator + Number(current.bedrag), 0)).toFixed(2)}</div>
       <Table aria-label="tabel" isCompact fullWidth>
         <TableHeader>
           <TableColumn>Datum</TableColumn>
@@ -34,7 +34,7 @@ const FinListbox = ({ items }: Props) => {
                 {DateToDDMMYYYY(fromUnixTime(item.datum))}
               </TableCell>
               <TableCell className="min-w-20 content-start">
-                &euro; {item.bedrag.toString()}
+                &euro; {Number(item.bedrag).toFixed(2)}
               </TableCell>
               <TableCell className=" p-2 content-start text-wrap">{item.mededeling}</TableCell>
             </TableRow>

@@ -37,18 +37,11 @@ export async function PostNieuweEtappe(model: PostEtappeNieuwModel) {
       locatie: model.locatie ? model.locatie : "",
       startDatum: getUnixTime(model.startDatum),
       kost: new Prisma.Decimal(model.kost),
-      userId: model.kost > 0 ? model.betaler : undefined,
+      userId: model.kost > 0 ? model.betaler : "",
     },
   });
-  if (model.kost > 0 && model.verschuldigDoor) {
-    await db.kostVerdeling.create({
-      data: {
-        missieEtappeId: etappe.id,
-        userId: model.betaler!,
-        bedrag: model.kost,
-      },
-    });
 
+  if (model.kost > 0 && model.verschuldigDoor) {
     let bedrag = parseFloat((model.kost / model.verschuldigDoor.length).toFixed(3)) * -1;
     for await (const u of model.verschuldigDoor) {
       const res = await db.kostVerdeling.create({
@@ -60,6 +53,7 @@ export async function PostNieuweEtappe(model: PostEtappeNieuwModel) {
       });
       console.log(res);
     }
+
   }
 
   return etappe.id;
@@ -81,17 +75,10 @@ export async function PostUpdateEtappe(model: PostEtappeNieuwModel) {
       locatie: model.locatie,
       startDatum: getUnixTime(model.startDatum),
       kost: model.kost,
-      userId: model.betaler,
+      userId: model.kost > 0 ? model.betaler : "",
     },
   });
   if (model.kost > 0 && model.verschuldigDoor) {
-    await db.kostVerdeling.create({
-      data: {
-        missieEtappeId: model.missieid!,
-        userId: model.betaler!,
-        bedrag: model.kost,
-      },
-    });
     let bedrag =
       parseFloat((model.kost / model.verschuldigDoor.length).toFixed(3)) * -1;
     // (Math.round((model.kost / model.verschuldigDoor?.length) * 100) / 100) *
@@ -104,7 +91,6 @@ export async function PostUpdateEtappe(model: PostEtappeNieuwModel) {
           bedrag: bedrag,
         },
       });
-      console.log(res);
     }
   }
 }

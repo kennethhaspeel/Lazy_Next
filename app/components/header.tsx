@@ -76,7 +76,7 @@ const Header = () => {
                   className="w-full"
                   onClick={() => toggleMenu()}
                 >
-                  Spaarboekje
+                  Spaarboekske
                 </Link>
               </NavbarMenuItem>
             </>
@@ -165,7 +165,7 @@ const Header = () => {
                 <Link href="/Missie/OverzichtMissies">Missies</Link>
               </NavbarItem>
               <NavbarItem>
-                <Link href="/Spaarboek/Overzicht">Spaarboekje</Link>
+                <Link href="/Spaarboek/Overzicht">Spaarboekske</Link>
               </NavbarItem>
             </>
           ) : (

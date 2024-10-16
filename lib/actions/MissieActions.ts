@@ -1,6 +1,6 @@
 "use server";
 
-import {  Prisma } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import db from "../prisma";
 import { getUnixTime, fromUnixTime } from "date-fns";
 import { unescape } from "querystring";
@@ -155,18 +155,73 @@ export async function UpdateMissieDeelnemers(
   return model;
 }
 
-export async function GetMissieKosten(missieid: Number) {
-  const result: GetMissieKost[] =
-    await db.$queryRaw`select kost."userId",kost.bedrag::text,concat(deelnemer.voornaam,' ',deelnemer.naam) naam from
-(select  "userId",round(sum(bedrag),2) bedrag from public."KostVerdeling" where "KostVerdeling"."missieEtappeId" in (select  id from public."MissieEtappe" where "missieId" = ${missieid}) group by "userId") kost
-inner JOIN
-(select id, naam,voornaam from public."User" ) deelnemer
-on kost."userId" = deelnemer.id`;
-  return result;
+export async function GetMissiekostenPerDeelnemer(missieid: number) {
+  const result = await db.missie.findUnique({
+    where: {
+      id: missieid,
+    },
+    include: {
+      MissieEtappe: {
+        include: {
+          KostenVerdeling: true,
+        },
+      },
+      MissieUser: {
+        include: {
+          user: true,
+        },
+      },
+    },
+  });
+  let lijst: MissiekostenPerDeelnemer[] = [];
+  if (result) {
+    for (const u of result.MissieUser) {
+      lijst.push({
+        userid: u.userId,
+        naam: `${u.user.voornaam} ${u.user.naam}`,
+        bedrag: 0,
+      });
+    }
+    let rekening: number = 0;
+    for (const u of lijst) {
+      result.MissieEtappe.forEach((rij) => {
+        if (rij.userId === u.userid) {
+          u.bedrag += Number(rij.kost);
+        } 
+        rij.KostenVerdeling.forEach((kost) => {
+          if (kost.userId === u.userid) {
+            u.bedrag += Number(kost.bedrag);
+          }
+        });
+      });
+    }
+    result.MissieEtappe.forEach((rij) => {
+      if (rij.userId === "clxucmprp0002p31rf6p6mux3") {
+        rekening += Number(rij.kost);
+      }
+    })
+    lijst.push({
+      userid: "clxucmprp0002p31rf6p6mux3",
+      naam: "Rekening",
+      bedrag: rekening,
+    });
+  }
+
+  return lijst;
 }
 
+// export async function GetMissieKosten(missieid: Number) {
+//   const result: GetMissieKost[] =
+//     await db.$queryRaw`select kost."userId",kost.bedrag::text,concat(deelnemer.voornaam,' ',deelnemer.naam) naam from
+// (select  "userId",round(sum(bedrag),2) bedrag from public."KostVerdeling" where "KostVerdeling"."missieEtappeId" in (select  id from public."MissieEtappe" where "missieId" = ${missieid}) group by "userId") kost
+// inner JOIN
+// (select id, naam,voornaam from public."User" ) deelnemer
+// on kost."userId" = deelnemer.id`;
+//   return result;
+// }
+
 interface PostMissieKostVerdelingModel {
-  kosten: GetMissieKost[];
+  kosten: MissiekostenPerDeelnemer[];
   missieid: number;
   missienaam: string;
 }
@@ -174,8 +229,8 @@ interface PostMissieKostVerdelingModel {
 interface PostMissieKostenArr {
   bedrag: Prisma.Decimal;
   userId: string;
-  datum:number;
-  mededeling:string;
+  datum: number;
+  mededeling: string;
 }
 
 export async function PostMissieKosten({
@@ -183,17 +238,16 @@ export async function PostMissieKosten({
   missieid,
   missienaam,
 }: PostMissieKostVerdelingModel) {
-  let arr: PostMissieKostenArr[] = []
+  let arr: PostMissieKostenArr[] = [];
   kosten.map((record) => {
     arr.push({
       bedrag: new Prisma.Decimal(Number(record.bedrag)),
-      userId: record.userId,
+      userId: record.userid,
       datum: getUnixTime(new Date()),
       mededeling: `Afrekening missie "${atob(unescape(missienaam))}"`,
-    })
+    });
   });
-  const response = await db.finTransactie.createMany({data: arr})
-  console.log(response)
+  const response = await db.finTransactie.createMany({ data: arr });
   return `${kosten.length} records bewaard`;
 }
 

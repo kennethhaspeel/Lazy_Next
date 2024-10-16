@@ -23,7 +23,7 @@ import {
 } from "@/lib/actions/MissieActions";
 
 interface Props {
-  kosten: GetMissieKost[];
+  kosten: MissiekostenPerDeelnemer[];
   missieid: number;
   missienaam: string;
 }
@@ -31,49 +31,45 @@ interface Props {
 const KostenTabel = ({ kosten, missieid, missienaam }: Props) => {
   const [loading, setLoading] = useState(false);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-console.log(missienaam)
+
   return (
     <>
-      <Table aria-label="Overzicht Kosten" hideHeader>
+    <div className="flex flex-grow text-xl place-content-center my-3">
+{atob(unescape(missienaam))}
+    </div>
+      <Table aria-label="Overzicht Kosten" hideHeader key="rekening">
         <TableHeader>
           <TableColumn>Naam</TableColumn>
           <TableColumn>Bedrag</TableColumn>
         </TableHeader>
         <TableBody items={kosten} emptyContent={"Geen gegevens"}>
           {kosten
-            .filter((kost) => kost.userId === "clxucmprp0002p31rf6p6mux3")
+            .filter((kost) => kost.userid === "clxucmprp0002p31rf6p6mux3")
             .map((kost) => (
-              <TableRow key={kost.userId}>
-                <TableCell>{kost.naam}</TableCell>
-                <TableCell>{kost.bedrag}</TableCell>
+              <TableRow key={kost.userid}>
+                <TableCell>Uitgaves via rekening</TableCell>
+                <TableCell>{kost.bedrag.toFixed(2)}</TableCell>
               </TableRow>
             ))}
         </TableBody>
       </Table>
       <Divider className="mt-2 mb-2" />
-      <Table aria-label="Overzicht Kosten">
+      <Table aria-label="Overzicht Kosten" key="deelnemers">
         <TableHeader>
           <TableColumn>Naam</TableColumn>
           <TableColumn>Bedrag</TableColumn>
         </TableHeader>
-        <TableBody items={kosten} emptyContent={"Geen gegevens"}>
+        <TableBody
+          key="tabelBodyDeelnemers"
+          items={kosten}
+          emptyContent={"Geen gegevens"}
+        >
           {kosten
-            .filter((kost) => kost.userId != "clxucmprp0002p31rf6p6mux3")
-            .sort((a, b) => {
-              const naamA = a.naam;
-              const naamB = b.naam;
-              if (naamA < naamB) {
-                return -1;
-              }
-              if (naamA > naamB) {
-                return 1;
-              }
-              return 0;
-            })
+            .filter((kost) => kost.userid != "clxucmprp0002p31rf6p6mux3")
             .map((kost) => (
-              <TableRow key={kost.userId}>
+              <TableRow key={kost.userid}>
                 <TableCell>{kost.naam}</TableCell>
-                <TableCell>{kost.bedrag}</TableCell>
+                <TableCell>{kost.bedrag.toFixed(2)}</TableCell>
               </TableRow>
             ))}
         </TableBody>
@@ -98,7 +94,7 @@ console.log(missienaam)
               missieid,
               afsluiten,
             });
-            console.log(afsluiting)
+            console.log(afsluiting);
             onOpen();
           }}
         >

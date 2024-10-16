@@ -22,3 +22,9 @@ interface GetMissieKost {
   naam: string;
   bedrag: string;
 }
+
+interface MissiekostenPerDeelnemer {
+  userid: string;
+  naam: string;
+  bedrag: number;
+}

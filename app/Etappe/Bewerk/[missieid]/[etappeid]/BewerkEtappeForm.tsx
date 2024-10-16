@@ -40,13 +40,17 @@ interface Props {
   details: EtappeDetail;
 }
 const BewerkEtappeForm = ({ deelnemers, details }: Props) => {
-  //console.log(details);
+  console.log(details);
   const router = useRouter();
   const [verschuldigdDoor, setVerschuldigdDoor] = useState<string[]>([]);
   const [betalerslijst, setBetalersLijst] = useState<MissieDeelnemerModel[]>(
     []
   );
   const [betaler, setBetaler] = useState<string>("clxucmprp0002p31rf6p6mux3");
+  const [titel,setTitel]=useState<string>("")
+  const [omschrijving,setOmschrijving]=useState<string>("")
+  const [url,setUrl]=useState<string>("")
+  const [locatie,setLocatie]=useState<string>("")
 
   let [starttijdValue, setStarttijdValue] = useState<Time>(new Time());
 
@@ -68,7 +72,7 @@ const BewerkEtappeForm = ({ deelnemers, details }: Props) => {
         betaler: data.kost > 0 ? betaler : "",
         url: data.url ? data.url : "",
       };
-      //console.log(model);
+      console.log(model);
       const result = await PostUpdateEtappe(model);
       //console.log(result);
       toast.success("Aanpassing Bewaard");
@@ -104,6 +108,11 @@ const BewerkEtappeForm = ({ deelnemers, details }: Props) => {
     setBetalersLijst(betLijst);
     setVerschuldigdDoor(details.kostenverdeling);
     setDatum(fromUnixTime(details.startDatum));
+    setTitel(details.titel)
+    setOmschrijving(details.omschrijving || "")
+    setUrl(details.url || "")
+    setLocatie(details.locatie || "")
+
     let dat = fromUnixTime(details.startDatum);
     let tijd = new Time(dat.getHours(), dat.getMinutes());
     setStarttijdValue(new Time(dat.getHours(), dat.getMinutes()));
@@ -135,7 +144,8 @@ const BewerkEtappeForm = ({ deelnemers, details }: Props) => {
                 isInvalid={!!errors.titel}
                 label="Algemene titel"
                 className="col-span-2"
-                value={details.titel}
+                value={titel}
+                onChange={((e)=>{setTitel(e.target.value)})}
               />
             </div>
             <div className="mb-1 sm:mb-5 align-middle">
@@ -145,7 +155,8 @@ const BewerkEtappeForm = ({ deelnemers, details }: Props) => {
                 isInvalid={!!errors.omschrijving}
                 label="Korte omschrijving"
                 className="col-span-2"
-                value={details.omschrijving}
+                value={omschrijving}
+                onChange={((e)=>{setOmschrijving(e.target.value)})}
               />
             </div>
             <div className="mb-1 sm:mb-5 align-middle">
@@ -155,7 +166,8 @@ const BewerkEtappeForm = ({ deelnemers, details }: Props) => {
                 isInvalid={!!errors.url}
                 label="Link naar site"
                 className="col-span-2"
-                value={details.url}
+                value={url}
+                onChange={((e)=>{setUrl(e.target.value)})}
               />
             </div>
             <div className="mb-1 sm:mb-5 align-middle">
@@ -165,7 +177,8 @@ const BewerkEtappeForm = ({ deelnemers, details }: Props) => {
                 isInvalid={!!errors.locatie}
                 label="Algemene locatie"
                 className="col-span-2"
-                value={details.locatie}
+                value={locatie}
+                onChange={((e)=>{setLocatie(e.target.value)})}
               />
             </div>
             <div className="mb-1 sm:mb-5 align-middle">

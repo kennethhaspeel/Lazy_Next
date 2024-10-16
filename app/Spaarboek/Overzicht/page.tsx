@@ -38,7 +38,7 @@ const Overzicht = async () => {
               href="/Spaarboek/OverzichtRekening"
               startContent={<PlusCircleIcon />}
             >
-              Spaarrekening Overzicht
+              Argenta Overzicht
             </Button>
             <Button
               as={Link}

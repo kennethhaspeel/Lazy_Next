@@ -9,6 +9,9 @@ import {
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
+  Card,
+  CardHeader,
+  CardBody,
 } from "@nextui-org/react";
 import { MissieEtappe } from "@prisma/client";
 import { format, fromUnixTime, getDayOfYear, getUnixTime } from "date-fns";
@@ -74,7 +77,198 @@ const ToonEtappes = ({
         </h2>
       </div>
       <div className="ps-3 pt-4">
-        <Accordion variant="splitted" isDisabled={ladenNieuweEtappe}>
+        {MissieDatums?.map((datum, index) => (
+          <Card key={`Card_${index}`} className="my-3">
+            <CardHeader>
+              <div>
+                {!afgesloten && (
+                  <div
+                    className="border-2 border-sky-500 rounded-lg  px-4 py-1"
+                    onClick={() => {
+                      setLadenNieuweEtappe(true);
+                      redirectNieuweEtappe(datum);
+                    }}
+                  >
+                    {ladenNieuweEtappe ? (
+                      <Spinner size="sm" />
+                    ) : (
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="size-6"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M12 4.5v15m7.5-7.5h-15"
+                        />
+                      </svg>
+                    )}
+                  </div>
+                )}
+              </div>
+              <div className="ms-3">
+                {index === 0 ? "Algemeen" : format(datum, "dd/MM/yyyy")}
+              </div>
+            </CardHeader>
+            <CardBody>
+              <div className="hidden md:grid md:grid-cols-11">
+                <div className="md:col-span-5">
+                  <div className="bg-default-300 pt-1 pb-1 ps-1 rounded-l-lg grow">
+                    Omschrijving
+                  </div>
+                </div>
+                <div className="md:col-span-1 bg-default-300 pt-1 pb-1 ps-1 content-center">
+                  Tijdstip
+                </div>
+                <div className="md:col-span-1 bg-default-300 pt-1 pb-1 ps-1">
+                  Kost
+                </div>
+                <div className="md:col-span-2 bg-default-300 pt-1 pb-1 ps-1">
+                  Bewijsstuk
+                </div>
+                <div className="md:col-span-2 bg-default-300 pt-1 pb-1 ps-1  rounded-r-lg ">
+                  Foto&lsquo;s
+                </div>
+              </div>
+              {Etappes.filter(
+                (etappe) =>
+                  getDayOfYear(fromUnixTime(etappe.startDatum)) ==
+                  getDayOfYear(datum)
+              ).map((etappe, index) => (
+                <div
+                  className="md:grid grid-cols-11 hidden pt-2 pb-2  border-b-1"
+                  key={`rij_${etappe.id}`}
+                >
+                  <div className="md:col-span-5 pt-1 ps-2 content-center">
+                    {afgesloten && (
+                      <>
+                        <Button
+                          isIconOnly
+                          as={Link}
+                          href={`/Etappe/Bewerk/${missieid}/${etappe.id}`}
+                          className="mr-2"
+                        >
+                          <PencilSquareIcon className="w-5"/>
+                        </Button>
+                      </>
+                    )}
+
+                    {etappe.titel}
+                  </div>
+                  <div className="md:col-span-1 pt-1 content-center">
+                    {format(fromUnixTime(etappe.startDatum), "HH:mm")}
+                  </div>
+                  <div className="md:col-span-1 pt-1 content-center">
+                    {Number(etappe.kost).toFixed(2)}
+                  </div>
+                  <div className="md:col-span-2 pt-1 content-center grow">
+                    <ButtonGroup variant="flat">
+                      <Button>
+                        <>
+                          {etappe.aantalbewijsstukken === 1 ? (
+                            <span>1 stuk</span>
+                          ) : (
+                            <span>{etappe.aantalbewijsstukken} stukken</span>
+                          )}
+                        </>
+                      </Button>
+                      <Dropdown placement="bottom-end">
+                        <DropdownTrigger>
+                          <Button isIconOnly>
+                            <ChevronDownIcon className="size-6" />
+                          </Button>
+                        </DropdownTrigger>
+                        <DropdownMenu
+                          disallowEmptySelection
+                          aria-label="Bewijsstuk"
+                          selectionMode="single"
+                          className="max-w-[300px]"
+                          disabledKeys={
+                            etappe.aantalbewijsstukken === 0
+                              ? [`bekijk_${etappe.id}`]
+                              : []
+                          }
+                        >
+                          <DropdownItem
+                            key={`bekijk_${etappe.id}`}
+                            startContent={<EyeIcon className="size-6" />}
+                            href="/"
+                          >
+                            Bekijk
+                          </DropdownItem>
+
+                          <DropdownItem
+                            key={`foto_${etappe.id}`}
+                            startContent={
+                              <DocumentPlusIcon className="size-6" />
+                            }
+                            href={`/Bestanden/UploadBestand/${missieid}/${etappe.id}/true`}
+                          >
+                            Toevoegen
+                          </DropdownItem>
+                        </DropdownMenu>
+                      </Dropdown>
+                    </ButtonGroup>
+                  </div>
+                  <div className="md:col-span-2 pt-1 content-center grow">
+                    <ButtonGroup variant="flat">
+                      <Button>
+                        <>
+                          {etappe.aantalbijlages === 1 ? (
+                            <span>1 stuk</span>
+                          ) : (
+                            <span>{etappe.aantalbijlages} stukken</span>
+                          )}
+                        </>
+                      </Button>
+                      <Dropdown placement="bottom-end">
+                        <DropdownTrigger>
+                          <Button isIconOnly>
+                            <ChevronDownIcon className="size-6" />
+                          </Button>
+                        </DropdownTrigger>
+                        <DropdownMenu
+                          disallowEmptySelection
+                          aria-label="Bewijsstuk"
+                          selectionMode="single"
+                          className="max-w-[300px]"
+                          disabledKeys={
+                            etappe.aantalbijlages === 0
+                              ? [`bekijk_${etappe.id}`]
+                              : []
+                          }
+                        >
+                          <DropdownItem
+                            key={`bekijk_${etappe.id}`}
+                            startContent={<EyeIcon className="size-6" />}
+                            href={`/Bestanden/FotoGallerij/${missieid}/${etappe.id}`}
+                          >
+                            Bekijk
+                          </DropdownItem>
+
+                          <DropdownItem
+                            key={`foto_${etappe.id}`}
+                            startContent={
+                              <DocumentPlusIcon className="size-6" />
+                            }
+                            href={`/Bestanden/UploadBestand/${missieid}/${etappe.id}/false`}
+                          >
+                            Toevoegen
+                          </DropdownItem>
+                        </DropdownMenu>
+                      </Dropdown>
+                    </ButtonGroup>
+                  </div>
+                </div>
+              ))}
+            </CardBody>
+          </Card>
+        ))}
+        {/* <Accordion variant="splitted" isDisabled={ladenNieuweEtappe}>
           {MissieDatums?.map((datum, index) => (
             <AccordionItem
               key={`tabel_${datum.toString()}`}
@@ -257,7 +451,7 @@ const ToonEtappes = ({
               ))}
             </AccordionItem>
           ))}
-        </Accordion>
+        </Accordion> */}
       </div>
     </>
   );

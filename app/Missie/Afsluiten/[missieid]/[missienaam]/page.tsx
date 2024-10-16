@@ -1,4 +1,4 @@
-import { GetMissieKosten } from "@/lib/actions/MissieActions";
+import {  GetMissiekostenPerDeelnemer } from "@/lib/actions/MissieActions";
 import KostenTabel from "./KostenTabel";
 import Image from "next/image";
 import { Suspense } from "react";
@@ -12,7 +12,8 @@ interface Props {
 }
 
 const Afsluiten = async ({ params: { missieid ,missienaam} }: Props) => {
-  const kosten = await GetMissieKosten(Number(missieid));
+  const record = await GetMissiekostenPerDeelnemer(Number(missieid))
+
   return (
     <>
       <Suspense fallback={<LoadingSpinner />}>
@@ -20,7 +21,7 @@ const Afsluiten = async ({ params: { missieid ,missienaam} }: Props) => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
             <div>
               <p className="text-5xl pb-4 text-center">Kostenverdeling</p>
-              <KostenTabel kosten={kosten} missieid={Number(missieid)} missienaam={missienaam}/>
+              <KostenTabel missieid={Number(missieid)} missienaam={missienaam} kosten={record}/>
             </div>
             <div className="hidden md:block">
               <Image
