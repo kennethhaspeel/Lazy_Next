@@ -47,10 +47,10 @@ const BewerkEtappeForm = ({ deelnemers, details }: Props) => {
     []
   );
   const [betaler, setBetaler] = useState<string>("clxucmprp0002p31rf6p6mux3");
-  const [titel,setTitel]=useState<string>("")
-  const [omschrijving,setOmschrijving]=useState<string>("")
-  const [url,setUrl]=useState<string>("")
-  const [locatie,setLocatie]=useState<string>("")
+  const [titel, setTitel] = useState<string>("");
+  const [omschrijving, setOmschrijving] = useState<string>("");
+  const [url, setUrl] = useState<string>("");
+  const [locatie, setLocatie] = useState<string>("");
 
   let [starttijdValue, setStarttijdValue] = useState<Time>(new Time());
 
@@ -90,6 +90,13 @@ const BewerkEtappeForm = ({ deelnemers, details }: Props) => {
     formState: { errors, isSubmitting },
   } = useForm<InputType>({
     resolver: zodResolver(formSchema),
+    defaultValues:{
+      titel: details.titel,
+      omschrijving:details.omschrijving ,
+      url:details.url,
+      locatie:details.locatie,
+      kost:details.kost
+    }
   });
 
   useEffect(() => {
@@ -108,10 +115,10 @@ const BewerkEtappeForm = ({ deelnemers, details }: Props) => {
     setBetalersLijst(betLijst);
     setVerschuldigdDoor(details.kostenverdeling);
     setDatum(fromUnixTime(details.startDatum));
-    setTitel(details.titel)
-    setOmschrijving(details.omschrijving || "")
-    setUrl(details.url || "")
-    setLocatie(details.locatie || "")
+    setTitel(details.titel);
+    setOmschrijving(details.omschrijving || "");
+    setUrl(details.url || "");
+    setLocatie(details.locatie || "");
 
     let dat = fromUnixTime(details.startDatum);
     let tijd = new Time(dat.getHours(), dat.getMinutes());
@@ -145,7 +152,10 @@ const BewerkEtappeForm = ({ deelnemers, details }: Props) => {
                 label="Algemene titel"
                 className="col-span-2"
                 value={titel}
-                onChange={((e)=>{setTitel(e.target.value)})}
+                onChange={(e) => {
+                  setTitel(e.target.value);
+                  setValue("titel", e.target.value);
+                }}
               />
             </div>
             <div className="mb-1 sm:mb-5 align-middle">
@@ -156,7 +166,9 @@ const BewerkEtappeForm = ({ deelnemers, details }: Props) => {
                 label="Korte omschrijving"
                 className="col-span-2"
                 value={omschrijving}
-                onChange={((e)=>{setOmschrijving(e.target.value)})}
+                onChange={(e) => {
+                  setOmschrijving(e.target.value);
+                }}
               />
             </div>
             <div className="mb-1 sm:mb-5 align-middle">
@@ -167,7 +179,9 @@ const BewerkEtappeForm = ({ deelnemers, details }: Props) => {
                 label="Link naar site"
                 className="col-span-2"
                 value={url}
-                onChange={((e)=>{setUrl(e.target.value)})}
+                onChange={(e) => {
+                  setUrl(e.target.value);
+                }}
               />
             </div>
             <div className="mb-1 sm:mb-5 align-middle">
@@ -178,7 +192,9 @@ const BewerkEtappeForm = ({ deelnemers, details }: Props) => {
                 label="Algemene locatie"
                 className="col-span-2"
                 value={locatie}
-                onChange={((e)=>{setLocatie(e.target.value)})}
+                onChange={(e) => {
+                  setLocatie(e.target.value);
+                }}
               />
             </div>
             <div className="mb-1 sm:mb-5 align-middle">

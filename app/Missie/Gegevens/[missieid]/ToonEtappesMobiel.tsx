@@ -25,9 +25,12 @@ import {
   ArrowUpTrayIcon,
   CameraIcon,
   ChevronDownIcon,
+  DocumentMagnifyingGlassIcon,
   DocumentPlusIcon,
   EyeIcon,
 } from "@heroicons/react/16/solid";
+import { GetEtappeMetDetails } from "@/lib/actions/EtappeActions";
+import EtappeDetailModal from "@/app/components/EtappeDetailModal";
 
 interface Props {
   Etaps: string;
@@ -49,6 +52,9 @@ const ToonEtappesMobiel = ({
   const [Etappes, setEtappes] = useState<GetEtappeMetAantallen[]>(
     JSON.parse(Etaps)
   );
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalData, setModalData] = useState<EtappeDetail | null>(null);
+
   const [totaleKost, setTotaleKost] = useState(0.0);
   const [ladenNieuweEtappe, setLadenNieuweEtappe] = useState(false);
   useEffect(() => {
@@ -63,6 +69,11 @@ const ToonEtappesMobiel = ({
     Begindatum.toString(),
     Einddatum.toString()
   );
+  const ToonEtappeDetailModel = async (etappeid: number) => {
+    setModalOpen((modalOpen) => !modalOpen)
+    const data = await GetEtappeMetDetails(etappeid)
+    setModalData(JSON.parse(JSON.stringify(data)));
+  };
 
   const redirectNieuweEtappe = (datum: Date) => {
     router.push(`/Missie/EtappeNieuw/${missieid}/${getUnixTime(datum)}`);
@@ -129,8 +140,21 @@ const ToonEtappesMobiel = ({
                     key={`blok_${etappe.id}`}
                   >
                     <div className="grid grid-cols-8">
-                      <div className="col-span-8 text-lg font-bold ps-2 rounded-small bg-slate-800">
-                        {etappe.titel}
+                      <div className="col-span-8 text-lg font-bold ps-2 rounded-small bg-slate-800 flex" >
+                      <div className="shrink">
+                        <>
+                          <Button
+                            isIconOnly
+                            className="m-2"
+                            onClick={() => {
+                              ToonEtappeDetailModel(etappe.id);
+                            }}
+                          >
+                            <DocumentMagnifyingGlassIcon className="w-5" />
+                          </Button>
+                        </>
+                      </div>
+                      <div className="place-content-center">{etappe.titel}</div>
                       </div>
                     </div>
                     <div className="grid grid-cols-8 ps-2 pt-2">
@@ -260,6 +284,12 @@ const ToonEtappesMobiel = ({
           ))}
         </Accordion>
       </div>
+      <EtappeDetailModal
+        modalOpen={modalOpen}
+        setModalOpen={setModalOpen}
+        modalData={modalData}
+        setModalData={setModalData}
+      />
     </>
   );
 };
