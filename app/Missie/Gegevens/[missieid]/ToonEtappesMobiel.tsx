@@ -213,7 +213,7 @@ const ToonEtappesMobiel = ({
                                 startContent={
                                   <ArrowUpTrayIcon className="size-6" />
                                 }
-                                href="/"
+                                href={`/Bestanden/UploadBestand/${missieid}/${etappe.id}/true`}
                               >
                                 Bestand Opladen
                               </DropdownItem>
@@ -247,7 +247,7 @@ const ToonEtappesMobiel = ({
                               <DropdownItem
                                 key={`bekijk_${etappe.id}`}
                                 startContent={<EyeIcon className="size-6" />}
-                                href="/"
+                                href={`/Bestanden/FotoGallerij/${missieid}/${etappe.id}`}
                               >
                                 Bekijk
                               </DropdownItem>

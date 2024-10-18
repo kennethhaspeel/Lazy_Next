@@ -23,20 +23,21 @@ const AfbeeldingCard = async ({ data, user }: Props) => {
   //console.log(url)
   //console.log(blurred);
   return (
-    <Card className="max-w-[250px]">
+    <Card className="max-w-[250px] max-h-[300px] overflow-hidden">
       <CardHeader className="flex gap-3">
         <Image
           src={url!}
           alt="Card background"
-          className="object-cover rounded-xl"
+          className="rounded-xl max-h-[250px]"
           sizes="(max-width: 640px) 100vw,
        (max-width: 1280px) 50vw,
        (max-width: 1536px) 33vw,
        25vw"
-          width={720}
-          height={480}
+          width={250}
+          height={250}
           placeholder="blur"
           blurDataURL={blurred}
+          objectFit="cover"
         />
       </CardHeader>
       <CardFooter>
