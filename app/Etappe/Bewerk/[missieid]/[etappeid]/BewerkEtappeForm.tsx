@@ -172,7 +172,7 @@ const BewerkEtappeForm = ({ deelnemers, details }: Props) => {
               />
             </div>
             <div className="mb-1 sm:mb-5 align-middle">
-              <Textarea
+              <Input
                 {...register("url")}
                 errorMessage={errors.url?.message}
                 isInvalid={!!errors.url}

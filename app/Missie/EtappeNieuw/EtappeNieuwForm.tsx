@@ -36,6 +36,9 @@ const formSchema = z.object({
   locatie: z
     .string()
     .optional(),
+    url: z
+    .string()
+    .optional(),
   startTijd: z.string().time("Gelieve een starttijd in te geven"),
   kost: z.number(),
 });
@@ -88,6 +91,7 @@ const EtappeNieuwForm = ({ deelnemers, missieid, datum }: Props) => {
         titel: data.titel,
         omschrijving: data.omschrijving,
         locatie: data.locatie,
+        url:data.url,
         startDatum: new Date(starttijdValue.toAbsoluteString()),
         kost: data.kost,
         verschuldigDoor: data.kost > 0 ? verschuldigdDoor : [],
@@ -153,6 +157,15 @@ const EtappeNieuwForm = ({ deelnemers, missieid, datum }: Props) => {
                 className="col-span-2"
               />
             </div>
+            <div className="mb-1 sm:mb-5 align-middle">
+              <Input
+                {...register("url")}
+                errorMessage={errors.url?.message}
+                isInvalid={!!errors.url}
+                label="URL"
+                className="col-span-2"
+              />
+            </div>        
             <div className="mb-1 sm:mb-5 align-middle">
               <Input
                 {...register("locatie")}
