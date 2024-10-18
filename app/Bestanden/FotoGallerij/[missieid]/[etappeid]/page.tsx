@@ -25,7 +25,7 @@ const ToonGallerij = async ({ params: { missieid, etappeid } }: Props) => {
   const getAfbeeldingen: Promise<MissieEtappeBestand[]> = GetAfbeeldingenPerEtappe(etappeid)
   const getAllUsers: Promise<User[]> = GetAllUsers();
   const [afbeeldingen,users] = await Promise.all([getAfbeeldingen,getAllUsers])
-
+console.log(etappeid)
 
 
 
