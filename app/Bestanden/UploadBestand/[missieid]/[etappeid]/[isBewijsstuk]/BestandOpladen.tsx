@@ -75,8 +75,8 @@ const BestandOpladen = ({
     if (file) {
       new Compressor(file,{
         quality:0.8,
-        maxWidth: 2500,
-        maxHeight:2500,
+        maxWidth: 3000,
+        maxHeight:3000,
         checkOrientation:true,
         retainExif:true,
         success(result){
@@ -85,7 +85,7 @@ const BestandOpladen = ({
           reader.onloadend = () => {
             setBestand(reader.result as string);
           };
-          reader.readAsDataURL(file);
+          reader.readAsDataURL(result);
         },
         error(err){console.log(err)}
       })
