@@ -18,6 +18,7 @@ import { getUnixTime } from "date-fns";
 import pdfIcon from "../../../../../afbeeldingen/fileicons/pdf.png";
 import { isatty } from "tty";
 import ExifReader from "exifreader";
+import Compressor from "compressorjs"
 
 interface Props {
   setToonUploadKeuzes: Dispatch<SetStateAction<boolean>>;
@@ -69,22 +70,39 @@ const BestandOpladen = ({
       throw new Error("Geen foto geselecteerd");
     }
     const file = event.target.files[0];
+    setBestandsnaam(file.name);
+    setBestandsgrootte((Number(file.size) / 1024 / 1024).toFixed(2));
     if (file) {
-      const reader = new FileReader();
-      setBestandsnaam(file.name);
-      setBestandsgrootte((Number(file.size) / 1024 / 1024).toFixed(2));
-      console.log((Number(file.size) / 1024 / 1024).toFixed(2));
-      console.log(file.name);
-      reader.onloadend = () => {
-        setBestand(reader.result as string);
-      };
-      reader.readAsDataURL(file);
+      new Compressor(file,{
+        quality:0.8,
+        maxWidth: 2500,
+        maxHeight:2500,
+        checkOrientation:true,
+        retainExif:true,
+        success(result){
+          console.log((Number(result.size) / 1024 / 1024).toFixed(2));
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            setBestand(reader.result as string);
+          };
+          reader.readAsDataURL(file);
+        },
+        error(err){console.log(err)}
+      })
+      
+      // const reader = new FileReader();
+      // setBestandsnaam(file.name);
+      // setBestandsgrootte((Number(file.size) / 1024 / 1024).toFixed(2));
+
+      // console.log(file.name);
+
     }
   };
 
   async function BewaarBestand() {
     if (bestand) {
       setSaving(true)
+
       if (etappeid == 0) {
         const result = JSON.parse(await UploadFoto(bestand, [], bestandsnaam!));
         const update = await UpdateMissieAfbeeldingRecord({

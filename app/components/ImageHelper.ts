@@ -1,7 +1,7 @@
 import ImageKit from "imagekit";
 import { getPlaiceholder } from "plaiceholder";
 import { ParseDMS } from "./geolocation";
-import ExifReader from 'exifreader'
+import ExifReader from "exifreader";
 
 var imagekit = new ImageKit({
   publicKey: process.env.IMAGEKIT_PUBLICKEY!,
@@ -16,10 +16,10 @@ export const generateRandom = () => {
   );
 };
 
-export const GetGeoLocatie = async (bestand:string)=>{
-  const tags = await ExifReader.load(bestand,{expanded:true})
-  return tags
-}
+export const GetGeoLocatie = async (bestand: string) => {
+  const tags = await ExifReader.load(bestand, { expanded: true });
+  return tags;
+};
 
 export const GetImageSignedUrl = (
   url: string,
@@ -28,7 +28,7 @@ export const GetImageSignedUrl = (
   blur = false,
   watermerk = false
 ) => {
-  console.log(url)
+  console.log(url);
   let imageUrl = imagekit.url({
     src: url,
     signed: true,
@@ -52,15 +52,15 @@ export const GetImageSignedUrl = (
   return imageUrl;
 };
 
-export const GetMetaData = async (url:string)=>{
-  let meta:any = await imagekit.getFileMetadata(url)
-  
-  const {gps} = meta.exif
-  const LatLon = ParseDMS(gps.GPSLatitude,gps.GPSLongitude)
-  console.log(gps)
-  console.log(LatLon)
-  return meta
-}
+export const GetMetaData = async (url: string) => {
+  let meta: any = await imagekit.getFileMetadata(url);
+
+  const { gps } = meta.exif;
+  const LatLon = ParseDMS(gps.GPSLatitude, gps.GPSLongitude);
+  console.log(gps);
+  console.log(LatLon);
+  return meta;
+};
 
 export const BestandNaarImagekit = async (
   bestand: FormData,
@@ -73,12 +73,16 @@ export const BestandNaarImagekit = async (
     fileName: `${generateRandom()}.jpeg`,
     useUniqueFileName: true,
     tags: tags,
-    isPrivateFile:true
+    isPrivateFile: true,
   });
   return response;
 };
 
-export const UploadImage = async (dataUrl: string, tagList: string[],bestandsnaam:string) => {
+export const UploadImage = async (
+  dataUrl: string,
+  tagList: string[],
+  bestandsnaam: string
+) => {
   const tags = tagList.join(",");
   const response = await imagekit.upload({
     file: dataUrl,
@@ -104,3 +108,5 @@ export const getBase64 = async (url: string) => {
 
   return base64;
 };
+
+
