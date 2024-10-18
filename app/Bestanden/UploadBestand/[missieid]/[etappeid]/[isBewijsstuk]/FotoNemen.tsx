@@ -19,7 +19,7 @@ import { getUnixTime } from "date-fns";
 
 import { GetGeoLocatie } from "@/app/components/ImageHelper";
 import ExifReader from "exifreader";
-
+import Compressor from "compressorjs"
 
 interface Props {
   setToonUploadKeuzes: Dispatch<SetStateAction<boolean>>;
@@ -64,16 +64,25 @@ const FotoNemen = ({
       throw new Error("Geen foto geselecteerd");
     }
     const file = event.target.files[0];
+    setBestandsnaam(file.name);
+    setBestandsgrootte((Number(file.size) / 1024 / 1024).toFixed(2));
     if (file) {
-
-      setBestandsnaam(file.name);
-      setBestandsgrootte((Number(file.size) / 1024 / 1024).toFixed(2));
-      const reader = new FileReader();
-      reader.onloadend = async () => {
-        setNeemFotoSrc(reader.result as string);
-
-      };
-      reader.readAsDataURL(file);
+      new Compressor(file,{
+        quality:0.8,
+        maxWidth: 3000,
+        maxHeight:3000,
+        checkOrientation:true,
+        retainExif:true,
+        success(result){
+          console.log((Number(result.size) / 1024 / 1024).toFixed(2));
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            setNeemFotoSrc(reader.result as string);
+          };
+          reader.readAsDataURL(result);
+        },
+        error(err){console.log(err)}
+      })
     }
   };
 
