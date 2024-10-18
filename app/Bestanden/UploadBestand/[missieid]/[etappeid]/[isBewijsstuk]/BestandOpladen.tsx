@@ -75,8 +75,8 @@ const BestandOpladen = ({
     if (file) {
       new Compressor(file,{
         quality:0.8,
-        maxWidth: 4000,
-        maxHeight:4000,
+        maxWidth: 2500,
+        maxHeight:2500,
         checkOrientation:true,
         retainExif:true,
         success(result){
