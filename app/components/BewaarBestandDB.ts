@@ -40,11 +40,21 @@ interface BewaarMissieBestandModel {
 }
 
 export async function BewaarMissieBestand(data: BewaarMissieBestandModel) {
-  console.log(data)
   const response = await db.missieEtappeBestand.create({
-    data: data,
+    data: {
+      missieEtappeId:Number(data.missieEtappeId),
+      bestandsNaam:data.bestandsNaam,
+      mime:data.mime,
+      url:data.url,
+      width:data.width,
+      height:data.height,
+      size:data.size,
+      fileId:data.fileId,
+      uploadDatum:data.uploadDatum,
+      userId:data.userId,
+      isBewijsstuk: data.isBewijsstuk.toString() === 'true'
+    },
   });
-  
-  console.log(response)
+
   return response;
 }

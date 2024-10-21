@@ -39,7 +39,6 @@ const Upload = ({
   const [toonUploadFoto, setToonUploadFoto] = useState(false);
   const [toonUploadPDF, setToonUploadPDF] = useState(false);
   const [allesBewaard, setAllesBewaard] = useState(false);
-
   const ToggleZichtbaarheid = (onderwerp: string) => {
     switch (onderwerp) {
       case "fotonemen":

@@ -39,7 +39,7 @@ const page = async ({ params: { missieid } }: Props) => {
     allEtappes,
     allDeelnemers,
   ]);
-  console.log(missie)
+
   const currentUser = missie.deelnemers.filter((el) => {
     return `${el.naam}` === `${session?.user.voornaam} ${session?.user.naam}`;
   })[0];

@@ -19,6 +19,7 @@ const UploadBestand = async ({
   if (!session?.user) {
     return <h1 className="text-5xl">Geen Toegang</h1>;
   }
+  console.error(`Start UploadBestand: ${isBewijsstuk}`)
   return (
     <>
       <section className="pt-5">

@@ -115,7 +115,7 @@ const BestandOpladen = ({
         const result = JSON.parse(
           await UploadFoto(bestand, tags, bestandsnaam!)
         );
-        console.log(result);
+        //console.log(result);
         const gps = await GetGeoLocatie(bestand)
         const dbdata = {
           missieEtappeId: Number(etappeid),
@@ -128,7 +128,7 @@ const BestandOpladen = ({
           fileId: result.fileId,
           uploadDatum: getUnixTime(new Date()),
           userId: currentUser,
-          isBewijsstuk: isBewijsstuk === true,
+          isBewijsstuk: isBewijsstuk,
           locatie: gps != undefined ? JSON.stringify(gps) : null
         };
         const dbResult = await BewaarMissieBestand(dbdata);
