@@ -27,8 +27,8 @@ export default function Uitleg() {
                   Waar
                 </p>
                 <p>
-                  Met uw overschotjes aan geld kunt u altijd terecht op BE79
-                  9733 6524 3783
+                  Met uw overschotjes aan geld kunt u altijd terecht op <span className="text-lg font-bold">BE79
+                  9733 6524 3733</span> 
                 </p>
                 <p className="bg-slate-500  dark:bg-slate-800 p-2 rounded-lg text-white">
                   Waarom

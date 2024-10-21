@@ -204,7 +204,7 @@ const ToonEtappesMobiel = ({
                               <DropdownItem
                                 key={`foto_${etappe.id}`}
                                 startContent={<CameraIcon className="size-6" />}
-                                href={`/Bestanden/FotoInput/${missieid}/${etappe.id}/${true}`}
+                                href={`/Bestanden/UploadBestand/${missieid}/${etappe.id}/${true}`}
                               >
                                 Neem Foto
                               </DropdownItem>

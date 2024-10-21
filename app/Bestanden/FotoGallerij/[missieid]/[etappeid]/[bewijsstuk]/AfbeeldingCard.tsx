@@ -3,7 +3,7 @@ import {
   getBase64,
   GetImageSignedUrl,
   GetMetaData,
-} from "../../../../components/ImageHelper";
+} from "../../../../../components/ImageHelper";
 import Image from "next/image";
 import { MissieEtappeBestand, User } from "@prisma/client";
 import { Card, CardFooter, CardHeader } from "@nextui-org/react";
@@ -13,7 +13,7 @@ interface Props {
   user: User;
 }
 const AfbeeldingCard = async ({ data, user }: Props) => {
-  //console.log(data);
+  console.log(data);
   const blurred = await getBase64(GetImageSignedUrl(data.url, 100, 0, true));
 
   const url = GetImageSignedUrl(data.url, 720, 0, false);
@@ -23,7 +23,7 @@ const AfbeeldingCard = async ({ data, user }: Props) => {
   //console.log(url)
   //console.log(blurred);
   return (
-    <Card className="max-w-[250px] max-h-[300px] overflow-hidden">
+    <Card className="max-w-[250px] max-h-[400px] overflow-hidden">
       <CardHeader className="flex gap-3">
         <Image
           src={url!}
@@ -37,13 +37,16 @@ const AfbeeldingCard = async ({ data, user }: Props) => {
           height={250}
           placeholder="blur"
           blurDataURL={blurred}
-          objectFit="cover"
+          
         />
       </CardHeader>
       <CardFooter>
         <div className="flex flex-col">
           <div className="text-tiny text-white/80">
             Opgeladen: {user.voornaam} {user.naam}
+          </div>
+          <div className="text-tiny text-white/80">
+            Opgeladen: {data.bestandsNaam}
           </div>
         </div>
       </CardFooter>

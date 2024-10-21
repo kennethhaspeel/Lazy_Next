@@ -9,7 +9,7 @@ export async function GetAfbeelding(id:number){
     return afbeeldingData
 }
 
-export async function GetAfbeeldingenPerEtappe(etappeid:number){
+export async function GetAfbeeldingenPerEtappe(etappeid:number,bewijsstuk:boolean){
     const afbeeldingData = await db.missieEtappeBestand.findMany({
         where:{
             missieEtappeId: {
@@ -17,6 +17,9 @@ export async function GetAfbeeldingenPerEtappe(etappeid:number){
             },
             mime:{
                 equals: 'image'
+            },
+            isBewijsstuk:{
+                equals: (bewijsstuk === true)
             }
         }
     })
