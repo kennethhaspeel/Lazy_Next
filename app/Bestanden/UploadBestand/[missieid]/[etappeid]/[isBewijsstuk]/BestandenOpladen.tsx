@@ -18,6 +18,11 @@ import {
 } from "@nextui-org/react";
 import ExifReader from "exifreader";
 import Compressor from "compressorjs";
+import {
+  BewaarMissieBestand,
+  UploadFoto,
+} from "@/app/components/BewaarBestandDB";
+import { getUnixTime } from "date-fns";
 
 interface Props {
   setToonUploadKeuzes: Dispatch<SetStateAction<boolean>>;
@@ -39,6 +44,7 @@ interface BestandModel {
   bestandsgrootteVoor: string;
   bestandsgrootte: string;
   progressOnzichtbaar: boolean;
+  bewaard: boolean;
 }
 const BestandenOpladen = ({
   setToonUploadKeuzes,
@@ -110,6 +116,7 @@ const BestandenOpladen = ({
                     2
                   ),
                   progressOnzichtbaar: true,
+                  bewaard: false,
                 },
               ];
             });
@@ -123,15 +130,39 @@ const BestandenOpladen = ({
     }
   };
 
-  const BewaarBestanden = () => {
+  const BewaarBestanden = async () => {
     setSaving(true);
     const bs = [...bestanden];
-    bs?.map((bestand, index) => {
-      bs[index].progressOnzichtbaar = false;
+    bs?.map((bestand) => {
+      bs[bestand.index].progressOnzichtbaar = false;
     });
     setBestanden(bs);
 
-    console.log(bestanden.length);
+    const tags: string[] = [naam!, voornaam!];
+    for (let i = 0; i < bs.length; i++) {
+      const result = JSON.parse(
+        await UploadFoto(bs[i].bestand, tags, bs[i].bestandsnaam!)
+      );
+      const dbdata = {
+        missieEtappeId: Number(etappeid),
+        bestandsNaam: result.name,
+        mime: result.fileType,
+        url: result.url,
+        width: result.width || 0,
+        height: result.height || 0,
+        size: result.size,
+        fileId: result.fileId,
+        uploadDatum: getUnixTime(new Date()),
+        userId: currentUser,
+        isBewijsstuk: isBewijsstuk,
+        locatie: bs[i].gps != undefined ? JSON.stringify(bs[i].gps) : null,
+      };
+      const dbResult = await BewaarMissieBestand(dbdata);
+      bs[i].bewaard = true;
+      bs[i].progressOnzichtbaar = true;
+    
+    }
+      setBestanden(bs);
   };
   return (
     <>
@@ -154,49 +185,61 @@ const BestandenOpladen = ({
             multiple
           />
         </form>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-2" key={"bestanden"}>
-          {bestanden?.map((bestand, index) => {
+        <div
+          className="grid grid-cols-2 md:grid-cols-3 gap-2"
+          key={"bestanden"}
+        >
+          {bestanden?.map((bestand) => {
             return (
-
-                <Card className="py-4" key={index}>
-                  <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
-                    <p className="text-tiny uppercase font-bold">
-                      {bestand.bestandsnaam.length > 30
-                        ? `${bestand.bestandsnaam.substring(0, 15)}...`
-                        : bestand.bestandsnaam}
-                    </p>
-                    <small className="text-default-500">
-                      Origineel: {bestand.bestandsgrootteVoor} MB
-                    </small>
-                    <small className="text-default-500">
-                      Upload: {bestand.bestandsgrootte} MB
-                    </small>
-                  </CardHeader>
-                  <CardBody className="overflow-hidden py-2">
-                    <Image
-                      key={index}
-                      src={bestand.bestand}
-                      alt="afbeelding"
-                      width={200}
-                      height={200}
-                      isBlurred
-                      className="m-2"
+              <Card className="py-4" key={bestand.index}>
+                <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
+                  <p className="text-tiny uppercase font-bold">
+                    {bestand.bestandsnaam.length > 30
+                      ? `${bestand.bestandsnaam.substring(0, 15)}...`
+                      : bestand.bestandsnaam}
+                  </p>
+                  <small className="text-default-500">
+                    Origineel: {bestand.bestandsgrootteVoor} MB
+                  </small>
+                  <small className="text-default-500">
+                    Upload: {bestand.bestandsgrootte} MB
+                  </small>
+                </CardHeader>
+                <CardBody className="overflow-hidden py-2">
+                  <Image
+                    key={bestand.index}
+                    src={bestand.bestand}
+                    alt="afbeelding"
+                    width={200}
+                    height={200}
+                    isBlurred
+                    className="m-2"
+                  />
+                  <div hidden={bestand.progressOnzichtbaar}>
+                    <Progress
+                      isIndeterminate
+                      className="max-w-md mt-2"
+                      aria-label="progress"
                     />
-                    <div hidden={bestand.progressOnzichtbaar}>
-                      <Progress
-                        isIndeterminate
-                        className="max-w-md mt-2"
-                        aria-label="progress"
-                      />
-                    </div>
-                  </CardBody>
-                  <CardFooter className="flex flex-row">
-                    <Button className="w-full" color="danger">
+                  </div>
+                </CardBody>
+                <CardFooter className="flex flex-row">
+                  {!bestand.bewaard && (
+                    <Button
+                      className="w-full"
+                      color="danger"
+                      isLoading={saving}
+                    >
                       Verwijderen
                     </Button>
-                  </CardFooter>
-                </Card>
-   
+                  )}
+                  {bestand.bewaard && (
+                    <Button className="w-full" color="success" isDisabled>
+                      Bewaard
+                    </Button>
+                  )}
+                </CardFooter>
+              </Card>
             );
           })}
         </div>
