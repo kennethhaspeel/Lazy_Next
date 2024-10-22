@@ -15,6 +15,7 @@ import Image from "next/image";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import FotoNemen from "./FotoNemen";
 import BestandOpladen from "./BestandOpladen";
+import BestandenOpladen from "./BestandenOpladen";
 
 interface Props {
   missieid: number;
@@ -136,7 +137,7 @@ const Upload = ({
       </div>
       <div>
         {toonUploadFoto && (
-          <BestandOpladen
+          <BestandenOpladen
             setToonUploadKeuzes={setToonUploadKeuzes}
             setAllesBewaard={setAllesBewaard}
             missieid={missieid}
