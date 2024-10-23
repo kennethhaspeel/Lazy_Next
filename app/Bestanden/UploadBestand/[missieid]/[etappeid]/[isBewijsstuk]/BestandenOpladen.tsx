@@ -12,7 +12,6 @@ import {
   CardBody,
   CardFooter,
   CardHeader,
-  Divider,
   Image,
   Progress,
 } from "@nextui-org/react";
@@ -20,6 +19,7 @@ import ExifReader from "exifreader";
 import Compressor from "compressorjs";
 import {
   BewaarMissieBestand,
+  UpdateMissieAfbeeldingRecord,
   UploadFoto,
 } from "@/app/components/BewaarBestandDB";
 import { getUnixTime } from "date-fns";
@@ -43,8 +43,6 @@ interface BestandModel {
   gps?: ExifReader.GpsTags;
   bestandsgrootteVoor: string;
   bestandsgrootte: string;
-  progressOnzichtbaar: boolean;
-  bewaard: boolean;
 }
 const BestandenOpladen = ({
   setToonUploadKeuzes,
@@ -60,9 +58,10 @@ const BestandenOpladen = ({
   const [bestanden, setBestanden] = useState<BestandModel[]>([]);
   const [saving, setSaving] = useState(false);
   const [toonFout, setToonFout] = useState(false);
+  const [progressZichtbaar, setProgressZichtbaar] = useState(false);
+  const [totalSaved, setTotalSaved] = useState<number>(0);
   const [foutBoodschap, setFoutBoodschap] = useState<string>("");
   const triggerUploadBestand = useRef<HTMLInputElement>(null);
-
   const triggerFunction = () => {
     triggerUploadBestand.current!.click();
   };
@@ -86,15 +85,15 @@ const BestandenOpladen = ({
       return;
     }
     const files = event.target.files;
+
     for (let i = 0; i < files.length; i++) {
       new Compressor(files[i], {
         quality: 0.8,
-        maxWidth: 3000,
-        maxHeight: 3000,
+        maxWidth: etappeid === 0 ? 1000 : 3000,
+        maxHeight: etappeid === 0 ? 1000 : 3000,
         checkOrientation: true,
         retainExif: true,
         success(result) {
-          console.log((Number(result.size) / 1024 / 1024).toFixed(2));
           const reader = new FileReader();
           reader.onloadend = async () => {
             let str = reader.result as string;
@@ -115,8 +114,6 @@ const BestandenOpladen = ({
                   bestandsgrootte: (Number(result.size) / 1024 / 1024).toFixed(
                     2
                   ),
-                  progressOnzichtbaar: true,
-                  bewaard: false,
                 },
               ];
             });
@@ -132,38 +129,55 @@ const BestandenOpladen = ({
 
   const BewaarBestanden = async () => {
     setSaving(true);
-    const bs = [...bestanden];
-    bs?.map((bestand) => {
-      bs[bestand.index].progressOnzichtbaar = false;
-    });
-    setBestanden(bs);
-
+    setProgressZichtbaar(true);
     const tags: string[] = [naam!, voornaam!];
-    for (let i = 0; i < bs.length; i++) {
+
+    if (Number(etappeid) == 0) {
       const result = JSON.parse(
-        await UploadFoto(bs[i].bestand, tags, bs[i].bestandsnaam!)
+        await UploadFoto(bestanden[0].bestand, [], bestanden[0].bestandsnaam)
       );
-      const dbdata = {
-        missieEtappeId: Number(etappeid),
-        bestandsNaam: result.name,
-        mime: result.fileType,
-        url: result.url,
-        width: result.width || 0,
-        height: result.height || 0,
-        size: result.size,
-        fileId: result.fileId,
-        uploadDatum: getUnixTime(new Date()),
-        userId: currentUser,
-        isBewijsstuk: isBewijsstuk,
-        locatie: bs[i].gps != undefined ? JSON.stringify(bs[i].gps) : null,
-      };
-      const dbResult = await BewaarMissieBestand(dbdata);
-      bs[i].bewaard = true;
-      bs[i].progressOnzichtbaar = true;
-    
+      const update = await UpdateMissieAfbeeldingRecord({
+        missieid: missieid,
+        bestandsnaam: result.url,
+      });
+      setTotalSaved((prev) => prev + 1);
+    } else {
+      bestanden.forEach(async (bestand) => {
+        const result = JSON.parse(
+          await UploadFoto(bestand.bestand, tags, bestand.bestandsnaam!)
+        );
+        const dbdata = {
+          missieEtappeId: Number(etappeid),
+          bestandsNaam: result.name,
+          mime: result.fileType,
+          url: result.url,
+          width: result.width || 0,
+          height: result.height || 0,
+          size: result.size,
+          fileId: result.fileId,
+          uploadDatum: getUnixTime(new Date()),
+          userId: currentUser,
+          isBewijsstuk: isBewijsstuk,
+          locatie:
+            bestand.gps != undefined ? JSON.stringify(bestand.gps) : null,
+        };
+        const dbResult = await BewaarMissieBestand(dbdata);
+        setTotalSaved((prev) => prev + 1);
+      });
     }
-      setBestanden(bs);
   };
+
+  useEffect(() => {
+    if (bestanden.length > 0) {
+      if (totalSaved === bestanden.length) {
+        setSaving(false);
+        setToonUploadKeuzes(true);
+        setAllesBewaard(true);
+        setProgressZichtbaar(false);
+        setBestanden([]);
+      }
+    }
+  }, [totalSaved]);
   return (
     <>
       <div>
@@ -182,7 +196,7 @@ const BestandenOpladen = ({
             accept={isAfbeelding ? "image/*" : "application/pdf"}
             onChange={ToonVoorbeeld}
             name="image"
-            multiple
+            multiple={etappeid != 0}
           />
         </form>
         <div
@@ -215,34 +229,25 @@ const BestandenOpladen = ({
                     isBlurred
                     className="m-2"
                   />
-                  <div hidden={bestand.progressOnzichtbaar}>
-                    <Progress
-                      isIndeterminate
-                      className="max-w-md mt-2"
-                      aria-label="progress"
-                    />
-                  </div>
                 </CardBody>
                 <CardFooter className="flex flex-row">
-                  {!bestand.bewaard && (
-                    <Button
-                      className="w-full"
-                      color="danger"
-                      isLoading={saving}
-                    >
-                      Verwijderen
-                    </Button>
-                  )}
-                  {bestand.bewaard && (
-                    <Button className="w-full" color="success" isDisabled>
-                      Bewaard
-                    </Button>
-                  )}
+                  <Button className="w-full" color="danger" isLoading={saving}>
+                    Verwijderen
+                  </Button>
                 </CardFooter>
               </Card>
             );
           })}
         </div>
+        {progressZichtbaar && (
+          <div className="flex w-full">
+            <Progress
+              isIndeterminate
+              className="max-w-md mt-2"
+              aria-label="bewaren"
+            />
+          </div>
+        )}
 
         {bestanden?.length > 0 && (
           <div className="flex w-full justify-items-stretch gap-4  pt-4">

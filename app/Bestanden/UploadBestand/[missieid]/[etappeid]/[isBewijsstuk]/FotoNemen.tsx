@@ -93,7 +93,7 @@ const FotoNemen = ({
         const result = JSON.parse(await UploadFoto(NeemFotoSrc, [],bestandsnaam!));
         const update = await UpdateMissieAfbeeldingRecord({
           missieid: missieid,
-          bestandsnaam: result["name"],
+          bestandsnaam: result.url,
         });
       } else {
         const gps = await GetGeoLocatie(NeemFotoSrc)

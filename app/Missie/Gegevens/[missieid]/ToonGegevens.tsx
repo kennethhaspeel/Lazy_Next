@@ -57,7 +57,7 @@ const ToonGegevens = async ({ missieData, currentUser }: Props) => {
                     {missieData.afbeelding ? (
                       <p>Bekijk afbeelding</p>
                     ) : (
-                      "Nog geen afbeelding"
+                      <ToonMissieAfbeelding hasImage={missieData.afbeelding != null} missieid={missieData.id}/>
                     )}
                   </div>
                 )}
