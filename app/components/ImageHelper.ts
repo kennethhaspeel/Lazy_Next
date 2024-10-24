@@ -28,7 +28,6 @@ export const GetImageSignedUrl = (
   blur = false,
   watermerk = false
 ) => {
-  console.log(url);
   let imageUrl = imagekit.url({
     src: url,
     signed: true,
@@ -53,12 +52,18 @@ export const GetImageSignedUrl = (
 };
 
 export const GetMetaData = async (url: string) => {
-  let meta: any = await imagekit.getFileMetadata(url);
 
-  const { gps } = meta.exif;
-  const LatLon = ParseDMS(gps.GPSLatitude, gps.GPSLongitude);
-  console.log(gps);
-  console.log(LatLon);
+  let meta: any = await imagekit.getFileMetadata(url);
+  // try {
+  // const { gps } = meta.exif;
+  //   const LatLon = ParseDMS(gps.GPSLatitude, gps.GPSLongitude);
+  // }
+  // catch(exception){
+  //   console.log(exception)
+  // }
+
+
+
   return meta;
 };
 

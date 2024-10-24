@@ -23,6 +23,7 @@ import {
   UploadFoto,
 } from "@/app/components/BewaarBestandDB";
 import { getUnixTime } from "date-fns";
+import { ExifDatumNaarDatum } from "@/app/components/DatumHelper";
 
 interface Props {
   setToonUploadKeuzes: Dispatch<SetStateAction<boolean>>;
@@ -43,6 +44,7 @@ interface BestandModel {
   gps?: ExifReader.GpsTags;
   bestandsgrootteVoor: string;
   bestandsgrootte: string;
+  opnamedatum: number;
 }
 const BestandenOpladen = ({
   setToonUploadKeuzes,
@@ -65,10 +67,14 @@ const BestandenOpladen = ({
   const triggerFunction = () => {
     triggerUploadBestand.current!.click();
   };
-  const GetGeoLocatie = async (bestand: string) => {
+  const GetExifData = async (bestand: string) => {
     try {
-      const { gps } = await ExifReader.load(bestand, { expanded: true });
-      return gps;
+      return await ExifReader.load(bestand, { expanded: true });
+      // const datum: number =
+      //   exif && exif.DateTimeOriginal
+      //     ? getUnixTime(ExifDatumNaarDatum(exif.DateTimeOriginal.description))
+      //     : 0;
+      // return [gps, datum];
     } catch {
       console.log("Geen gps data gevonden");
       return undefined;
@@ -97,15 +103,17 @@ const BestandenOpladen = ({
           const reader = new FileReader();
           reader.onloadend = async () => {
             let str = reader.result as string;
-            let gps = await GetGeoLocatie(str);
+            let exifdata = await GetExifData(str);
+            console.log(exifdata)
             setBestanden((prevBestanden) => {
               return [
                 ...prevBestanden,
                 {
                   index: i,
                   bestandsnaam: files[i].name,
-                  gps: gps,
+                  gps: exifdata?.gps ,
                   bestand: str,
+                  opnamedatum:  exifdata?.exif && exifdata.exif.DateTimeOriginal? getUnixTime(ExifDatumNaarDatum(exifdata.exif.DateTimeOriginal.description)) : 0,
                   bestandsgrootteVoor: (
                     Number(files[i].size) /
                     1024 /
@@ -156,6 +164,7 @@ const BestandenOpladen = ({
           size: result.size,
           fileId: result.fileId,
           uploadDatum: getUnixTime(new Date()),
+          opnamedatum: bestand.opnamedatum || 0,
           userId: currentUser,
           isBewijsstuk: isBewijsstuk,
           locatie:

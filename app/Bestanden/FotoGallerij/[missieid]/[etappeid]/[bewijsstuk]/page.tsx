@@ -13,30 +13,37 @@ interface Props {
   params: {
     missieid: number;
     etappeid: number;
-    bewijsstuk:boolean;
+    bewijsstuk: boolean;
   };
 }
 
-const ToonGallerij = async ({ params: { missieid, etappeid,bewijsstuk } }: Props) => {
+const ToonGallerij = async ({
+  params: { missieid, etappeid, bewijsstuk },
+}: Props) => {
   const session = await getServerSession(authOptions);
   if (!session?.user) {
     return <h1 className="text-5xl">Geen Toegang</h1>;
   }
 
-  const getAfbeeldingen: Promise<MissieEtappeBestand[]> = GetAfbeeldingenPerEtappe(etappeid,bewijsstuk)
+  const getAfbeeldingen: Promise<MissieEtappeBestand[]> =
+    GetAfbeeldingenPerEtappe(etappeid, bewijsstuk);
   const getAllUsers: Promise<User[]> = GetAllUsers();
-  const [afbeeldingen,users] = await Promise.all([getAfbeeldingen,getAllUsers])
-console.log(etappeid)
-
-
+  const [afbeeldingen, users] = await Promise.all([
+    getAfbeeldingen,
+    getAllUsers,
+  ]);
 
   return (
     <>
       <div className="font-bold">Overzicht</div>
       <Suspense fallback={<LoadingSpinner />}>
-        <div className="gap-2 grid grid-cols-2 sm:grid-cols-4">
+        <div className="gap-2 grid grid-cols-2 mx-2 sm:grid-cols-4">
           {afbeeldingen?.map((afb, index) => (
-            <AfbeeldingCard key={afb.id} data={afb} user={users.find(x=>x.id === afb.userId)!} />
+            <AfbeeldingCard
+              key={afb.id}
+              data={afb}
+              user={users.find((x) => x.id === afb.userId)!}
+            />
           ))}
         </div>
       </Suspense>
