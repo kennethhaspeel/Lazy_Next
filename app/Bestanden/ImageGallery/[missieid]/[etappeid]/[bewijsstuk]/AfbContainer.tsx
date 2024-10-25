@@ -23,7 +23,8 @@ const AfbContainer = async ({ data, user }: Props) => {
       className="w-[250px] justify-self-center"
       style={{ gridRow: `span ${photoSpans}` }}
     >
-      <Link href={GetImageSignedUrl(data.url, 0, 0, false,true)} target="_blank" className="grid place-content-center">
+      {/* <Link href={GetImageSignedUrl(data.url, 0, 0, false,true)} target="_blank" className="grid place-content-center"> */}
+      <Link href={`/foto/${btoa(data.url)}`}>
         <div className="rounded-xl bg-stone-300 overflow-hidden group ">
           <Image
             src={url!}
