@@ -24,8 +24,8 @@ const AfbeeldingCard = async ({ data, user }: Props) => {
 
   const url = GetImageSignedUrl(data.url, 720, 0, false);
 
-  const metagegevens = await GetMetaData(data.fileId);
-  (metagegevens.exif.exif.CreateDate && data.opnameDatum === 0) && UpdateBestandOpname(data.id,getUnixTime(ExifDatumNaarDatum(metagegevens.exif.exif.CreateDate)))
+ // const metagegevens = await GetMetaData(data.fileId);
+  //(metagegevens.exif.exif.CreateDate && data.opnameDatum === 0) && UpdateBestandOpname(data.id,getUnixTime(ExifDatumNaarDatum(metagegevens.exif.exif.CreateDate)))
   //console.log(fromUnixTime(data.opnameDatum).toString())
   return (
     <Card className="max-w-[250px] max-h-[400px] overflow-hidden">

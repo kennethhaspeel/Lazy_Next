@@ -11,10 +11,8 @@ import {
   Link,
   Divider,
 } from "@nextui-org/react";
-import Image from "next/image";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import FotoNemen from "./FotoNemen";
-import BestandOpladen from "./BestandOpladen";
 import BestandenOpladen from "./BestandenOpladen";
 
 interface Props {
@@ -147,21 +145,6 @@ const Upload = ({
             voornaam={voornaam}
             isBewijsstuk={isBewijsstuk}
             isAfbeelding={true}
-          />
-        )}
-      </div>
-      <div>
-        {toonUploadPDF && isBewijsstuk && (
-          <BestandOpladen
-            setToonUploadKeuzes={setToonUploadKeuzes}
-            setAllesBewaard={setAllesBewaard}
-            missieid={missieid}
-            etappeid={etappeid}
-            currentUser={currentUser}
-            naam={naam}
-            voornaam={voornaam}
-            isBewijsstuk={isBewijsstuk}
-            isAfbeelding={false}
           />
         )}
       </div>
