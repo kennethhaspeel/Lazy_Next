@@ -171,7 +171,6 @@ const TransactieForm = ({ users }: Props) => {
                 className="col-span-2"
                 value={mededeling}
                 onChange={(e) => {
-                  console.log(e.target.value)
                   setValue("mededeling", e.target.value);
                   setMededeling(e.target.value);
                 }}

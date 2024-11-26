@@ -57,7 +57,7 @@ export const DateToDDMMYYYY = (datum) => {
 };
 
 export const DateToYYYYMMDDstring = (datum) => {
-  return format(datum, "yyyy-MM-dd").toString();
+  return format(datum, "yyyy-MM-dd");
 };
 
 export const GMTtoDate = (datum) => {
