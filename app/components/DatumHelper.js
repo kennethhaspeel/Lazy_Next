@@ -51,9 +51,9 @@ export const CompareDates = (date1, date2) => {
   return datum1 === datum2 ? true : false;
 };
 
-export const DateToDDMMYYYY = (datum) => { 
+export const DateToDDMMYYYY = (datum, metTijd = false) => { 
   const d = toZonedTime(datum,"Europe/Brussels")
-  return format(d, "dd/MM/yyyy");
+  return metTijd ? format(d,"dd/MM/yyyy HH:mm"): format(d, "dd/MM/yyyy");
 };
 
 export const DateToYYYYMMDDstring = (datum) => {
@@ -75,3 +75,15 @@ export const YYYYMMDDtoDate = (datumstring) => {
 export const DDMMYYYYtoDate = (datumstring) => {
   return parse(datumstring, "dd/MM/yyyy", new Date());
 };
+
+
+export const ExifDatumNaarString=(datumstring,InclusiefTijd)=>{
+  const datumdelen = datumstring.split(' ')
+  const datumonderdelen = datumdelen[0].split(':')
+ return `${datumonderdelen[2]}/${datumonderdelen[1]}/${datumonderdelen[0]} ${datumdelen[1].substring(0,5)}`
+
+}
+
+export const ExifDatumNaarDatum=(datumstring)=>{
+  return parse(datumstring, "yyyy:MM:dd HH:mm:ss", new Date());
+}

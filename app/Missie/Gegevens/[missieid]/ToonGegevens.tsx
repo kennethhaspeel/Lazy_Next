@@ -35,7 +35,7 @@ const ToonGegevens = async ({ missieData, currentUser }: Props) => {
               <div className="ps-2 font-extrabold">Titel</div>
               <div className="sm:col-span-5">{missieData.titel}</div>
             </div>
-            <div className="mt-3 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+            <div className="mt-3 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 pe-2">
               <div className="ps-2 font-extrabold">Omschrijving</div>
               <div className="sm:col-span-5">
                 <p>{missieData.omschrijving}</p>
@@ -57,7 +57,7 @@ const ToonGegevens = async ({ missieData, currentUser }: Props) => {
                     {missieData.afbeelding ? (
                       <p>Bekijk afbeelding</p>
                     ) : (
-                      "Nog geen afbeelding"
+                      <ToonMissieAfbeelding hasImage={missieData.afbeelding != null} missieid={missieData.id}/>
                     )}
                   </div>
                 )}

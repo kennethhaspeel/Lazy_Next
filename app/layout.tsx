@@ -1,4 +1,4 @@
-import type { Metadata , Viewport} from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { Inter } from "next/font/google";
 import { Providers } from "./providers";
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   formatDetection: {
     telephone: false,
   },
-  
+
   openGraph: {
     type: "website",
     siteName: APP_NAME,
@@ -53,32 +53,32 @@ export const viewport: Viewport = {
 };
 export default function RootLayout({
   children,
+  modal,
 }: Readonly<{
   children: React.ReactNode;
+  modal: React.ReactNode;
 }>) {
-
-  const baseClasses = ''
+  const baseClasses = "";
   return (
-    <html
-      lang="nl-be"
-      suppressHydrationWarning
-    >
-     
-      <body className= {`${inter.className} bg-slate-100 dark:bg-slate-600`}>
-         <Providers>
+    <html lang="nl-be" suppressHydrationWarning>
+      <body className={`${inter.className} bg-slate-100 dark:bg-slate-600`}>
+        <Providers>
           <div className="flex h-full min-h-screen flex-col justify-between bg-slate-100 dark:bg-slate-600">
             <div className="flex sticky top-0 w-full lg:max-w-7xl mx-auto bg-slate-100 dark:bg-slate-600 dark:text-white p-2 rounded-b-lg">
               <Header />
             </div>
 
-            <div className="flex-1 w-full lg:max-w-7xl mx-auto bg-slate-100 dark:bg-slate-600 dark:text-white z-0">{children}</div>
+            <div className="flex-1 w-full lg:max-w-7xl mx-auto bg-slate-100 dark:bg-slate-600 dark:text-white z-0">
+              {children}
+            </div>
             <div className="flex sticky bottom-0 w-full lg:max-w-7xl mx-auto  bg-slate-100 dark:bg-slate-600 dark:text-white p-4 rounded-t-lg pt-2">
               <Footer />
             </div>
+            {modal}
             <ToastContainer />
           </div>
-              </Providers>
-              {/* <script>
+        </Providers>
+        {/* <script>
               const registerServiceWorker = async () => {
             if ("serviceWorker" in navigator) {
                 try {
@@ -100,7 +100,6 @@ export default function RootLayout({
         registerServiceWorker();
               </script> */}
       </body>
-
     </html>
   );
 }

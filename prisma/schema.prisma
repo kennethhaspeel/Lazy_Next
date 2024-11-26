@@ -146,6 +146,7 @@ model MissieEtappeBestand {
   size           BigInt
   fileId         String       @db.VarChar(100)
   uploadDatum    Int          @default(0)
+  opnameDatum    Int          @default(0)
   user           User         @relation(fields: [userId], references: [id])
   userId         String
   isBewijsstuk   Boolean      @default(false)

@@ -1,13 +1,13 @@
 import React from "react";
-import Image from "next/image";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../../../../api/auth/[...nextauth]/AuthOptions";
 import { MissieEtappeBestand, User } from "@prisma/client";
 import { GetAfbeeldingenPerEtappe } from "../../../../../../lib/actions/AfbeeldingActions";
 import { Suspense } from "react";
 import LoadingSpinner from "../../../../../components/LoadingSpinner";
-import AfbeeldingCard from "./AfbeeldingCard";
 import { GetAllUsers } from "@/lib/actions/UserActions";
+import AfbContainer from "./AfbContainer";
+import Link from "next/link";
 
 interface Props {
   params: {
@@ -16,7 +16,6 @@ interface Props {
     bewijsstuk: boolean;
   };
 }
-
 const ToonGallerij = async ({
   params: { missieid, etappeid, bewijsstuk },
 }: Props) => {
@@ -32,20 +31,21 @@ const ToonGallerij = async ({
     getAfbeeldingen,
     getAllUsers,
   ]);
-
   return (
     <>
-      <div className="font-bold">Overzicht</div>
+      <div className="bg-slate-800  p-4 mx-2 rounded-xl">
+        <Link href={`/Missie/Gegevens/${missieid}`}>Terug naar missie</Link>
+      </div>
       <Suspense fallback={<LoadingSpinner />}>
-        <div className="gap-2 grid grid-cols-2 mx-2 sm:grid-cols-4">
-          {afbeeldingen?.map((afb, index) => (
-            <AfbeeldingCard
+        <section className=" my-3 grid grid-cols-gallery auto-rows-[10px]">
+          {afbeeldingen?.map((afb) => (
+            <AfbContainer
               key={afb.id}
               data={afb}
               user={users.find((x) => x.id === afb.userId)!}
             />
           ))}
-        </div>
+        </section>
       </Suspense>
     </>
   );

@@ -36,12 +36,12 @@ const UploadBestand = async ({
             />
           </div>
           <div className="hidden md:block p-3">
-            <Image
+            {/* <Image
               src={AfbeeldingNeemFoto}
               alt="editformafbeelding"
               className="h-auto max-w-50"
               placeholder="blur"
-            />
+            /> */}
           </div>
         </div>
       </section>

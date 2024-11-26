@@ -196,7 +196,7 @@ const ToonEtappesMobiel = ({
                               <DropdownItem
                                 key={`bekijk_${etappe.id}`}
                                 startContent={<EyeIcon className="size-6" />}
-                                href="/"
+                                href={`/Bestanden/ImageGallery/${missieid}/${etappe.id}/true`}
                               >
                                 Bekijk
                               </DropdownItem>
@@ -206,16 +206,7 @@ const ToonEtappesMobiel = ({
                                 startContent={<CameraIcon className="size-6" />}
                                 href={`/Bestanden/UploadBestand/${missieid}/${etappe.id}/true`}
                               >
-                                Neem Foto
-                              </DropdownItem>
-                              <DropdownItem
-                                key={`bestand_${etappe.id}`}
-                                startContent={
-                                  <ArrowUpTrayIcon className="size-6" />
-                                }
-                                href={`/Bestanden/UploadBestand/${missieid}/${etappe.id}/true`}
-                              >
-                                Bestand Opladen
+                                Toevoegen
                               </DropdownItem>
                             </DropdownMenu>
                           </Dropdown>
@@ -247,7 +238,7 @@ const ToonEtappesMobiel = ({
                               <DropdownItem
                                 key={`bekijk_${etappe.id}`}
                                 startContent={<EyeIcon className="size-6" />}
-                                href={`/Bestanden/FotoGallerij/${missieid}/${etappe.id}`}
+                                href={`/Bestanden/ImageGallery/${missieid}/${etappe.id}/false`}
                               >
                                 Bekijk
                               </DropdownItem>

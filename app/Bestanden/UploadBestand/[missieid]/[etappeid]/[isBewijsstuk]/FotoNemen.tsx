@@ -20,6 +20,7 @@ import { getUnixTime } from "date-fns";
 import { GetGeoLocatie } from "@/app/components/ImageHelper";
 import ExifReader from "exifreader";
 import Compressor from "compressorjs"
+import { ExifDatumNaarDatum } from "@/app/components/DatumHelper";
 
 interface Props {
   setToonUploadKeuzes: Dispatch<SetStateAction<boolean>>;
@@ -54,10 +55,19 @@ const FotoNemen = ({
     triggerNeemFoto.current!.click();
   }, []);
 
-      const GetGeoLocatie = async (bestand:string)=>{
-        const {gps} =  await ExifReader.load(bestand,{expanded:true})
-        return gps
-      }
+  const GetExifData = async (bestand: string) => {
+    try {
+      return await ExifReader.load(bestand, { expanded: true });
+      // const datum: number =
+      //   exif && exif.DateTimeOriginal
+      //     ? getUnixTime(ExifDatumNaarDatum(exif.DateTimeOriginal.description))
+      //     : 0;
+      // return [gps, datum];
+    } catch {
+      console.log("Geen gps data gevonden");
+      return undefined;
+    }
+  };
 
   const ToonVoorbeeldNeemFoto = async (event: ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files) {
@@ -76,7 +86,7 @@ const FotoNemen = ({
         success(result){
           console.log((Number(result.size) / 1024 / 1024).toFixed(2));
           const reader = new FileReader();
-          reader.onloadend = () => {
+          reader.onloadend = async () => {
             setNeemFotoSrc(reader.result as string);
           };
           reader.readAsDataURL(result);
@@ -93,12 +103,14 @@ const FotoNemen = ({
         const result = JSON.parse(await UploadFoto(NeemFotoSrc, [],bestandsnaam!));
         const update = await UpdateMissieAfbeeldingRecord({
           missieid: missieid,
-          bestandsnaam: result["name"],
+          bestandsnaam: result.url,
         });
       } else {
-        const gps = await GetGeoLocatie(NeemFotoSrc)
+
         const tags: string[] = [naam!, voornaam!];
         const result = JSON.parse(await UploadFoto(NeemFotoSrc, tags,bestandsnaam!));
+        let exifdata = await GetExifData(NeemFotoSrc);
+
         const dbdata = {
           missieEtappeId: Number(etappeid),
           bestandsNaam: result.name,
@@ -111,7 +123,8 @@ const FotoNemen = ({
           uploadDatum: getUnixTime(new Date()),
           userId: currentUser,
           isBewijsstuk: isBewijsstuk === true,
-          locatie: gps != undefined ? JSON.stringify(gps) : null
+          locatie: exifdata?.gps ,
+          opnamedatum: exifdata?.exif && exifdata.exif.DateTimeOriginal? getUnixTime(ExifDatumNaarDatum(exifdata.exif.DateTimeOriginal.description)) : 0
         };
         const dbResult = await BewaarMissieBestand(dbdata);
       }

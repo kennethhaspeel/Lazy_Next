@@ -2,8 +2,12 @@
 import db from "@/lib/prisma";
 import { UploadImage } from "./ImageHelper";
 
-export async function UploadFoto(data: string, tags: string[],bestandsnaam:string) {
-  const response = await UploadImage(data, tags,bestandsnaam);
+export async function UploadFoto(
+  data: string,
+  tags: string[],
+  bestandsnaam: string
+) {
+  const response = await UploadImage(data, tags, bestandsnaam);
   return JSON.stringify(response);
 }
 
@@ -37,24 +41,36 @@ interface BewaarMissieBestandModel {
   uploadDatum: number;
   userId: string;
   isBewijsstuk: boolean;
+  opnamedatum: number;
 }
 
 export async function BewaarMissieBestand(data: BewaarMissieBestandModel) {
   const response = await db.missieEtappeBestand.create({
     data: {
-      missieEtappeId:Number(data.missieEtappeId),
-      bestandsNaam:data.bestandsNaam,
-      mime:data.mime,
-      url:data.url,
-      width:data.width,
-      height:data.height,
-      size:data.size,
-      fileId:data.fileId,
-      uploadDatum:data.uploadDatum,
-      userId:data.userId,
-      isBewijsstuk: data.isBewijsstuk.toString() === 'true'
+      missieEtappeId: Number(data.missieEtappeId),
+      bestandsNaam: data.bestandsNaam,
+      mime: data.mime,
+      url: data.url,
+      width: data.width,
+      height: data.height,
+      size: data.size,
+      fileId: data.fileId,
+      uploadDatum: data.uploadDatum,
+      userId: data.userId,
+      isBewijsstuk: data.isBewijsstuk.toString() === "true",
+      opnameDatum: Number(data.opnamedatum),
     },
   });
 
+  return response;
+}
+
+export async function UpdateBestandOpname(bestandid: number, datum: number) {
+  const response = await db.missieEtappeBestand.update({
+    where: { id: bestandid },
+    data: {
+      opnameDatum: datum,
+    },
+  });
   return response;
 }
