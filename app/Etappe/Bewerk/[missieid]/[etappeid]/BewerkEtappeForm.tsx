@@ -40,7 +40,7 @@ interface Props {
   details: EtappeDetail;
 }
 const BewerkEtappeForm = ({ deelnemers, details }: Props) => {
-  console.log(details);
+
   const router = useRouter();
   const [verschuldigdDoor, setVerschuldigdDoor] = useState<string[]>([]);
   const [betalerslijst, setBetalersLijst] = useState<MissieDeelnemerModel[]>(
@@ -60,7 +60,6 @@ const BewerkEtappeForm = ({ deelnemers, details }: Props) => {
       let d = datum;
       d.setHours(starttijdValue.hour);
       d.setMinutes(starttijdValue.minute);
-      console.log(d);
       const model: PostEtappeNieuwModel = {
         missieid: details.id,
         titel: data.titel,
@@ -69,12 +68,12 @@ const BewerkEtappeForm = ({ deelnemers, details }: Props) => {
         startDatum: d,
         kost: data.kost,
         verschuldigDoor: data.kost > 0 ? verschuldigdDoor : [],
-        betaler: data.kost > 0 ? betaler : "",
-        url: data.url ? data.url : "",
+        betaler: betaler ,
+        url: data.url ,
       };
       console.log(model);
       const result = await PostUpdateEtappe(model);
-      //console.log(result);
+      console.log(result);
       toast.success("Aanpassing Bewaard");
     } catch (error) {
       if (error instanceof Error) {

@@ -60,6 +60,7 @@ export async function PostNieuweEtappe(model: PostEtappeNieuwModel) {
 }
 
 export async function PostUpdateEtappe(model: PostEtappeNieuwModel) {
+  console.log(model)
   const deleteKosten = await db.kostVerdeling.deleteMany({
     where: {
       missieEtappeId: model.missieid,
@@ -71,11 +72,12 @@ export async function PostUpdateEtappe(model: PostEtappeNieuwModel) {
     },
     data: {
       titel: model.titel,
+      url:model.url,
       omschrijving: model.omschrijving,
       locatie: model.locatie,
       startDatum: getUnixTime(model.startDatum),
       kost: model.kost,
-      userId: model.kost > 0 ? model.betaler : "",
+      userId:  model.betaler,
     },
   });
   if (model.kost > 0 && model.verschuldigDoor) {

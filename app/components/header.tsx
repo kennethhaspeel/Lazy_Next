@@ -18,12 +18,13 @@ import { useSession, signIn, signOut } from "next-auth/react";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
   const { data: session } = useSession();
-  //console.log(session?.user.naam);
+
   return (
     <div className="w-full lg:max-w-7xl mx-auto">
       <Navbar isBordered isMenuOpen={isMenuOpen}>
