@@ -67,14 +67,15 @@ export default function RootLayout({
             <div className="flex sticky top-0 w-full lg:max-w-7xl mx-auto bg-slate-100 dark:bg-slate-600 dark:text-white p-2 rounded-b-lg">
               <Header />
             </div>
-
+            <div>{modal}</div>
+            <div id="modal-root" />
             <div className="flex-1 w-full lg:max-w-7xl mx-auto bg-slate-100 dark:bg-slate-600 dark:text-white z-0">
               {children}
             </div>
             <div className="flex sticky bottom-0 w-full lg:max-w-7xl mx-auto  bg-slate-100 dark:bg-slate-600 dark:text-white p-4 rounded-t-lg pt-2">
               <Footer />
             </div>
-            {modal}
+
             <ToastContainer />
           </div>
         </Providers>

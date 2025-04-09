@@ -14,6 +14,7 @@ import {
 } from "@/app/components/DatumHelper";
 import { fromUnixTime, getUnixTime } from "date-fns";
 import { UpdateBestandOpname } from "@/app/components/BewaarBestandDB";
+import Link from "next/link";
 
 interface Props {
   data: MissieEtappeBestand;
@@ -30,6 +31,7 @@ const AfbeeldingCard = async ({ data, user }: Props) => {
   return (
     <Card className="max-w-[250px] max-h-[400px] overflow-hidden">
       <CardHeader className="flex gap-3 min-h-[300px]">
+      <Link href={`/Bestanden/Foto/${data.id}`}>
         <Image
           // onLoad={onImageLoad}
           src={url!}
@@ -45,6 +47,7 @@ const AfbeeldingCard = async ({ data, user }: Props) => {
           blurDataURL={blurred}
           loading="lazy"
         />
+        </Link>
       </CardHeader>
       <CardFooter>
         <div className="flex flex-col">
