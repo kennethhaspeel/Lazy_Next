@@ -28,7 +28,7 @@ const FormSchema = z.object({
     
       const submitRequest: SubmitHandler<InputType> = async (data) => {
         try {
-          const result = await VergetenPaswoord(data.email);
+          const result = await VergetenPaswoord(data.email.toLowerCase());
           toast.success("Een link is verstuurd naar uw emailadres");
           reset();
         } catch (error) {
