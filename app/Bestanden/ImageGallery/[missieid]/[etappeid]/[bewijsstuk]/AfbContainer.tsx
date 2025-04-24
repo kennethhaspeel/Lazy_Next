@@ -23,9 +23,10 @@ const AfbContainer = async ({ data, user }: Props) => {
       className="w-[250px] justify-self-center"
       style={{ gridRow: `span ${photoSpans}` }}
     >
-      {/* <Link href={GetImageSignedUrl(data.url, 0, 0, false,true)} target="_blank" className="grid place-content-center"> */}
-      <Link href={`/foto/${btoa(data.url)}`}>
+      {/* <Link   href={`/Bestanden/Foto/${btoa(GetImageSignedUrl(data.url, 0, 0, false, true))}`}> */}
+      
         <div className="rounded-xl bg-stone-300 overflow-hidden group ">
+          <Link href={`/Bestanden/Foto/${data.id}`}>
           <Image
             src={url!}
             alt="Card background"
@@ -36,8 +37,9 @@ const AfbContainer = async ({ data, user }: Props) => {
             blurDataURL={blurred}
             sizes="250px"
           />
+           </Link>
         </div>
-      </Link>
+     
     </div>
   );
 };
