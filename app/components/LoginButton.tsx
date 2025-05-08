@@ -21,9 +21,9 @@ const LoginButton = () => {
       ) : (
         <>
           <Button onClick={() => signIn()}>Log in </Button>
-          <Button as={Link} href="/identity/registreer">
+          {/* <Button as={Link} href="/identity/registreer">
             Registreer
-          </Button>
+          </Button> */}
         </>
       )}
     </div>

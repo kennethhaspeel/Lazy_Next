@@ -127,15 +127,15 @@ const Header = () => {
                     Log in{" "}
                   </Button>
                 </div>
-                <div className="w-full p-4">
+                {/* <div className="w-full p-4">
                   <Button
                     as={Link}
                     href="/identity/registreer"
                     className="w-full"
                   >
                     Registreer
-                  </Button>
-                </div>
+                  </Button> 
+                </div>*/}
               </div>
             )}
           </NavbarItem>
