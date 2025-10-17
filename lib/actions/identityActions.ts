@@ -18,15 +18,16 @@ export async function RegistreerGebruiker(user: registratieModel) {
       telefoon: user.telefoon,
       email: user.email,
       paswoord: await bcrypt.hash(user.paswoord, 10),
+      emailBevestigd:true,
     },
   });
 
-  const jwtUserId = signJwt({
-    id: result.id,
-  });
-  const activationUrl = `${process.env.NEXTAUTH_URL}/identity/BevestigRegistratie/${jwtUserId}`;
-  const body = compileerActivatieMail(user.voornaam, activationUrl);
-  await ZendMail({ to: user.email, subject: "Activate Your Account", body });
+  // const jwtUserId = signJwt({
+  //   id: result.id,
+  // });
+  // const activationUrl = `${process.env.NEXTAUTH_URL}/identity/BevestigRegistratie/${jwtUserId}`;
+  // const body = compileerActivatieMail(user.voornaam, activationUrl);
+  // await ZendMail({ to: user.email, subject: "Activate Your Account", body });
   return result;
 }
 
