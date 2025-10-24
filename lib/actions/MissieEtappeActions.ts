@@ -34,6 +34,7 @@ export async function PostNieuweEtappe(model: PostEtappeNieuwModel) {
       missieId: model.missieid!,
       titel: model.titel,
       omschrijving: model.omschrijving ? model.omschrijving : "",
+      url: model.url ? model.url : "",
       locatie: model.locatie ? model.locatie : "",
       startDatum: getUnixTime(model.startDatum),
       kost: new Prisma.Decimal(model.kost),
