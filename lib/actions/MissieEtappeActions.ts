@@ -29,6 +29,8 @@ export async function GetAllEtappesMetBewijsstuk(
 }
 
 export async function PostNieuweEtappe(model: PostEtappeNieuwModel) {
+  console.log('Model voor bewaren')
+  console.log(model)
   const etappe = await db.missieEtappe.create({
     data: {
       missieId: model.missieid!,

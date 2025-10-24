@@ -23,6 +23,7 @@ export async function GetEtappeDetails(etappeid: number) {
       kost: Number(result!.kost),
       betaaldDoor: result!.userId ? result!.userId : undefined,
       kostenverdeling: result!.KostenVerdeling.map((kost) => kost.userId),
+      url: result!.url ? result!.url : ""
     };
     return data;
   //}
@@ -52,6 +53,7 @@ export async function GetEtappeMetDetails(etappeid:number){
     kost: Number(result!.kost),
     betaaldDoor: result!.userId ? `${result!.betaaldDoor?.voornaam } ${result!.betaaldDoor?.naam }` : undefined,
     kostenverdeling: result!.KostenVerdeling.map((kost) =>`${kost.user.voornaam } ${kost.user.naam }`),
+    url: result!.url ? result!.url : "",
   };
   return data;
 }
