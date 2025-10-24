@@ -37,7 +37,7 @@ export async function PostNieuweEtappe(model: PostEtappeNieuwModel) {
       locatie: model.locatie ? model.locatie : "",
       startDatum: getUnixTime(model.startDatum),
       kost: new Prisma.Decimal(model.kost),
-      userId: model.kost > 0 ? model.betaler : "",
+      userId: model.kost > 0 ? model.betaler : "clxucmprp0002p31rf6p6mux3",
     },
   });
 
