@@ -41,7 +41,7 @@ const LoginForm = (props: Props) => {
   const onSubmit: SubmitHandler<InputType> = async (data) => {
     const result = await signIn("credentials", {
       redirect: false,
-      email: data.email,
+      email: data.email.trim(),
       paswoord: data.paswoord,
     });
     if (!result?.ok) {
@@ -107,13 +107,13 @@ const LoginForm = (props: Props) => {
               Paswoord Instellen
             </Button>
           </div>
-          <hr />
+{/*          <hr />
           <p className="mt-5">Nog niet geregistreerd?</p>
           <div className="mb-5 mt-5 w-full">
             <Button as={Link} href="/identity/registreer" className="w-full">
               Registreer
             </Button>
-          </div>
+          </div> */}
         </form>
       </div>
     </>
